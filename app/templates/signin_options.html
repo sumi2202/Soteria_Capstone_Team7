@@ -4,23 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- Optional theme -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/launch.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/signin_options.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css"
     integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
     crossorigin="anonymous">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
-    <title>{% block title %}Launch{% endblock %}</title>
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+    <title>{% block title %}Home{% endblock %}</title>
 </head>
 <body>
     <div class="wrapper">
-        <h1>Welcome to Soteria</h1>
-        <h2>A powerful, free tool at the tip of your fingertips.</h2>
-        <h3>Redefining pen-testing</h3>
-        <a href="signin_options">
-            <button class="register">Start</button>
+        <h1>Soteria</h1>
+        <a href="login">
+            <button class="login">Log In</button>
+        </a>
+        <a href="sign-up">
+            <button class="register">Register Your School Account</button>
         </a>
     </div>
 </body>
