@@ -9,7 +9,7 @@ def launch():
 
 @views.route('/signup-options')
 def sign_options():
-    return "sign up or log in"
+    return render_template("signin_options.html")
 
 
 

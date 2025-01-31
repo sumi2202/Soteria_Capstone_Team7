@@ -13,7 +13,6 @@ body {
     min-height: 100vh;
     position: relative;
     background: linear-gradient(245deg,#071e22,#1d7874,#d85461) !important;
-    background-size: 500% 500%;
     animation: gradient-animation 18s ease infinite
 }
 
@@ -51,14 +50,18 @@ body {
     word-wrap: break-word
 }
 .wrapper h2{
-    font-size: 20px;
+    font-size: 14px;
     text-align: center;
     padding: 20px;
+    font-family: JetBrains Mono;
+
 }
 .wrapper h3{
     font-size: 14px;
     text-align: center;
-       padding: 20px;
+    padding: 20px;
+        font-family: JetBrains Mono;
+
 
 }
 
