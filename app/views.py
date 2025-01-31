@@ -10,6 +10,9 @@ def launch():
 @views.route('/signup-options')
 def sign_options():
     return render_template("signin_options.html")
+@views.route('/dashboard')
+def dashboard():
+    return render_template("dash_search.html")
 
 
 
