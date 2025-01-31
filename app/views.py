@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, send_from_directory
+import os
 
 views = Blueprint('views', __name__)
 
@@ -9,5 +10,6 @@ def launch():
 @views.route('/signup-options')
 def sign_options():
     return "sign up or log in"
+
 
 
