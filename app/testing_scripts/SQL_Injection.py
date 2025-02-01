@@ -72,6 +72,7 @@ def sql_injection(url):
         database_extract = re.findall(r"available databases \[.*?\]:\n\[(.*?)\]", test_result, re.DOTALL) #getting output from sqlmap command
         database_list = [name.strip() for name in database_extract[0].split(",")] if database_extract else [] #formating the string of multiple databases into a list
 
+        #Listing out test results in JSON format
         result_analysis = {
             "url": url,
             "num_passed": num_passed,
