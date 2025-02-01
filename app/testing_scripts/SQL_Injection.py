@@ -1,11 +1,11 @@
-import re
-import subprocess
 
-# Right now it displays the test results in a JSON format
+# Right now it displays the test results in a JSON format that contains:
 # - Number of failed & passed tests
 # - Types of failed & passed tests
 
 
+import re
+import subprocess
 
 #function for sql injection tests
 def sql_injection(url):

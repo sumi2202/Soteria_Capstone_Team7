@@ -1,8 +1,12 @@
+
+# Returns two integers:
+# - Does the URL exist? (0 = Yes, 1 = No)
+# - Is the URL available? (0 = Yes, 1 = No)
+
+
 import validators #package used to check for URL formatting
 import requests #package used to check if URL exists
 from pymongo import MongoClient  #MongoDB
-import re
-
 
 #Connect to database
 client = MongoClient('mongodb://10.190.37.194:27017/')
