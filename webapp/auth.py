@@ -5,6 +5,8 @@ auth = Blueprint('auth', __name__)
 
 @auth.route('/login')
 def login():
+    if request.method == 'POST':
+        email = request.form.get('email')
     return render_template("login.html")
 
 @auth.route('/logout')
