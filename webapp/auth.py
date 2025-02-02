@@ -2,7 +2,9 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from .models import User
 from . import db
 import os
+
 auth = Blueprint('auth', __name__)
+
 
 @auth.route('/login')
 def login():
@@ -10,20 +12,43 @@ def login():
         email = request.form.get('email')
         password = request.form.get('password')
 
-        user = db.users.find_one({"email": email, "password" : password})
+        user = db.users.find_one({"email": email, "password": password})
         if user:
-            flash('Log In Successful!', category= 'success')
+            flash('LOG IN SUCCESSFUL!', category='success')
             return redirect(url_for('views.dashboard'))
         else:
-
-
+            flash('WRONG CREDENTIALS', category='error')
     return render_template("login.html")
+
 
 @auth.route('/logout')
 def logout():
     return "Log Out"
 
+
 @auth.route('/sign-up')
 def sign_up():
-    return render_template("signup.html")
+    if request.method == 'POST':
+        first_name = request.form.get('firstName')
+        last_name = request.form.get('lastName')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        confirm_email = request.form.get('confirmEmail')
+        confirm_password = request.form.get('confirmPassword')
 
+        if email != confirm_email:
+            flash('EMAIL DOES NOT MATCH!', category='error')
+            return redirect(url_for('auth.sign_up'))
+        if password != confirm_password:
+            flash('PASSWORD DOES NOT MATCH!', category='error')
+            return redirect(url_for('auth.sign_up'))
+
+        if db.users.find_one({"email" : email}):
+            flash('Email already exists.', category='error')
+            return redirect(url_for('auth.sign_up'))
+
+        user = User(db)
+        user_id = user.signup(first_name, last_name, email, password)
+        return redirect(url_for('auth.login'))
+
+    return render_template("signup.html")
