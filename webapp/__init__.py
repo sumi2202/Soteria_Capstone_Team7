@@ -1,6 +1,7 @@
 from flask import Flask
 from .auth import auth
 from .views import views
+from pymongo import MongoClient
 
 def create_app():
     app = Flask(__name__)
