@@ -1,15 +1,18 @@
 from flask import Flask, jsonify
 from pymongo import MongoClient
+from bson.objectid import ObjectId
 
 
 class User:
-    def signup(self):
+    def __init__(self, db):
+        self.db = db
+    def signup(self, first_name, last_name, email, password):
         user = {
-            "_id": "",
-            "firstName": "",
-            "lastName": "",
-            "email":"",
-            "password":""
+            "firstName": first_name,
+            "lastName": last_name,
+            "email": email,
+            "password": password
 
         }
-        return jsonify(user), 200
+        result = self.db.users.insert_one(user)
+        return str(result.inserted_id)
