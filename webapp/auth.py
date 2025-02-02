@@ -1,16 +1,17 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, send_from_directory
+from flask import Blueprint, render_template, request, redirect, url_for, flash, send_from_directory, current_app
 from .models import User
-from . import db
 import os
 
 auth = Blueprint('auth', __name__)
 
 
-@auth.route('/login')
+@auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
+
+        db = current_app.db
 
         user = db.users.find_one({"email": email, "password": password})
         if user:
@@ -26,7 +27,7 @@ def logout():
     return "Log Out"
 
 
-@auth.route('/sign-up')
+@auth.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
     if request.method == 'POST':
         first_name = request.form.get('firstName')
@@ -35,6 +36,8 @@ def sign_up():
         password = request.form.get('password')
         confirm_email = request.form.get('confirmEmail')
         confirm_password = request.form.get('confirmPassword')
+
+        db = current_app.db
 
         if email != confirm_email:
             flash('EMAIL DOES NOT MATCH!', category='error')

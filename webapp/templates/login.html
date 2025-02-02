@@ -16,17 +16,17 @@
 </head>
 <body>
     <div class="wrapper">
-        <form action="" id="loginForm">
+        <form action="{{ url_for('auth.login') }}" method="POST" id="loginForm">
             <h1>SOTERIA</h1>
             <div class="input-box">
                 <div class="input-wrapper">
-                    <input type="text" placeholder="Email Address" id="EmailAdd" required>
+                    <input type="text" placeholder="Email Address" id="EmailAdd" name="email" required>
                     <i class='bx bxs-user-badge'></i>
                 </div>
             </div>
             <div class="input-box">
                 <div class="input-wrapper">
-                    <input type="text" style="-webkit-text-security: circle" placeholder="Password" id="loginPassword" required>
+                    <input type="text" style="-webkit-text-security: circle" placeholder="Password" id="loginPassword" name="password" required>
                     <i class='bx bxs-lock' ></i>
                 </div>
             </div>
