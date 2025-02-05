@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "JetBrains Mono", sans-serif;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    position: relative;
+    background: linear-gradient(245deg,#071e22,#1d7874,#d85461) !important;
+    animation: gradient-animation 18s ease infinite
+}
+
+@keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+h2 {
+    color: #fff;
+    font-size: 30px;
+}
+
+.row {
+    height: 100%;
+}
+
+.navbar {
+    background-color: #000; /* Black background */
+    border-bottom: 2px solid #fff; /* White border at the bottom */
+}
+
+.navbar-nav {
+    flex-direction: row;
+}
+
+.navbar .navbar-brand {
+    color: #fff !important;
+}
+
+.navbar .navbar-nav .nav-item .nav-link {
+    color: #fff !important;
+    display: block !important;
+}
