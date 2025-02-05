@@ -6,7 +6,7 @@ def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'dhfbdbfjksd hfjksdkjdh'
 
-    app.config['MONGO_URI'] = 'mongodb://localhost:27017/'
+    app.config['MONGO_URI'] = 'mongodb+srv://SoteriaUser:SOFEcapstone2425@soteriacluster.g7txq.mongodb.net/'
     client = MongoClient(app.config['MONGO_URI'])
     app.db = client.soteria
 
