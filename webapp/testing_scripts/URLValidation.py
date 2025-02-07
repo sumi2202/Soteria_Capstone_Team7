@@ -4,6 +4,9 @@
 # - Is the URL available? (0 = Yes, 1 = No)
 
 
+#only checks the URL Information database because it needs to be validated by the team before it can be registered
+
+
 import validators #package used to check for URL formatting
 import requests #package used to check if URL exists
 from pymongo import MongoClient  #MongoDB
@@ -11,7 +14,7 @@ from pymongo import MongoClient  #MongoDB
 #Connect to database
 client = MongoClient('mongodb://10.190.37.194:27017/')
 db = client['Crack_Database'] #database
-table = db['URL Information'] #table
+table = db['urlInfo'] #table
 
 
 #both of these have to stay 0 for it to be validated
@@ -44,11 +47,10 @@ def url_validation(email, url):
                     alreadyRegistered = 0
 
                 else:
-                    # **Insert the URL and user in the db**
-                    newEntry = {
-                        "email": email,
-                        "URL": url
-                    }
+                    #newEntry = {
+                        #"email": email,
+                        #"URL": url
+                    #}
                     #table.insert_one(newEntry)
 
                     alreadyRegistered = 0

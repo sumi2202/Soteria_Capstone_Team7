@@ -16,3 +16,14 @@ class User:
         }
         result = self.db.users.insert_one(user)
         return str(result.inserted_id)
+
+class URLInformation:
+    def __init__(self, db):
+        self.db = db
+    def store_url(self, email, url):
+        url_entry = {
+            "email": email,
+            "url": url,
+        }
+        result = self.db.urlInfo.insert_one(url_entry)
+        return str(result.inserted_id)
