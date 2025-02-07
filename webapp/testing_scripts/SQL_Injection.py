@@ -6,6 +6,8 @@
 
 import re
 import subprocess
+import json
+from pymongo import MongoClient  #MongoDB
 
 #function for sql injection tests
 def sql_injection(url):
