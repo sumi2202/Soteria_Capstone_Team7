@@ -84,6 +84,10 @@ def sql_injection(url):
             "database_list": database_list
         }
 
+        # ** Insert result_analysis into database, table sql_results **
+
+
+
         return result_analysis
 
     except Exception as e:

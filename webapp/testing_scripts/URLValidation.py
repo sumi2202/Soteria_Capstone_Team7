@@ -4,7 +4,7 @@
 # - Is the URL available? (0 = Yes, 1 = No)
 
 
-#only checks the URL Information database because it needs to be validated by the team before it can be registered
+#Checks if URL has already been registered by another user (where verified = true)
 
 
 import validators #package used to check for URL formatting
@@ -17,12 +17,12 @@ db = client['Crack_Database'] #database
 table = db['urlInfo'] #table
 
 
-#both of these have to stay 0 for it to be validated
-validURL = 0
-alreadyRegistered = 0
-
-
 def url_validation(email, url):
+
+    # both of these have to stay 0 for it to be validated
+    validURL = 0
+    alreadyRegistered = 0
+
     validation = validators.url(url)
 
     if not validation: #invalid url
@@ -38,26 +38,13 @@ def url_validation(email, url):
         if exists.status_code == 200:
 
             #Check if the URL is already in the database with another user
-            if table.find_one({"URL": url, "email": {"$ne": email}}) is not None:
+            if table.find_one({"URL": url, "email": {"$ne": email}}) is not None: #url is found to be registered to another user, add "verified" field = true check
                 alreadyRegistered = 1
-
-            else:
-                # Check if the URL has already been submitted by the same user before
-                if table.find_one({"URL": url, "email": email}) is not None:
-                    alreadyRegistered = 0
-
-                else:
-                    #newEntry = {
-                        #"email": email,
-                        #"URL": url
-                    #}
-                    #table.insert_one(newEntry)
-
-                    alreadyRegistered = 0
 
         else:
             validURL = 1 #URL does not exist
-    except requests.RequestException as errorMsg:
+
+    except requests.RequestException:
         validURL = 1 #URL not reached
 
     return validURL, alreadyRegistered

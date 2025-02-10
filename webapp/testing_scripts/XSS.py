@@ -57,6 +57,12 @@ def xss_testing(url):
             "type_failed": type_failed,
         }
 
+        # ** Insert result_analysis into database, table sql_results **
+
+
+
+        return result_analysis
+
     except Exception as e:
         type_failed.append(f"Error running tests {str(e)}")
         return {
