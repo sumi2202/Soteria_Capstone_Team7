@@ -14,20 +14,21 @@ body {
 }
 
 .navbar {
-    background-color: #000; /* Black background */
-    border-bottom: 2px solid #fff; /* White border at the bottom */
-    width: 100%; /* Ensure it spans full width */
-}
+    background-color: #000;
+    border-bottom: 2px solid #fff;
+    width: 100%;
 
 .navbar-nav {
     flex-direction: row;
-}
-
-.navbar .navbar-brand {
-    color: #fff !important;
+    gap: 15px;
 }
 
 .navbar .navbar-nav .nav-item .nav-link {
     color: #fff !important;
-    display: block !important;
+    padding: 8px 15px;
+    text-decoration: none;
 }
+.navbar .navbar-brand {
+    color: #fff !important;
+}
+
