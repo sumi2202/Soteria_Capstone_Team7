@@ -1,7 +1,8 @@
 import re
 import json
 import subprocess
-from pymongo import MongoClient  #MongoDB
+from flask import current_app
+from ..models import XSSResult
 
 #function for xss tests
 def xss_testing(url):
@@ -57,11 +58,11 @@ def xss_testing(url):
             "type_failed": type_failed,
         }
 
-        # ** Insert result_analysis into database, table sql_results **
+        # ** Insert result_analysis into database, table xss_results **
+        xss_result_analysis = XSSResult(current_app.db)
+        xss_result_analysis.store_xssresult(result_analysis)
 
-
-
-        return result_analysis
+        return None
 
     except Exception as e:
         type_failed.append(f"Error running tests {str(e)}")

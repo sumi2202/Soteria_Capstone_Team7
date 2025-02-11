@@ -32,3 +32,19 @@ class URLRegistration:
         }
         result = self.db.URL_Registration.insert_one(url_entry)
         return str(result.inserted_id)
+
+
+class SQLResult:
+    def __init__(self, db):
+        self.db = db
+    def store_sqlresult(self, result_analysis):
+        result = self.db.sql_result.insert_one(result_analysis)
+        return str(result.inserted_id)
+
+
+class XSSResult:
+    def __init__(self, db):
+        self.db = db
+    def store_xssresult(self, result_analysis):
+        result = self.db.xss_result.insert_one(result_analysis)
+        return str(result.inserted_id)

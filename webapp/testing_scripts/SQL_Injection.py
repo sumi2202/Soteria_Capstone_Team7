@@ -6,8 +6,9 @@
 
 import re
 import subprocess
+from flask import current_app
+from ..models import SQLResult
 import json
-from pymongo import MongoClient  #MongoDB
 
 #function for sql injection tests
 def sql_injection(url):
@@ -85,10 +86,10 @@ def sql_injection(url):
         }
 
         # ** Insert result_analysis into database, table sql_results **
+        sql_result_analysis = SQLResult(current_app.db)
+        sql_result_analysis.store_sqlresult(result_analysis)
 
-
-
-        return result_analysis
+        return None
 
     except Exception as e:
         type_failed.append(f"Error running tests {str(e)}")

@@ -14,7 +14,7 @@ def url_validation(email, url):
     validURL = 0
     alreadyRegistered = 0
 
-    db = current_app.db
+    db = current_app.db #connect to database
 
     validation = validators.url(url)
 
