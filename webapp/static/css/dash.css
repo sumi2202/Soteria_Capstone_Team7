@@ -6,39 +6,17 @@
     box-sizing: border-box;
     font-family: "JetBrains Mono", sans-serif;
 }
-
 body {
-    display: flex;
     min-height: 100vh;
     position: relative;
     background: linear-gradient(245deg,#071e22,#1d7874,#d85461) !important;
-    animation: gradient-animation 18s ease infinite
-}
-
-@keyframes gradient-animation {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-h2 {
-    color: #fff;
-    font-size: 30px;
-}
-
-.row {
-    height: 100%;
+    animation: gradient-animation 18s ease infinite;
 }
 
 .navbar {
     background-color: #000; /* Black background */
     border-bottom: 2px solid #fff; /* White border at the bottom */
+    width: 100%; /* Ensure it spans full width */
 }
 
 .navbar-nav {
