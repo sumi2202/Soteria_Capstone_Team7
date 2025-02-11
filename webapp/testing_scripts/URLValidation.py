@@ -4,24 +4,17 @@
 # - Is the URL available? (0 = Yes, 1 = No)
 
 
-#Checks if URL has already been registered by another user (where verified = true)
-
-
 import validators #package used to check for URL formatting
 import requests #package used to check if URL exists
-from pymongo import MongoClient  #MongoDB
-
-#Connect to database
-client = MongoClient('mongodb://10.190.37.194:27017/')
-db = client['Crack_Database'] #database
-table = db['urlInfo'] #table
-
+from flask import current_app
 
 def url_validation(email, url):
 
     # both of these have to stay 0 for it to be validated
     validURL = 0
     alreadyRegistered = 0
+
+    db = current_app.db
 
     validation = validators.url(url)
 
@@ -38,7 +31,7 @@ def url_validation(email, url):
         if exists.status_code == 200:
 
             #Check if the URL is already in the database with another user
-            if table.find_one({"URL": url, "email": {"$ne": email}}) is not None: #url is found to be registered to another user, add "verified" field = true check
+            if db.URL_Registration.find_one({"url": url, "verified": True, "email": {"$ne": email}}) is not None: #url is found to be registered to another user, add "verified" field = true check
                 alreadyRegistered = 1
 
         else:
