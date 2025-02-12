@@ -14,7 +14,7 @@ def sign_options():
 def dashboard():
     return render_template("dash_search.html")
 
-@views.route('/validation')
+@views.route('/validation', methods=['GET', 'POST'])
 def link_validation():
     return render_template("link_validation.html")
 

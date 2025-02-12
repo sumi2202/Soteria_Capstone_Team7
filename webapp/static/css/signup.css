@@ -61,7 +61,20 @@ body {
     word-wrap: break-word
 }
 .wrapper .login{
-       width: 100%;
+       width: 50%;
+    height: 45px;
+    background: linear-gradient(#44ffd2, #679289);
+    border: #FFFFFF;
+    outline: none;
+    padding: 3px;
+    border-radius: 40px;
+    cursor: pointer;
+    font-size: 16px;
+    color:#FFFFFF;
+    font-weight: 600;
+}
+.wrapper .signup{
+       width: 50%;
     height: 45px;
     background: linear-gradient(#44ffd2, #679289);
     border: #FFFFFF;
