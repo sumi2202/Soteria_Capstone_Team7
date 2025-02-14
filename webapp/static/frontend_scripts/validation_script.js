@@ -1,24 +1,36 @@
 async function validateURL(){
-    const email = document.getElementById('email').value;
     const url = document.getElementById('url').value;
 
-    const response = await fetch('/validate', {
+    const response = await fetch('/validation', {
         method: 'POST',
         headers: {'Content-Type' : 'application/json'},
         body: JSON.stringify({url})
     });
 
     const result = await response.json();
-    let message = '';
+    let existMessage = '';
+    let availMessage = '';
 
     if(result.error){
-        message = "error: " + result.error;
-    }else if (result.validURL === 1){
-        message = "Invalid or unreachable URL.";
-    } else if (result.alreadyRegistered === 1){
-        message = "already registered";
-    } else {
-        message = "URL available";
+        existMessage = "❌ ERROR: " + result.error;
+
+    }else if (result.invalidURL === 1) {
+        existMessage = "❌ URL IS INVALID.";
+        availMessage = "❌ URL CANNOT BE REGISTERED.";
     }
-    document.getElementById('result').innerText = message;
+    else if (result.validURL === 1) {
+        existMessage = "❌ URL DOES NOT EXIST OR IS UNREACHABLE";
+        availMessage = "❌ URL CANNOT BE REGISTERED";
+    }
+    else {
+        existMessage = "✅ URL EXISTS";
+
+        availMessage = result.alreadyRegistered === 1
+            ? "⚠️ URL IS ALREADY REGISTERED"
+            : "✅ URL IS AVAILABLE FOR REGISTRATION";
+    }
+
+    document.getElementById('existResult').innerText = existMessage;
+    document.getElementById('availResult').innerText = availMessage;
+
 }

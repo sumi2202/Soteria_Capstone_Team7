@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, send_from_directory, current_app
+from flask import Blueprint, render_template, request, redirect, url_for, flash, send_from_directory, current_app, session
 from .models import User
 import os
 
@@ -15,6 +15,7 @@ def login():
 
         user = db.users.find_one({"email": email, "password": password})
         if user:
+            session['email'] = email
             flash('LOG IN SUCCESSFUL!', category='success')
             return redirect(url_for('views.dashboard'))
         else:

@@ -12,6 +12,7 @@ def url_validation(email, url):
 
     # both of these have to stay 0 for it to be validated
     validURL = 0
+    invalidURL = 0
     alreadyRegistered = 0
 
     db = current_app.db #connect to database
@@ -19,9 +20,10 @@ def url_validation(email, url):
     validation = validators.url(url)
 
     if not validation: #invalid url
-        validURL = 1
-        alreadyRegistered = 1
-        return validURL, alreadyRegistered
+        #validURL = 1
+        invalidURL = 1
+        #alreadyRegistered = 1
+        return validURL, invalidURL, alreadyRegistered
 
     try:
         headers = {
@@ -40,4 +42,4 @@ def url_validation(email, url):
     except requests.RequestException:
         validURL = 1 #URL not reached
 
-    return validURL, alreadyRegistered
+    return validURL, invalidURL, alreadyRegistered
