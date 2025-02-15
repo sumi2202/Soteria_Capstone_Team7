@@ -2,7 +2,6 @@ import random #for generating the code
 import requests #accessing Abstract API
 import yagmail #sending emails
 
-
 #Used to check if the email is real and valid
 def email_validation(email):
 
