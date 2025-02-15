@@ -1,8 +1,8 @@
 
-# Returns two integers:
+# Returns three integers:
+# - Can the URL be reached? (0 = Yes, 1 = No)
 # - Does the URL exist? (0 = Yes, 1 = No)
 # - Is the URL available? (0 = Yes, 1 = No)
-
 
 import validators #package used to check for URL formatting
 import requests #package used to check if URL exists
@@ -10,7 +10,7 @@ from flask import current_app
 
 def url_validation(email, url):
 
-    # both of these have to stay 0 for it to be validated
+    # These have to stay 0 for it to be validated
     validURL = 0
     invalidURL = 0
     alreadyRegistered = 0
