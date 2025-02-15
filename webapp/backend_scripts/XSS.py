@@ -3,6 +3,7 @@ import json
 import subprocess
 from flask import current_app
 from ..models import XSSResult
+from datetime import datetime, UTC
 
 #function for xss tests
 def xss_testing(url):
@@ -49,6 +50,9 @@ def xss_testing(url):
             type_passed.append("DOM Based XSS")
 
 
+        # Getting Time of Test Completion
+        timestamp = datetime.now(UTC)
+
         #Listing out test results in JSON format
         result_analysis = {
             "url": url,
@@ -56,6 +60,7 @@ def xss_testing(url):
             "num_failed": num_failed,
             "type_passed": type_passed,
             "type_failed": type_failed,
+            "timestamp": timestamp
         }
 
         # ** Insert result_analysis into database, table xss_results **

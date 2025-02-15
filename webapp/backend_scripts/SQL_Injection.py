@@ -8,7 +8,7 @@ import re
 import subprocess
 from flask import current_app
 from ..models import SQLResult
-import json
+from datetime import datetime, UTC
 
 #function for sql injection tests
 def sql_injection(url):
@@ -75,6 +75,10 @@ def sql_injection(url):
         database_extract = re.findall(r"available databases \[.*?\]:\n\[(.*?)\]", test_result, re.DOTALL) #getting output from sqlmap command
         database_list = [name.strip() for name in database_extract[0].split(",")] if database_extract else [] #formating the string of multiple databases into a list
 
+
+        #Getting Time of Test Completion
+        timestamp = datetime.now(UTC)
+
         #Listing out test results in JSON format
         result_analysis = {
             "url": url,
@@ -82,7 +86,8 @@ def sql_injection(url):
             "num_failed": num_failed,
             "type_passed": type_passed,
             "type_failed": type_failed,
-            "database_list": database_list
+            "database_list": database_list,
+            "timestamp": timestamp,
         }
 
         # ** Insert result_analysis into database, table sql_results **
