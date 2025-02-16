@@ -56,11 +56,11 @@ def send_code(email, code):
 # ** DELETE THIS AFTER FRONTEND IS DONE **
 #Main Functions for Testing Purposes
 if __name__ == '__main__':
-    email = input("Please enter your email to send the code: ")
+    email_input= input("Please enter your email to send the code: ")
 
-    if email_validation(email):
+    if email_validation(email_input):
         code = generate_code()
-        send_code(email, code)
+        send_code(email_input, code)
 
         user_code = input("Please enter the 6 digit passcode: ")
 
