@@ -1,7 +1,6 @@
-from flask import Flask, current_app
+from flask import current_app
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
-from PIL import Image
 from app import app #FOR TESTING, DELETE AFTER
 
 
