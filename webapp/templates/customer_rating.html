@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/customer_rating.css') }}">
+    <title>Title</title>
+</head>
+<body>
+    <div class="text-center">
+    {% for i in range(10) %}
+    <img src="{{ url_for('assets',filename='rating_unfilled.png') }}" width="50" height="50" id="star_{{i}}">
+    {% end for %}
+    </div>
+
+</body>
+</html>

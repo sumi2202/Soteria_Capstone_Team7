@@ -20,7 +20,7 @@ def pdf_converter(url):
         file = canvas.Canvas("Soteria_Results.pdf", pagesize=A4) #defining canvas with filename & size
 
         #Soteria logo
-        file.drawImage("../assets/Soteria_logo_white.png", 40, h - 80, width=65, height=65)
+        file.drawImage("../static/assets/Soteria_logo_white.png", 40, h - 80, width=65, height=65)
 
         #Title of report
         file.setFont("Times-Roman", 20)
