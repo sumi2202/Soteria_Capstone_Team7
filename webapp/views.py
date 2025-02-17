@@ -43,3 +43,7 @@ def link_validation():
 @views.route('/register-link')
 def link_registration():
     return render_template("link_registration.html")
+
+@views.route('/customer-rating')
+def customer_rating():
+    return render_template('customer_rating.html')
