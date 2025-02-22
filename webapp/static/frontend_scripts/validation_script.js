@@ -1,6 +1,6 @@
 async function validateURL(){
     const url = document.getElementById('url').value;
-    const allowRegister = document.getElementByID('allowRegister')
+
 
     const response = await fetch('/validation', {
         method: 'POST',
@@ -11,6 +11,7 @@ async function validateURL(){
     const result = await response.json();
     let existMessage = '';
     let availMessage = '';
+    const allowRegister = document.getElementById('allowRegister');
 
     if(result.error){
         existMessage = "❌ ERROR: " + result.error;
@@ -36,11 +37,14 @@ async function validateURL(){
         } else {
             availMessage = "✅ URL IS AVAILABLE FOR REGISTRATION";
             allowRegister.disabled = false;
+            sessionStorage.setItem("URL_validated", url);
         }
-
     }
 
     document.getElementById('existResult').innerText = existMessage;
     document.getElementById('availResult').innerText = availMessage;
 
+}
+function registerURL(){
+    window.location.href = "/register-link";
 }
