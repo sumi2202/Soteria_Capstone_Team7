@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, session
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 
@@ -47,4 +47,16 @@ class XSSResult:
         self.db = db
     def store_xssresult(self, result_analysis):
         result = self.db.xss_result.insert_one(result_analysis)
+        return str(result.inserted_id)
+
+
+class Rating:
+    def __init__(self, db):
+        self.db = db
+    def store_rating(self, sessionC, rating):
+        rating_entry = {
+            "sessionC": sessionC,
+            "rating": rating
+        }
+        result = self.db.customer_rating.insert_one(rating_entry)
         return str(result.inserted_id)
