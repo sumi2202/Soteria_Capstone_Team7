@@ -10,7 +10,7 @@ def login():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
-
+  
         db = current_app.db
 
         user = db.users.find_one({"email": email, "password": password})
