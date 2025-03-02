@@ -36,50 +36,42 @@
         </div>
     </div>
 </nav>
-<div class="wrapper">
-    <form action = "{{ url_for('views.register-link') }}" method="POST" id="">
-        <h1>REGISTER YOUR DOMAIN</h1>
-        <div class = "form-container">
-            <div class = "column">
-                <div class="input-box">
-                    <div class="input-wrapper">
-                        <input type="text" placeholder="First Name" id="FirstName" name = "firstName" required>
-                        <i class='bx bxs-user-badge'></i>
-                    </div>
-                </div>
-                <div class="input-box">
-                    <div class="input-wrapper">
-                        <input type="text" placeholder="Email" id="EmailAdd" name = "email" required>
-                        <i class='bx bxs-lock' ></i>
-                    </div>
-                </div>
-                <div class="input-box">
-                    <div class="input-wrapper">
-                        <input type="text" style="-webkit-text-security: circle" placeholder="Password" id="loginPassword" name = "password" required>
-                        <i class='bx bxs-lock' ></i>
-                    </div>
+        <div class="wrapper">
+    <form action="{{ url_for('views.link_registration') }}" method="POST">
+    <h1>REGISTER YOUR DOMAIN</h1>
+    <div class="form-container">
+        <div class="column">
+            <div class="input-box">
+                <div class="input-wrapper">
+                    <input type="text" placeholder="First Name" id="FirstName" name="firstName" required>
+                    <i class='bx bxs-user-badge'></i>
                 </div>
             </div>
-            <div class = "column">
-                <div class="input-box">
-                    <div class="input-wrapper">
-                        <input type="text" placeholder="Last Name" id="LastName" name = "lastName" required>
-                        <i class='bx bxs-user-badge'></i>
-                    </div>
-                    <div class="input-wrapper">
-                        <input type="text" placeholder="Re-enter Email" id="EmailReenter" name = "confirmEmail" required>
-                        <i class='bx bxs-user-badge'></i>
-                    </div>
-                </div>
-                <div class="input-box">
-                    <div class="input-wrapper">
-                        <input type="text" style="-webkit-text-security: circle" placeholder="Re-enter Password" id="PasswordReenter" name = "confirmPassword" required>
-                        <i class='bx bxs-lock' ></i>
-                    </div>
+            <div class="input-box">
+                <div class="input-wrapper">
+                    <input type="text" placeholder="Last Name" id="LastName" name="lastName" required>
+                    <i class='bx bxs-user-badge'></i>
                 </div>
             </div>
         </div>
-    </form>
+        <div class="column">
+            <div class="input-box">
+                <div class="input-wrapper">
+                    <input type="email" placeholder="Domain Registration Email" id="Email" name="email" required>
+                    <i class='bx bxs-envelope'></i>
+                </div>
+            </div>
+            <div class="input-box">
+                <div class="input-wrapper">
+                    <input type="text" id="URL" name="url" value="{{ validated_url }}" readonly>
+                    <i class='bx bx-link'></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Register</button>
+</form>
 </div>
+
 </body>
 </html>

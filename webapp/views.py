@@ -33,6 +33,9 @@ def link_validation():
 
         validURL, invalidURL, alreadyRegistered = url_validation(email, url)
 
+        if validURL:
+            session['validated_url'] = url
+
         return jsonify({
             'validURL': validURL,
             'alreadyRegistered': alreadyRegistered,
@@ -41,9 +44,35 @@ def link_validation():
     return render_template("link_validation.html")
 
 
-@views.route('/register-link')
+@views.route('/register-link', methods=['GET', 'POST'])
 def link_registration():
-    return render_template("link_registration.html")
+    if request.method == 'POST':
+        first_name = request.form.get('firstName')
+        last_name = request.form.get('lastName')
+        email = request.form.get('email')
+        url = session.get('validated_URL')
+
+        if not url:
+            flash("No validated URL found. Please validate URL first", "error")
+            return redirect(url_for("views.link_validation"))
+
+        db = current_app.db
+
+        user = db.users.find_one({"email": email})
+        if not user:
+            flash("user account not found. use correct email")
+            return redirect(url_for('auth.sign_up'))
+
+        db.users.update_one(
+            {"email": email},
+            {"$set": {"registered_url": url}}
+        )
+
+        flash("Domain", "success")
+        return redirect(url_for('views.dashboard'))
+
+    validated_url = session.get('validated_url','')
+    return render_template("link_registration.html", validated_url=validated_url)
 
 @views.route('/customer-rating', methods=['GET'])
 def customer_rating():
