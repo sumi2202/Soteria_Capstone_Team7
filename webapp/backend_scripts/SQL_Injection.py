@@ -1,8 +1,14 @@
 import re
 import subprocess
+import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from flask import current_app
-from ..models import SQLResult
+from webapp.models import SQLResult
 from datetime import datetime, UTC
+from app import app #FOR TESTING, DELETE AFTER
+
+
 
 #function for sql injection tests
 def sql_injection(url):
@@ -121,7 +127,12 @@ def sql_injection(url):
     return None
 
 
+#FOR TESTING ONLY, DELETE AFTER
+if __name__ == "__main__":
 
+    with app.app_context():
+        url_input = input("Enter the URL to test (SQLi TESTING): ")
+        sql_injection(url_input)
 
 
     
