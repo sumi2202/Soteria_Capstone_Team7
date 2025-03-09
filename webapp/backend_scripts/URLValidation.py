@@ -39,7 +39,7 @@ def url_validation(email, url):
             print("⚠️ [DEBUG] URL is already registered to another user!")
             alreadyRegistered = 1
         else:
-            print("❌ [DEBUG] URL exists but is not reachable!")
+            print("✅ [DEBUG] URL exists and is reachable!")
             validURL = 0
 
     except requests.RequestException as e:

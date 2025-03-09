@@ -37,10 +37,9 @@ def link_validation():
         print(
             f"✅ [DEBUG] Validation Results → valid: {validURL}, invalid: {invalidURL}, alreadyRegistered: {alreadyRegistered}")
 
-        if validURL:
+        if validURL == 0 and invalidURL == 0 and alreadyRegistered == 0:
             session['validated_url'] = url  # Store URL in session
             session.modified = True  # Mark session as modified
-            session.permanent = True  # Ensure long-term storage
             print(f"✅ [DEBUG] Stored in session: {session.get('validated_url')}")
 
         print("🔍 [DEBUG] Session content after validation:", dict(session))  # Print session contents
