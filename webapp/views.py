@@ -34,18 +34,23 @@ def link_validation():
 
         validURL, invalidURL, alreadyRegistered = url_validation(email, url)
 
-        if validURL:
-            session['validated_url'] = url
-            session.modified = True
-            print("✅ [DEBUG] Stored in session:", session.get('validated_url'))
+        print(
+            f"✅ [DEBUG] Validation Results → valid: {validURL}, invalid: {invalidURL}, alreadyRegistered: {alreadyRegistered}")
 
-        print("🔍 [DEBUG] Session content after validation:", dict(session))
+        if validURL:
+            session['validated_url'] = url  # Store URL in session
+            session.modified = True  # Mark session as modified
+            session.permanent = True  # Ensure long-term storage
+            print(f"✅ [DEBUG] Stored in session: {session.get('validated_url')}")
+
+        print("🔍 [DEBUG] Session content after validation:", dict(session))  # Print session contents
 
         return jsonify({
             'validURL': validURL,
             'alreadyRegistered': alreadyRegistered,
             'invalidURL': invalidURL
         })
+
     return render_template("link_validation.html")
 
 
@@ -53,7 +58,7 @@ def link_validation():
 def link_registration():
     print("🔍 [DEBUG] Entire session before retrieving URL:", dict(session))
     validated_url = session.get('validated_url', '')  # Retrieve from Flask session
-    print("📌 [DEBUG] Sending to template:", validated_url)  # Debugging
+    print(f"🚨 [DEBUG] validated_url before rendering template: {validated_url}")
 
     if request.method == 'POST':
         first_name = request.form.get('firstName')
