@@ -1,9 +1,13 @@
 import re
 import json
 import subprocess
+import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from flask import current_app
-from ..models import XSSResult
+from webapp.models import XSSResult
 from datetime import datetime, UTC
+from app import app #FOR TESTING, DELETE AFTER
 
 #function for xss tests
 def xss_testing(url):
@@ -92,3 +96,11 @@ def xss_testing(url):
     xss_result_analysis.store_xssresult(result_analysis)
 
     return None
+
+
+#FOR TESTING ONLY, DELETE AFTER
+if __name__ == "__main__":
+
+    with app.app_context():
+        url_input = input("Enter the URL to test (XSS TESTING): ")
+        xss_testing(url_input)
