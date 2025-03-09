@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, send_from_directory, jsonify, session, current_app
+from flask import Blueprint, render_template, request, redirect, url_for, flash, send_from_directory, jsonify, session, \
+    current_app
 from .backend_scripts.URLValidation import url_validation
 from .models import Rating
 import os
@@ -33,17 +34,63 @@ def link_validation():
 
         validURL, invalidURL, alreadyRegistered = url_validation(email, url)
 
+        print(
+            f"✅ [DEBUG] Validation Results → valid: {validURL}, invalid: {invalidURL}, alreadyRegistered: {alreadyRegistered}")
+
+        if validURL:
+            session['validated_url'] = url  # Store URL in session
+            session.modified = True  # Mark session as modified
+            session.permanent = True  # Ensure long-term storage
+            print(f"✅ [DEBUG] Stored in session: {session.get('validated_url')}")
+
+        print("🔍 [DEBUG] Session content after validation:", dict(session))  # Print session contents
+
         return jsonify({
             'validURL': validURL,
             'alreadyRegistered': alreadyRegistered,
             'invalidURL': invalidURL
         })
+
     return render_template("link_validation.html")
 
 
-@views.route('/register-link')
+@views.route('/register-link', methods=['GET', 'POST'])
 def link_registration():
-    return render_template("link_registration.html")
+    print("🔍 [DEBUG] Entire session before retrieving URL:", dict(session))
+    validated_url = session.get('validated_url', '')  # Retrieve from Flask session
+    print(f"🚨 [DEBUG] validated_url before rendering template: {validated_url}")
+
+    if request.method == 'POST':
+        first_name = request.form.get('firstName')
+        last_name = request.form.get('lastName')
+        email = request.form.get('email')
+        url = session.get('validated_url')
+        print("🔍 Retrieved from session:", url)
+
+        if not url:
+            flash("No validated URL found. Please validate URL first", "error")
+            return redirect(url_for("views.link_validation"))
+
+        db = current_app.db
+
+        user = db.users.find_one({"email": email})
+        if not user:
+            flash("user account not found. use correct email")
+            return redirect(url_for('auth.sign_up'))
+
+        db.users.update_one(
+            {"email": email},
+            {"$set": {"registered_url": url}}
+        )
+
+        flash("Domain", "success")
+        return redirect(url_for('views.dashboard'))
+
+
+    if not validated_url:
+        flash("Session lost. Please validate the URL again.", "error")
+    return render_template("link_registration.html", validated_url=validated_url)
+
 
 @views.route('/customer-rating', methods=['GET'])
 def customer_rating():
@@ -55,17 +102,17 @@ def submit_rating():
     data = request.get_json()
     rating_data = data.get("rating")
 
-    #User has already submitted a rating (check using session key)
+    # User has already submitted a rating (check using session key)
     if session.get('rated', False):
         return jsonify({
             'output_msg': "A rating has already been submitted with this account."
         }), 400
 
-    #Storing rating in the db
+    # Storing rating in the db
     rating = Rating(current_app.db)
     rating_value = rating.store_rating("placeholder", rating_data)
 
-    #changing session flag to indicate rating has been done
+    # changing session flag to indicate rating has been done
     session['rated'] = True
 
     return jsonify({
