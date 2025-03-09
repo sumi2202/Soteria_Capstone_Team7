@@ -37,7 +37,9 @@ def link_validation():
         if validURL:
             session['validated_url'] = url
             session.modified = True
-            print("✅ Stored in session:", session.get('validated_url'))
+            print("✅ [DEBUG] Stored in session:", session.get('validated_url'))
+
+        print("🔍 [DEBUG] Session content after validation:", dict(session))
 
         return jsonify({
             'validURL': validURL,
@@ -49,6 +51,10 @@ def link_validation():
 
 @views.route('/register-link', methods=['GET', 'POST'])
 def link_registration():
+    print("🔍 [DEBUG] Entire session before retrieving URL:", dict(session))
+    validated_url = session.get('validated_url', '')  # Retrieve from Flask session
+    print("📌 [DEBUG] Sending to template:", validated_url)  # Debugging
+
     if request.method == 'POST':
         first_name = request.form.get('firstName')
         last_name = request.form.get('lastName')
@@ -75,8 +81,9 @@ def link_registration():
         flash("Domain", "success")
         return redirect(url_for('views.dashboard'))
 
-    validated_url = session.get('validated_url', '')
-    print("📌 Sending to template:", validated_url)
+
+    if not validated_url:
+        flash("Session lost. Please validate the URL again.", "error")
     return render_template("link_registration.html", validated_url=validated_url)
 
 

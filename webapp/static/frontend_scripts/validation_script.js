@@ -37,7 +37,6 @@ async function validateURL(){
         } else {
             availMessage = "✅ URL IS AVAILABLE FOR REGISTRATION";
             allowRegister.disabled = false;
-            sessionStorage.setItem("URL_validated", url);
         }
     }
 
@@ -46,5 +45,6 @@ async function validateURL(){
 
 }
 function registerURL(){
+    console.log("📌 Redirecting to /register-link...");
     window.location.href = "/register-link";
 }
