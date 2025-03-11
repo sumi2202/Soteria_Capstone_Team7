@@ -39,4 +39,21 @@ body {
     align-items: center;
     justify-content:center;
 }
+.search-bar{
+    width:100%
+    max-width: 700px
+    display: flex;
+    align-items: center;
+    border-radius: 60px;
+    padding: 10px 20px;
+}
+.search-bar input{
+    background: #fff;
+    flex: 1;
+    border: 0;
+    outline: none;
+    padding 24px 20px;
+    font-size: 20px;
+    color: #071E22
+}
 
