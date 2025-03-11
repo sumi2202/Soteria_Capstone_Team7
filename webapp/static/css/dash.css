@@ -17,7 +17,7 @@ body {
     background-color: #000;
     border-bottom: 2px solid #fff;
     width: 100%;
-
+}
 .navbar-nav {
     flex-direction: row;
     gap: 15px;
@@ -30,5 +30,13 @@ body {
 }
 .navbar .navbar-brand {
     color: #fff !important;
+}
+.container2{
+    width: 100%;
+    min-height: 100vh;
+    padding: 5%;
+    display:flex;
+    align-items: center;
+    justify-content:center;
 }
 
