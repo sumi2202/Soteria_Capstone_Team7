@@ -30,29 +30,64 @@ def xss_testing(url):
     # Function to crawl in order to find all additional pages within website
     def crawler(url):
         with sync_playwright() as p:
-
-            firefox = p.chromium.launch(headless=True)  # open browser
+            firefox = p.chromium.launch(headless=False)  # Set headless=False to debug visually
             websitePage = firefox.new_page()
 
-            websitePage.goto(url)  # navigate to the website
-            websitePage.wait_for_timeout(2500)
+            websitePage.goto(url)
+            websitePage.wait_for_timeout(3000)  # Allow JavaScript to load
 
             url_listing = set()
-            urls = [url]  # urls being accessed (pages)
+            urls = [url]  # Start with the main page
 
+            # **Get all buttons before clicking**
+            try:
+                buttons = websitePage.query_selector_all("button")  # Find all buttons
+                button_count = len(buttons)
+                print(f"[-->] Found {button_count} buttons on the page.")
+
+                for i in range(button_count):
+                    try:
+                        print(f"[-->] Clicking button {i + 1}...")
+
+                        # Reload the homepage to get fresh buttons
+                        websitePage.goto(url)
+                        websitePage.wait_for_timeout(3000)
+
+                        # Find the button again after reloading
+                        buttons = websitePage.query_selector_all("button")
+                        if i < len(buttons):  # Ensure the button still exists
+                            buttons[i].click()
+                            websitePage.wait_for_timeout(3000)  # Wait for potential navigation
+
+                            new_url = websitePage.url  # Get the new URL
+                            if check_domain(new_url) and new_url not in url_listing:
+                                urls.append(new_url)  # Add the new page
+                                print(f"[-->] Found new page: {new_url}")
+
+                        else:
+                            print(f"[X] Button {i + 1} is no longer available.")
+
+                    except Exception as e:
+                        print(f"[X] Error clicking button {i + 1}: {e}")
+
+            except Exception as e:
+                print(f"[X] Error finding buttons: {e}")
+
+            # **Crawl links on the main and discovered pages**
             while urls:
                 current_url = urls.pop(0)
 
-                if current_url in url_listing:  # skip over already accessed urls
+                if current_url in url_listing:
                     continue
-                url_listing.add(current_url)  # append to list
+                url_listing.add(current_url)
 
                 websitePage.goto(current_url)
-                websitePage.wait_for_timeout(2500)
-                page_urls = websitePage.eval_on_selector_all('a', 'elements => elements.map(e => e.href)')
+                websitePage.wait_for_timeout(3000)
 
+                # Find all links on the page
+                page_urls = websitePage.eval_on_selector_all('a', 'elements => elements.map(e => e.href)')
                 for page in page_urls:
-                    if check_domain(page) and page not in url_listing:  # verifying pages belong to respective domain
+                    if check_domain(page) and page not in url_listing:
                         urls.append(page)
 
             firefox.close()
