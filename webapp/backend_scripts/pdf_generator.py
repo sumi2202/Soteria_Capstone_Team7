@@ -3,7 +3,6 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
-from emojipy import Emoji
 import re
 import emoji
 from app import app #FOR TESTING, DELETE AFTER
