@@ -17,7 +17,7 @@ def pdf_converter(url):
 
     #Getting most recent result data
     sql_result_data = db.sql_result.find_one({"url": url}, sort=[("timestamp", -1)])
-    xss_result_data = db.sql_result.find_one({"url": url}, sort=[("timestamp", -1)])
+    xss_result_data = db.xss_result.find_one({"url": url}, sort=[("timestamp", -1)])
 
     #proceed only if there are results for the url
     if sql_result_data and xss_result_data:

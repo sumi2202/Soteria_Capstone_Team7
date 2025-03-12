@@ -5,12 +5,21 @@ import os
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from flask import current_app
+from playwright.sync_api import sync_playwright
 from webapp.models import XSSResult
 from datetime import datetime, UTC
+from urllib.parse import urlparse
+import emoji
 from app import app #FOR TESTING, DELETE AFTER
 
 #function for xss tests
 def xss_testing(url):
+    print(f"[-->] Initiating Cross Site Scripting Testing on: {url}")
+
+    # This ensures that only the pages only belonging to the urls domain is tested
+    def check_domain(url2):
+        originalDomain = urlparse(url).netloc
+        return urlparse(url2).netloc == originalDomain
 
     num_passed = 0  # number of tests passed (no vulnerability)
     num_failed = 0  # number of tests failed (found vulnerability)
@@ -18,41 +27,84 @@ def xss_testing(url):
     type_passed = []  # type of tests passed (no vulnerability)
     type_failed = []  # type of tests failed (found vulnerability)
 
+    # Function to crawl in order to find all additional pages within website
+    def crawler(url):
+        with sync_playwright() as p:
+
+            firefox = p.chromium.launch(headless=True)  # open browser
+            websitePage = firefox.new_page()
+
+            websitePage.goto(url)  # navigate to the website
+            websitePage.wait_for_timeout(2500)
+
+            url_listing = set()
+            urls = [url]  # urls being accessed (pages)
+
+            while urls:
+                current_url = urls.pop(0)
+
+                if current_url in url_listing:  # skip over already accessed urls
+                    continue
+                url_listing.add(current_url)  # append to list
+
+                websitePage.goto(current_url)
+                websitePage.wait_for_timeout(2500)
+                page_urls = websitePage.eval_on_selector_all('a', 'elements => elements.map(e => e.href)')
+
+                for page in page_urls:
+                    if check_domain(page) and page not in url_listing:  # verifying pages belong to respective domain
+                        urls.append(page)
+
+            firefox.close()
+        return url_listing
+
     # Looking for all pages in the website
-    all_cmd = ["xsser", "-u", url, "--Crawling", "--auto"]
+    print("[-->] Crawling for additional pages...")
     try:
-        all_cmd_run = subprocess.run(all_cmd, capture_output=True, text=True, timeout=800)
-        url_list = re.findall(r"https?://[^\s'\"]+", all_cmd_run.stdout)
+        url_list = crawler(url)
         url_list = list(set(url_list))  # getting a unique listing
+        print(f"[-->] Crawling Completed. Found {len(url_list)} potential pages to test...")
     except Exception as e:
+        print(f"[X] Error during crawling: {str(e)}")
         type_failed.append(f"Error running tests {str(e)}")
         return {
             "type_failed": type_failed
         }
 
-    # No extra pages found
-    if not url_list:
-        url_list = [url]
+    print(f"[-->] Verifying additional pages...")
 
+    # Taking out any additional pages that don't belong to the original domain
+    filteredURLs = [url3 for url3 in url_list if check_domain(url3)]
+
+    # No extra pages found
+    if not filteredURLs:
+        filteredURLs = [url]
+
+    print(f"[-->] Verification complete, testing a total of {len(filteredURLs)} page(s)")
 
     # Running Testing for each url in the website
-    for page in url_list:
-
+    for page in filteredURLs:
+        print(f"[-->] Started Testing on page: {page}")
         # using xsser tool to run XSS detection testing
         cmd = ["xsser", "-u", page, "--auto"]
 
 
         try:
             #Running xsser
+            print(f"[-->] Executing xsser on {page} ... Please wait.")
             run = subprocess.run(cmd, capture_output=True, text=True, timeout= 800)
+            #print("[-->] Raw Output from xsser:")
+            #print(run.stdout)
             test_result = run.stdout.lower() #getting testing results and converting to lowercase
 
             # **Evaluating XSS tests**
+            print("[-->] Analyzing Test Results...")
 
             # Stored XSS
             if "stored xss" in test_result or "vulnerable: stored" in test_result:
                 num_failed += 1
-                type_failed.append(f"Vulnerability Found: Stored XSS, Location: {page}")
+                type_failed.append(f"Stored XSS, Location: {page}")
+                print(f"[!!] Stored XSS found on: {page}")
             else:
                 num_passed += 1
                 type_passed.append(f"Stored XSS, Location: {page}")
@@ -60,7 +112,8 @@ def xss_testing(url):
             # Reflected XSS
             if "reflected xss" in test_result or "alert(" in test_result or "vulnerable: reflected" in test_result:
                 num_failed += 1
-                type_failed.append(f"Vulnerability Found: Reflected XSS, Location: {page}")
+                type_failed.append(f"Reflected XSS, Location: {page}")
+                print(f"[!!] Reflected XSS found on: {page}")
             else:
                 num_passed += 1
                 type_passed.append(f"Reflected XSS, Location: {page}")
@@ -68,12 +121,14 @@ def xss_testing(url):
             # DOM Based XSS
             if "dom xss" in test_result or "document.write" in test_result or "vulnerable: dom" in test_result:
                 num_failed += 1
-                type_failed.append(f"Vulnerability Found: DOM Based XSS, Location: {page}")
+                type_failed.append(f"DOM Based XSS, Location: {page}")
+                print(f"[!!] DOM Based XSS found on: {page}")
             else:
                 num_passed += 1
                 type_passed.append(f"DOM Based XSS, Location: {page}")
 
         except Exception as e:
+            print(f"[X] Error running tests on {page}: {str(e)}")
             type_failed.append(f"Error running tests: {str(e)}, Location: {page}")
             continue
 
@@ -94,6 +149,8 @@ def xss_testing(url):
     # ** Insert result_analysis into database, table xss_results **
     xss_result_analysis = XSSResult(current_app.db)
     xss_result_analysis.store_xssresult(result_analysis)
+
+    print("\U00002705 Cross Site Scripting Testing has been Completed!")
 
     return None
 
