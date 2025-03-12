@@ -8,7 +8,6 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from flask import current_app
 from webapp.models import SQLResult
 from datetime import datetime, UTC
-import emoji
 from app import app #FOR TESTING, DELETE AFTER
 
 
@@ -93,7 +92,7 @@ def sql_injection(url):
     for page in filteredURLs:
         print(f"[-->] Started Testing on page: {page}")
         #sqlmap command security tool, using the medium risk and level of tests
-        cmd = ["sqlmap", "-u", page, "--batch", "--dbs", "--tamper=space2comment,charencode", "--random-agent", "--level=3", "--risk=2"]
+        cmd = ["sqlmap", "-u", page, "--batch", "--dbs", "--tamper=space2comment,charencode", "--random-agent", "--level=3", "--risk=2", "--threads=5"]
 
         try:
             #Running sqlmap
