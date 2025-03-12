@@ -1,6 +1,9 @@
 from flask import current_app
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfbase import pdfmetrics
+import emoji
 from app import app #FOR TESTING, DELETE AFTER
 
 
@@ -8,6 +11,9 @@ from app import app #FOR TESTING, DELETE AFTER
 def pdf_converter(url):
 
     db = current_app.db  # connect to database
+
+    #Register font for emojis
+    pdfmetrics.registerFont(TTFont('NotoColor', '../static/assets/fonts/NotoColorEmoji-Regular.ttf'))
 
     #Getting most recent result data
     sql_result_data = db.sql_result.find_one({"url": url}, sort=[("timestamp", -1)])
@@ -74,6 +80,35 @@ def pdf_converter(url):
         for j in xss_result_data.get("type_failed", []):
             file.drawString(70, height, f"--> {j}")
             height -= 15
+
+
+        # ** Final Risk Analysis **
+        sqlPassed = sql_result_data.get('num_passed')
+        sqlFailed = sql_result_data.get('num_failed')
+        xssPassed = xss_result_data.get('num_passed')
+        xssFailed = xss_result_data.get('num_failed')
+        totalPassed = sqlPassed + xssPassed
+        totalTests = totalPassed + sqlFailed + xssFailed
+
+        ratio = (totalPassed / totalTests) * 100
+
+        # defining vulnerablility level
+        if ratio <= 40:
+            finalRating = "High Security Risk [\U00002757 0% - 40% Tests Passed]"
+        elif ratio <= 69:
+            finalRating = "Medium Security Risk [\U000026A0 41% - 69% Tests Passed]"
+        elif ratio <= 99:
+            finalRating = "Low Security Risk [\U00002705 70% - 99% Tests Passed]"
+        else:
+            finalRating = "No Security Risk [\U00002705 100% Tests Passed]"
+
+
+        #Displaying Final Risk Analysis
+        file.setFont("Times-Roman", 16)
+        file.drawString(50, height - 30, "Final Risk Analysis:")
+
+        file.setFont("Times-Roman", 14)
+        file.drawString(50, height - 60, f"{finalRating}")
 
 
         file.save()
