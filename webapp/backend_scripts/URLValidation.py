@@ -7,7 +7,6 @@ import validators  # package used to check for URL formatting
 import requests  # package used to check if URL exists
 from flask import current_app
 
-
 def url_validation(email, url):
     print(f"🛠 [DEBUG] Inside url_validation → Email: {email}, URL: {url}")
     # These have to stay 0 for it to be validated
@@ -27,8 +26,7 @@ def url_validation(email, url):
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36'
         }
-        exists = requests.get(url, timeout=12, headers=headers,
-                              allow_redirects=True)  # try to reach the URL for 12 seconds
+        exists = requests.get(url, timeout=12, headers=headers, allow_redirects=True)  # try to reach the URL for 12 seconds
         print(f"🔍 [DEBUG] URL Response Status Code: {exists.status_code}")
 
         if exists.status_code == 200:
