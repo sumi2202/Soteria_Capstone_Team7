@@ -3,6 +3,8 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
+from emojipy import Emoji
+import re
 import emoji
 from app import app #FOR TESTING, DELETE AFTER
 
@@ -13,7 +15,7 @@ def pdf_converter(url):
     db = current_app.db  # connect to database
 
     #Register font for emojis
-    pdfmetrics.registerFont(TTFont('NotoColor', '../static/assets/fonts/NotoColorEmoji-Regular.ttf'))
+    pdfmetrics.registerFont(TTFont('Symbola', '../static/assets/fonts/Symbola_hint.ttf'))
 
     #Getting most recent result data
     sql_result_data = db.sql_result.find_one({"url": url}, sort=[("timestamp", -1)])
@@ -107,7 +109,7 @@ def pdf_converter(url):
         file.setFont("Times-Roman", 16)
         file.drawString(50, height - 30, "Final Risk Analysis:")
 
-        file.setFont("Times-Roman", 14)
+        file.setFont("Symbola", 14)
         file.drawString(50, height - 60, f"{finalRating}")
 
 
