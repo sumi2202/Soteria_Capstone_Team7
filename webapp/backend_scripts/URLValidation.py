@@ -34,7 +34,7 @@ def url_validation(email, url):
         if exists.status_code == 200:
 
             # Check if the URL is already in the database with another user
-           exist_entry = db.URL_Registration.find_one({"url": url, "verified": True, "email":{"$ne": email}}) is not None  # url is found to be registered to another user, add "verified" field = true check
+           exist_entry = db.users.find_one({"registered_url": url, "verified": True, "email":{"$ne": email}}) is not None  # url is found to be registered to another user, add "verified" field = true check
         if exist_entry:
             print("⚠️ [DEBUG] URL is already registered to another user!")
             alreadyRegistered = 1
@@ -49,4 +49,3 @@ def url_validation(email, url):
     print(
         f"✅ [DEBUG] Final Results → validURL: {validURL}, invalidURL: {invalidURL}, alreadyRegistered: {alreadyRegistered}")
     return validURL, invalidURL, alreadyRegistered
-
