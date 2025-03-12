@@ -99,13 +99,16 @@
     <div class="modal-content">
         <span class="close-button">&times;</span>
 
-        <h2>PROOF OF ID</h2>
-        <button class="upload-btn">UPLOAD</button>
-        <div class="file-preview" id="id-preview"></div>
+       <h2>PROOF OF ID</h2>
+<input type="file" id="proofIdInput" accept="application/pdf" style="display:none;">
+<button class="upload-btn" onclick="document.getElementById('proofIdInput').click()">UPLOAD</button>
+<div class="file-preview" id="id-preview"></div>
 
-        <h2>OWNERSHIP DOCUMENTS</h2>
-        <button class="upload-btn">UPLOAD</button>
-        <div class="file-preview" id="ownership-preview"></div>
+<h2>OWNERSHIP DOCUMENTS</h2>
+<input type="file" id="ownershipDocInput" accept="application/pdf" style="display:none;">
+<button class="upload-btn" onclick="document.getElementById('ownershipDocInput').click()">UPLOAD</button>
+<div class="file-preview" id="ownership-preview"></div>
+
 
         <button class="submit-btn">SUBMIT</button>
     </div>
