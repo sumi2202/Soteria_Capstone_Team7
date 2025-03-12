@@ -38,7 +38,7 @@
     </div>
 </nav>
         <div class="wrapper">
-    <form action="{{ url_for('views.link_registration') }}" method="POST">
+    <form action="{{ url_for('views.link_registration') }}" method="POST" enctype="multipart/form-data">
     <h1>REGISTER YOUR DOMAIN</h1>
     <div class="form-container">
         <div class="column">
@@ -71,28 +71,28 @@
         </div>
     </div>
 </form>
-<button id="openOverlay" class="btn btn-primary">UPLOAD</button>
- <button type="submit" class="btn btn-primary">REGISTER</button>
-        <div id="uploadOverlay" class="overlay">
-            <div class="overlay-content">
-                <h2>UPLOAD PROOF DOCUMENTS</h2>
-                <div class="upload-section">
-                    <h3>PROOF OF ID</h3>
-                    <ul id="proofIDList"></ul>
-                    <button class="upload-btn" data-type="proof-of-id">UPLOAD</button>
-                </div>
-            </div>
-            <div class="overlay-content">
-                <h2>UPLOAD OWNERSHIP DOCUMENTS</h2>
-                <div class="upload-section">
-                    <h3>PROOF OF OWNERSHIP</h3>
-                    <ul id="ownerProofList"></ul>
-                    <button class="upload-btn" data-type="proof-of-ownership">UPLOAD</button>
-                </div>
-            </div>
-            <input type="file" id="fileInput" accept="application/pdf" multiple style="display: none;">
-            <button id="closeOverlay">Close</button>
-        </div>
+<!--<button id="openOverlay" class="btn btn-primary">UPLOAD</button>-->
+<!-- <button type="submit" class="btn btn-primary">REGISTER</button>-->
+<!--        <div id="uploadOverlay" class="overlay">-->
+<!--            <div class="overlay-content">-->
+<!--                <h2>UPLOAD PROOF DOCUMENTS</h2>-->
+<!--                <div class="upload-section">-->
+<!--                    <h3>PROOF OF ID</h3>-->
+<!--                    <ul id="proofIDList"></ul>-->
+<!--                    <button class="upload-btn" data-type="proof-of-id">UPLOAD</button>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="overlay-content">-->
+<!--                <h2>UPLOAD OWNERSHIP DOCUMENTS</h2>-->
+<!--                <div class="upload-section">-->
+<!--                    <h3>PROOF OF OWNERSHIP</h3>-->
+<!--                    <ul id="ownerProofList"></ul>-->
+<!--                    <button class="upload-btn" data-type="proof-of-ownership">UPLOAD</button>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <input type="file" id="fileInput" accept="application/pdf" multiple style="display: none;">-->
+<!--            <button id="closeOverlay">Close</button>-->
+<!--        </div>-->
 </div>
 <!-- Upload Modal -->
 <div id="uploadModal" class="modal">
@@ -100,14 +100,16 @@
         <span class="close-button">&times;</span>
 
        <h2>PROOF OF ID</h2>
-<input type="file" id="proofIdInput" accept="application/pdf" style="display:none;">
-<button class="upload-btn" onclick="document.getElementById('proofIdInput').click()">UPLOAD</button>
-<div class="file-preview" id="id-preview"></div>
+        <input type="file" id="proofIdInput" accept="application/pdf" multiple style="display:none;">
+        <div class="file-preview" id="id-preview"></div>
+        <button class="upload-btn" onclick="document.getElementById('proofIdInput').click()">UPLOAD</button>
+
 
 <h2>OWNERSHIP DOCUMENTS</h2>
-<input type="file" id="ownershipDocInput" accept="application/pdf" style="display:none;">
-<button class="upload-btn" onclick="document.getElementById('ownershipDocInput').click()">UPLOAD</button>
-<div class="file-preview" id="ownership-preview"></div>
+    <input type="file" id="ownershipDocInput" accept="application/pdf" multiple style="display:none;">
+     <div class="file-preview" id="ownership-preview"></div>
+    <button class="upload-btn" onclick="document.getElementById('ownershipDocInput').click()">UPLOAD</button>
+
 
 
         <button class="submit-btn">SUBMIT</button>
@@ -115,7 +117,8 @@
 </div>
 
 <!-- Add this to trigger the modal -->
-<button id="openUploadModal" class="upload-btn">UPLOAD</button>
+        <button id="openUploadModal" class="upload-btn">UPLOAD</button>
+        <button id="registerBtn" class="btn btn-success">REGISTER</button>
 <script src="{{ url_for('static', filename='frontend_scripts/registration.js') }}"></script>
 </body>
 </html>

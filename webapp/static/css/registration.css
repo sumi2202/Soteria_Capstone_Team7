@@ -114,7 +114,15 @@ body {
 .upload-btn:hover {
     background-color: #F58220;
 }
-
+.btn btn-success {
+    background-color: #00ADB5;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px 0;
+    cursor: pointer;
+    border-radius: 5px;
+}
 .submit-btn {
     background-color: #F58220;
     color: white;
