@@ -31,29 +31,47 @@ body {
 .navbar .navbar-brand {
     color: #fff !important;
 }
-.container2{
+.container2 {
     width: 100%;
     min-height: 100vh;
     padding: 5%;
-    display:flex;
-    align-items: center;
-    justify-content:center;
-}
-.search-bar{
-    width:100%
-    max-width: 700px
     display: flex;
     align-items: center;
-    border-radius: 60px;
-    padding: 10px 20px;
-}
-.search-bar input{
-    background: #fff;
-    flex: 1;
-    border: 0;
-    outline: none;
-    padding 24px 20px;
-    font-size: 20px;
-    color: #071E22
+    justify-content: center;
 }
 
+.search-bar {
+    width: 100%;
+    max-width: 700px;
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    align-items: center;
+    gap: 10px; /* Adds spacing between input and button */
+}
+
+.search-bar input {
+    width: 100%;
+    background: #fff;
+    border: 0;
+    outline: none;
+    padding: 24px 20px;
+    font-size: 20px;
+    color: #071E22;
+    border-radius: 10px;
+}
+
+.search-bar button {
+    width: 170px;
+    background: #071E22;
+    color: white;
+    border: none;
+    padding: 15px;
+    font-size: 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.search-bar button:hover {
+    background: #1d7874;
+}
