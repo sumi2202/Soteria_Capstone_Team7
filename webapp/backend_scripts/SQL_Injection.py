@@ -190,7 +190,7 @@ def sql_injection(url, level, risk):
                 database_list = list(set(database_list))  # getting a unique listing
                 print(f"[-->] List of Databases found: {', '.join(database_list)}")
             else: #if no databases are found, skip
-                database_list = "No Databases Found"
+                database_list = ["No Databases Found"]
                 pass
 
 

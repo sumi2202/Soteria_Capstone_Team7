@@ -27,6 +27,7 @@ def pdf_converter(url):
             if remaining_space < needed_space:
                 file.showPage()  # Start a new page
                 add_header()
+                file.setFont("Times-Roman", 14)
                 return h - 130  # Reset height after header
             return remaining_space
 
@@ -75,6 +76,17 @@ def pdf_converter(url):
                 height -= 15
 
             height -= 20  # Space before next section
+
+            if category == "sql":
+                file.drawString(50, height, f"Detected Databases:")
+                height -= 20
+
+                for j in data.get("database_list", []):
+                    height = check_space_needed(height, 15)
+                    file.drawString(70, height, f"--> {j}")
+                    height -= 15
+
+                height -= 20  # Space before next section
 
         # Writing SQL and XSS results
         write_test_results("SQL Injection Results:", sql_result_data, "sql")
