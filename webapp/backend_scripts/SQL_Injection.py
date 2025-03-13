@@ -12,7 +12,9 @@ from app import app #FOR TESTING, DELETE AFTER
 
 
 #function for sql injection tests
-def sql_injection(url):
+#level values = 1,2,3,4,5
+#risk values = 1,2,3
+def sql_injection(url, level, risk):
     print(f"[-->] Initiating SQL Injection Testing on: {url}")
 
     num_passed = 0 #number of tests passed (no vulnerability)
@@ -32,38 +34,33 @@ def sql_injection(url):
     #Function to crawl in order to find all additional pages within website
     def crawler(url):
         with sync_playwright() as p:
-            firefox = p.chromium.launch(headless=False)  # Set headless=False to debug visually
+            firefox = p.chromium.launch(headless=True) #don't show as a popup
             websitePage = firefox.new_page()
-
             websitePage.goto(url)
-            websitePage.wait_for_timeout(3000)  # Allow JavaScript to load
-
+            websitePage.wait_for_timeout(3000)
             url_listing = set()
-            urls = [url]  # Start with the main page
+            urls = [url]  #homepage of given url
 
-            # **Get all buttons before clicking**
+            # **Get list of buttons before clicking**
             try:
-                buttons = websitePage.query_selector_all("button")  # Find all buttons
+                buttons = websitePage.query_selector_all("button") #looking for all the buttons
                 button_count = len(buttons)
                 print(f"[-->] Found {button_count} buttons on the page.")
 
                 for i in range(button_count):
                     try:
                         print(f"[-->] Clicking button {i + 1}...")
-
-                        # Reload the homepage to get fresh buttons
-                        websitePage.goto(url)
+                        websitePage.goto(url) # go back to homepage
                         websitePage.wait_for_timeout(3000)
 
-                        # Find the button again after reloading
-                        buttons = websitePage.query_selector_all("button")
+                        buttons = websitePage.query_selector_all("button") #finding the next button
                         if i < len(buttons):  # Ensure the button still exists
                             buttons[i].click()
                             websitePage.wait_for_timeout(3000)  # Wait for potential navigation
 
-                            new_url = websitePage.url  # Get the new URL
+                            new_url = websitePage.url
                             if check_domain(new_url) and new_url not in url_listing:
-                                urls.append(new_url)  # Add the new page
+                                urls.append(new_url) #appending the new page to the url list
                                 print(f"[-->] Found new page: {new_url}")
 
                         else:
@@ -75,7 +72,7 @@ def sql_injection(url):
             except Exception as e:
                 print(f"[X] Error finding buttons: {e}")
 
-            # **Crawl links on the main and discovered pages**
+            # **Crawling**
             while urls:
                 current_url = urls.pop(0)
 
@@ -127,7 +124,7 @@ def sql_injection(url):
     for page in filteredURLs:
         print(f"[-->] Started Testing on page: {page}")
         #sqlmap command security tool, using the medium risk and level of tests
-        cmd = ["sqlmap", "-u", page, "--batch", "--dbs", "--tamper=space2comment,charencode", "--random-agent", "--level=3", "--risk=2", "--threads=5"]
+        cmd = ["sqlmap", "-u", page, "--batch", "--dbs", "--tamper=space2comment,charencode", "--random-agent", f"--level={level}", f"--risk={risk}", "--threads=5"]
 
         try:
             #Running sqlmap
@@ -185,13 +182,15 @@ def sql_injection(url):
 
 
             # ** Listing out found Databases **
-            database_extract = re.findall(r"available databases \[.*?\]:\n\[(.*?)\]", test_result, re.DOTALL) #getting output from sqlmap command
+            database_extract = re.findall(r"available databases.*?\]:\n(.*?)\n\n", test_result, re.DOTALL)
+             #getting output from sqlmap command
             if database_extract: #if databases are found
                 current_database_list = [name.strip() for name in database_extract[0].split(",")] #formating the string of multiple databases into a list
                 database_list.extend(current_database_list) #append found databases to final listing
                 database_list = list(set(database_list))  # getting a unique listing
                 print(f"[-->] List of Databases found: {', '.join(database_list)}")
             else: #if no databases are found, skip
+                database_list = "No Databases Found"
                 pass
 
 
@@ -228,7 +227,7 @@ if __name__ == "__main__":
 
     with app.app_context():
         url_input = input("Enter the URL to test (SQLi TESTING): ")
-        sql_injection(url_input)
+        sql_injection(url_input, 3, 2)
 
 
     
