@@ -30,38 +30,33 @@ def xss_testing(url):
     # Function to crawl in order to find all additional pages within website
     def crawler(url):
         with sync_playwright() as p:
-            firefox = p.chromium.launch(headless=False)  # Set headless=False to debug visually
+            firefox = p.chromium.launch(headless=True) #don't show as a popup
             websitePage = firefox.new_page()
-
             websitePage.goto(url)
-            websitePage.wait_for_timeout(3000)  # Allow JavaScript to load
-
+            websitePage.wait_for_timeout(3000)
             url_listing = set()
-            urls = [url]  # Start with the main page
+            urls = [url]  #homepage of given url
 
-            # **Get all buttons before clicking**
+            # **Get list of buttons before clicking**
             try:
-                buttons = websitePage.query_selector_all("button")  # Find all buttons
+                buttons = websitePage.query_selector_all("button") #looking for all the buttons
                 button_count = len(buttons)
                 print(f"[-->] Found {button_count} buttons on the page.")
 
                 for i in range(button_count):
                     try:
                         print(f"[-->] Clicking button {i + 1}...")
-
-                        # Reload the homepage to get fresh buttons
-                        websitePage.goto(url)
+                        websitePage.goto(url) # go back to homepage
                         websitePage.wait_for_timeout(3000)
 
-                        # Find the button again after reloading
-                        buttons = websitePage.query_selector_all("button")
+                        buttons = websitePage.query_selector_all("button") #finding the next button
                         if i < len(buttons):  # Ensure the button still exists
                             buttons[i].click()
                             websitePage.wait_for_timeout(3000)  # Wait for potential navigation
 
-                            new_url = websitePage.url  # Get the new URL
+                            new_url = websitePage.url
                             if check_domain(new_url) and new_url not in url_listing:
-                                urls.append(new_url)  # Add the new page
+                                urls.append(new_url) #appending the new page to the url list
                                 print(f"[-->] Found new page: {new_url}")
 
                         else:
@@ -73,7 +68,7 @@ def xss_testing(url):
             except Exception as e:
                 print(f"[X] Error finding buttons: {e}")
 
-            # **Crawl links on the main and discovered pages**
+            # **Crawling**
             while urls:
                 current_url = urls.pop(0)
 
