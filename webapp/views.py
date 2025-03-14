@@ -112,7 +112,8 @@ def link_registration():
             {"$set": {
                 "registered_url": url,
                 "proof_id_files": file_ids[:len(proof_id_files)],
-                "ownership_files": file_ids[len(proof_id_files):]
+                "ownership_files": file_ids[len(proof_id_files):],
+                "verified": False
             }}
         )
 
