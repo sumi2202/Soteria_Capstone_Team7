@@ -10,6 +10,7 @@ def create_app():
     client = MongoClient(app.config['MONGO_URI'])
     app.db = client.soteria
 
+    app.fs = GridFS(app.db)
     with app.app_context():
         fs = GridFS(app.db)
 

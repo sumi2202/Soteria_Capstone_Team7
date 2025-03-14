@@ -88,15 +88,9 @@ def link_registration():
         ownership_files = request.files.getlist('ownershipFiles')
 
         file_ids = []
-        fs = get_gridfs()
+        fs = current_app.fs  # Use app's GridFS instance
 
-        for file in proof_id_files:
-            if file:
-                filename = secure_filename(file.filename)
-                file_id = fs.put(file, filename=filename, content_type=file.content_type)
-                file_ids.append(file_id)
-
-        for file in ownership_files:
+        for file in proof_id_files + ownership_files:
             if file:
                 filename = secure_filename(file.filename)
                 file_id = fs.put(file, filename=filename, content_type=file.content_type)
@@ -106,24 +100,30 @@ def link_registration():
 
         user = db.users.find_one({"email": email})
         if not user:
-            flash("user account not found. use correct email")
+            flash("User account not found. Use the correct email.", "error")
             return redirect(url_for('auth.sign_up'))
 
-        db.users.update_one(
-            {"email": email},
-            {"$set": {
-                "registered_url": url,
-                "proof_id_files": file_ids[:len(proof_id_files)],
-                "ownership_files": file_ids[len(proof_id_files):],
-                "verified": False
-            }}
-        )
+        # Check if URL is already registered
+        existing_registration = db.registered_urls.find_one({"email": email, "url": url})
+        if existing_registration:
+            flash("This URL is already registered.", "info")
+            return redirect(url_for('views.dashboard'))
 
-        flash("Domain", "success")
+        # Store registration in `registered_urls` collection
+        db.registered_urls.insert_one({
+            "email": email,
+            "url": url,
+            "proof_id_files": file_ids[:len(proof_id_files)],
+            "ownership_files": file_ids[len(proof_id_files):],
+            "verified": False
+        })
+
+        flash("URL successfully registered!", "success")
         return redirect(url_for('views.dashboard'))
 
     if not validated_url:
         flash("Session lost. Please validate the URL again.", "error")
+
     return render_template("link_registration.html", validated_url=validated_url)
 
 
