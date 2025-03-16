@@ -1,8 +1,6 @@
 from flask import current_app
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
-from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.pdfbase import pdfmetrics
 from app import app  # FOR TESTING, DELETE AFTER
 
 # This function takes the testing result data from the db and formats it into a downloadable pdf
