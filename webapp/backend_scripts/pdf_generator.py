@@ -10,63 +10,61 @@ def pdf_converter(url):
 
     db = current_app.db  # connect to database
 
-    # Register font for emojis
-    pdfmetrics.registerFont(TTFont('Symbola', '../static/assets/fonts/Symbola_hint.ttf'))
-
     # Getting most recent result data
     sql_result_data = db.sql_result.find_one({"url": url}, sort=[("timestamp", -1)])
     xss_result_data = db.xss_result.find_one({"url": url}, sort=[("timestamp", -1)])
 
     # Proceed only if there are results for the URL
     if sql_result_data and xss_result_data:
-        w, h = A4  # Width & height of PDF
+        w, h = A4  # pdf width and hieght
         file = canvas.Canvas("Soteria_Results.pdf", pagesize=A4)  # Define canvas with filename & size
 
         def check_space_needed(remaining_space, needed_space):
-            """Check if there's enough space left on the current page. If not, start a new page."""
-            if remaining_space < needed_space:
-                file.showPage()  # Start a new page
-                add_header()
+            if remaining_space < needed_space: #checking if we need a new page (no space left)
+                file.showPage()  #creating a new page
+                file.drawImage("../static/assets/Soteria_logo_white.png", 40, h - 80, width=65, height=65) #adding logo for new page
                 file.setFont("Times-Roman", 14)
-                return h - 130  # Reset height after header
+                return h - 130
             return remaining_space
 
-        def add_header():
-            """Add the report header on each page."""
-            file.drawImage("../static/assets/Soteria_logo_white.png", 40, h - 80, width=65, height=65)
-            file.setFont("Times-Roman", 20)
-            file.drawString(w / 3, h - 90, "Soteria Testing Overview")
 
-        # Add first header
-        add_header()
+        # logo and title of the report
+        file.drawImage("../static/assets/Soteria_logo_white.png", 40, h - 80, width=65, height=65)
+        file.setFont("Times-Bold", 20)
+        file.drawString(w / 3, h - 90, "Soteria Testing Overview")
 
-        # Top details section (URL & timestamp)
+        #displaying URL and testing timestamp
+        file.setFont("Times-Bold", 13)
+        file.drawString(50, h - 130, f"URL: ")
         file.setFont("Times-Roman", 13)
-        file.drawString(50, h - 130, f"URL: {url}")
-        file.drawString(50, h - 150, f"Time of Completion: {xss_result_data.get('timestamp')}")
+        file.drawString(85, h - 130, f"{url}") #associated url for the result report
 
-        height = h - 180  # Initial height
+        file.setFont("Times-Bold", 13)
+        file.drawString(50, h - 150, f"Time of Completion: ")
+        file.setFont("Times-Roman", 13)  #associated timestamp
+        file.drawString(170, h - 150, f"{xss_result_data.get('timestamp')}")
+
+        height = h - 180
 
         # Function to write test results dynamically
         def write_test_results(title, data, category):
-            """Writes the test results section dynamically and handles pagination."""
             nonlocal height
 
-            file.setFont("Times-Roman", 16)
+            file.setFont("Times-Bold", 16)
             height = check_space_needed(height, 30)
             file.drawString(50, height, title)
             height -= 30
 
             file.setFont("Times-Roman", 14)
             file.drawString(50, height, f"Passed Tests: {data.get('num_passed', 0)}")
-            height -= 20
+            height -= 20 #blank space
 
             for i in data.get("type_passed", []):
                 height = check_space_needed(height, 15)
                 file.drawString(70, height, f"--> {i}")
                 height -= 15
 
-            height -= 10  # Space before failed section
+            height -= 10
             file.drawString(50, height, f"Failed Tests: {data.get('num_failed', 0)}")
             height -= 20
 
@@ -75,7 +73,7 @@ def pdf_converter(url):
                 file.drawString(70, height, f"--> {j}")
                 height -= 15
 
-            height -= 20  # Space before next section
+            height -= 20 #blank space
 
             if category == "sql":
                 file.drawString(50, height, f"Detected Databases:")
@@ -86,9 +84,9 @@ def pdf_converter(url):
                     file.drawString(70, height, f"--> {j}")
                     height -= 15
 
-                height -= 20  # Space before next section
+                height -= 20 #blank space
 
-        # Writing SQL and XSS results
+        # SQL and XSS result listings
         write_test_results("SQL Injection Results:", sql_result_data, "sql")
         write_test_results("XSS Results:", xss_result_data, "xss")
 
@@ -103,23 +101,32 @@ def pdf_converter(url):
         ratio = (totalPassed / totalTests) * 100
 
         if ratio <= 40:
-            finalRating = "High Security Risk [⚠️ 0% - 40% Tests Passed]"
+            finalRating = " High Security Risk [0% - 40% Tests Passed]"
+            emojiAnalysis = "../static/assets/sos.png" #emoji to be displayed depending on risk analysis
         elif ratio <= 69:
-            finalRating = "Medium Security Risk [⚠️ 41% - 69% Tests Passed]"
+            finalRating = " Medium Security Risk [41% - 69% Tests Passed]"
+            emojiAnalysis = "../static/assets/med.png"  # emoji to be displayed depending on risk analysis
         elif ratio <= 99:
-            finalRating = "Low Security Risk [✅ 70% - 99% Tests Passed]"
+            finalRating = " Low Security Risk [70% - 99% Tests Passed]"
+            emojiAnalysis = "../static/assets/low.png"  # emoji to be displayed depending on risk analysis
         else:
-            finalRating = "No Security Risk [✅ 100% Tests Passed]"
+            finalRating = " No Security Risk [100% Tests Passed]"
+            emojiAnalysis = "../static/assets/no.png"  # emoji to be displayed depending on risk analysis
+
+        height -= 20
 
         # Displaying Final Risk Analysis
-        file.setFont("Times-Roman", 16)
+        file.setFont("Times-Bold", 20)
         height = check_space_needed(height, 30)
         file.drawString(50, height, "Final Risk Analysis:")
         height -= 30
 
-        file.setFont("Symbola", 14)
+        file.drawImage(emojiAnalysis, 50, height - 5, width=20, height=20) #emoji
+        file.setFont("Times-Roman", 17)
         height = check_space_needed(height, 20)
-        file.drawString(50, height, finalRating)
+        file.drawString(70, height, finalRating) #result string
+
+
 
         file.save()
 
