@@ -10,16 +10,19 @@ def login():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
-  
+
         db = current_app.db
 
         user = db.users.find_one({"email": email, "password": password})
+
         if user:
-            session['email'] = email
+            # ✅ Save the session to track login (simple version)
+            session['email'] = user['email']  # or email
             flash('LOG IN SUCCESSFUL!', category='success')
             return redirect(url_for('views.dashboard'))
         else:
             flash('WRONG CREDENTIALS', category='error')
+
     return render_template("login.html")
 
 

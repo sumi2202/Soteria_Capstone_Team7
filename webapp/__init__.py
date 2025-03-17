@@ -5,6 +5,7 @@ from gridfs import GridFS
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'dhfbdbfjksd hfjksdkjdh'
+    app.secret_key = 'SOFECapstone2425'
 
     app.config['MONGO_URI'] = 'mongodb+srv://SoteriaUser:SOFEcapstone2425@soteriacluster.g7txq.mongodb.net/'
     client = MongoClient(app.config['MONGO_URI'])

@@ -35,7 +35,16 @@ def dashboard():
 
 @views.route('profile_page')
 def profile():
-    return render_template("profile_page.html")
+    if 'email' not in session:
+        flash('Please log in to view your profile.')
+        return redirect(url_for('auth.login'))
+
+    email = session['email']
+    user = current_app.db.users.find_one({'email': email})
+
+    # ✅ Pass user data to the template!
+    return render_template("profile_page.html", user=user)
+
 @views.route('/validation', methods=['GET', 'POST'])
 def link_validation():
     if request.method == 'POST':
