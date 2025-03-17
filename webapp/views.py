@@ -144,6 +144,28 @@ def view_file(file_id):
             return "File not found", 404
     except Exception as e:
         return f"Error retrieving file: {e}", 500
+
+
+@views.route('/check-registered-url', methods=['POST'])
+def check_registered_url():
+    data = request.get_json()
+    url = data.get('url')
+
+    # Get email from session
+    email = session.get('email')
+    if not email:
+        return jsonify({"success": False, "message": "User not logged in."}), 401
+
+    # Check if the URL is registered under the user's email
+    db = current_app.db
+    registration = db.registered_urls.find_one({"email": email, "url": url})
+
+    if registration:
+        return jsonify({"success": True, "message": "URL is registered."})
+    else:
+        return jsonify({"success": False, "message": "This URL is not registered under your account."})
+
+
 @views.route('/customer-rating', methods=['GET'])
 def customer_rating():
     return render_template('customer_rating.html')
