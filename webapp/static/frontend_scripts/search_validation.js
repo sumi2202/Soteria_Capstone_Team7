@@ -21,56 +21,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const data = await response.json();
             if (!data.success) {
-                alert(data.message);
+                alert(data.message);  // Only alert if registration fails
                 return;
             }
 
-            alert("URL is registered. Running security tests...");
-
-            // Start tests
-            const testResponse = await fetch('/run_tests', {
+            // Instead of an alert, just start the tests and redirect to loading screen
+            const testResponse = await fetch('/run_tests/run_tests', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ url })
             });
 
             const testData = await testResponse.json();
+            console.log("Test Response Data:", testData);  // Log response for debugging
+
             if (!testData.success) {
                 alert("Error running tests: " + testData.error);
                 return;
             }
 
             const taskId = testData.task_id;
-             sessionStorage.setItem("task_id", taskId);
 
-                // Redirect to the loading page
-                window.location.href = "/loading";  // Redirect to loading page
-            } catch (error) {
-                console.error("Error:", error);
-                alert("An unexpected error occurred. Please try again.");
-            }
+            // Save taskId to sessionStorage for later use
+            sessionStorage.setItem("task_id", taskId);
 
-            // Show loading message
-            document.getElementById("loadingScreen").style.display = "block";
+            // Redirect the user to the loading page
+            window.location.href = "/run_tests/loading";  // Redirect to loading page
 
-            // Poll the test status every 2 seconds
-            const checkTestStatus = async () => {
-                const statusResponse = await fetch(`/test_status/${taskId}`);
-                const statusData = await statusResponse.json();
-
-                if (statusData.status === "completed") {
-                    window.location.href = "/test_results";
-                } else {
-                    setTimeout(checkTestStatus, 2000);  // Keep checking
-                }
-            };
-
-            checkTestStatus();
         } catch (error) {
             console.error("Error:", error);
             alert("An unexpected error occurred. Please try again.");
         }
     });
 });
+
+
 
 

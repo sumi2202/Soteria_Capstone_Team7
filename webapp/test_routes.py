@@ -11,7 +11,6 @@ test_routes = Blueprint("test_routes", __name__)
 test_status = {}
 status_lock = threading.Lock()  # Lock for thread-safe updates
 
-
 def run_security_tests(url, task_id):
     """Function to run security tests and update test status safely."""
     with status_lock:
@@ -40,25 +39,28 @@ def run_security_tests(url, task_id):
         with status_lock:
             test_status[task_id] = {"status": "failed", "error": str(e)}
 
-
 @test_routes.route("/run_tests", methods=["POST"])
 def run_tests():
     try:
-        url = request.form.get("url") or (request.json and request.json.get("url"))
+        url = request.json.get("url")
         if not url:
             return jsonify({"success": False, "error": "No URL provided"}), 400
 
         task_id = str(uuid.uuid4())
 
+        # Start the test in a separate thread
         thread = threading.Thread(target=run_security_tests, args=(url, task_id))
         thread.start()
 
         return jsonify({"success": True, "task_id": task_id})
 
     except Exception as e:
-        print("Error in /run_tests:", str(e))
         return jsonify({"success": False, "error": str(e)}), 500
 
+@test_routes.route("/loading")
+def loading_screen():
+    """Render the loading screen while tests are running."""
+    return render_template("loading_screen.html")
 
 @test_routes.route("/test_status/<task_id>")
 def test_status_check(task_id):
@@ -66,7 +68,6 @@ def test_status_check(task_id):
     with status_lock:
         status = test_status.get(task_id, {"status": "unknown"})
     return jsonify(status)
-
 
 @test_routes.route("/test_results")
 def test_results():
@@ -83,9 +84,3 @@ def test_results():
     num_failed = xss_result.get("num_failed", 0) + sql_result.get("num_failed", 0)
 
     return render_template("test_results.html", num_tests=num_tests, num_failed=num_failed)
-
-
-
-
-
-
