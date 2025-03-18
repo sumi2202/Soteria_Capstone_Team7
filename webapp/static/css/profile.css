@@ -1,35 +1,153 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
-
 body {
-    font-family: Arial, sans-serif;
-    background-color: #0f2027;
-    color: #fff;
     margin: 0;
-    padding: 0;
+    font-family: 'Courier New', monospace;
+    color: #FFFFFF;
+    background: linear-gradient(135deg, #1f4037, #99f2c8);
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #0d0d0d;
+    padding: 15px 50px;
+    color: white;
+}
+
+.logo img {
+    height: 40px;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+}
+
+.nav-links li a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.profile-icon img {
+    height: 30px;
+    width: 30px;
 }
 
 .profile-container {
-    max-width: 600px;
-    margin: 50px auto;
-    background-color: #1c1c1c;
-    padding: 30px;
-    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 80px); /* Full height minus navbar */
 }
 
-.section {
+.profile-card {
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 15px;
+    padding: 40px 30px;
+    width: 400px;
+    text-align: center;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    border: 1px solid #4CAF50;
+}
+
+.avatar-section {
+    margin-bottom: 20px;
+}
+
+.avatar-img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background-color: white;
+}
+
+.profile-name {
+    font-size: 32px;
+    margin: 15px 0;
+    letter-spacing: 2px;
+}
+
+.profile-info p {
+    text-align: center;
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+.links-section {
     margin-top: 20px;
+    text-align: left;
+}
+
+.links-section h2 {
+    font-size: 18px;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+.links-section ul {
+    list-style: none;
+    padding-left: 0;
+    font-size: 14px;
 }
 
 .logout-btn {
-    background-color: #F44336;
-    color: white;
+    margin-top: 30px;
+    padding: 12px 20px;
+    font-size: 14px;
+    background-color: #c94c4c;
     border: none;
-    padding: 10px 20px;
-    width: 100%;
+    border-radius: 8px;
+    color: white;
     cursor: pointer;
-    border-radius: 5px;
+    transition: background-color 0.3s ease;
 }
 
 .logout-btn:hover {
-    background-color: #d32f2f;
+    background-color: #ff4d4d;
 }
+.documents-section {
+    margin-top: 20px;
+    text-align: left;
+}
+.doc-category ul {
+    list-style: none;
+    padding: 0;
+}
+
+.doc-category li {
+    margin-bottom: 5px;
+    /* Wrap the filename nicely in the card */
+    max-width: 300px; /* Adjust width based on your card size */
+    white-space: nowrap; /* Prevent text from wrapping to the next line */
+    overflow: hidden; /* Hide overflow content */
+    text-overflow: ellipsis; /* Add "..." at the end if it overflows */
+}
+
+.doc-category a {
+    color: #00ccff;
+    text-decoration: underline;
+}
+
+.doc-category a:hover {
+    color: #ff6600;
+}
+
+/* Optional: Tooltip on hover to show full name */
+.doc-category li:hover {
+    overflow: visible;
+}
+
+.doc-category li:hover::after {
+    content: attr(title);
+    position: absolute;
+    background-color: #333;
+    color: #fff;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 999;
+}
+

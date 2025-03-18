@@ -14,6 +14,17 @@ from gridfs import GridFS
 
 views = Blueprint('views', __name__)
 
+@views.route('/download/<file_id>')
+def download_file(file_id):
+    db = current_app.db
+    fs = gridfs.GridFS(db)
+
+    try:
+        file = fs.get(ObjectId(file_id))
+        return send_file(io.BytesIO(file.read()), download_name=file.filename, as_attachment=True)
+    except Exception as e:
+        flash("File not found or error downloading.")
+        return redirect(url_for('views.profile'))
 def get_gridfs():
     """HELPER FUNCTION TO ACCESS GRIDFS"""
     return gridfs.GridFS(current_app.db)
@@ -21,6 +32,8 @@ def get_gridfs():
 
 @views.route('/')
 def launch():
+    session.clear()
+    flash('You have been logged out.')
     return render_template("launch.html")
 
 
@@ -33,17 +46,81 @@ def sign_options():
 def dashboard():
     return render_template("dash_search.html")
 
-@views.route('profile_page')
+@views.route('/profile_page')
 def profile():
     if 'email' not in session:
         flash('Please log in to view your profile.')
         return redirect(url_for('auth.login'))
 
+    db = current_app.db
     email = session['email']
-    user = current_app.db.users.find_one({'email': email})
 
-    # ✅ Pass user data to the template!
-    return render_template("profile_page.html", user=user)
+    # Get user info from `users` collection
+    base_user = db.users.find_one({'email': email})
+    if not base_user:
+        flash('User not found in users collection.')
+        return redirect(url_for('auth.login'))
+
+    # First/last name, password from users collection
+    user_first_name = base_user.get('firstName', 'Unknown')
+    user_last_name = base_user.get('lastName', 'Unknown')
+    user_password = base_user.get('password', 'N/A')
+
+    # ✅ Fetch ALL registered_urls documents for this user
+    registered_links_cursor = db.registered_urls.find({'email': email})
+
+    # ✅ Extract all URLs
+    user_links = []
+    proof_of_id_files = []
+    ownership_id_files = []
+    verified_statuses = []
+
+    fs = gridfs.GridFS(db)
+
+    for reg_doc in registered_links_cursor:
+        # Collect URLs
+        if 'url' in reg_doc:
+            user_links.append(reg_doc['url'])
+
+        # Optional: Collect verified statuses (if needed)
+        verified_statuses.append(reg_doc.get('verified', False))
+
+        # Collect documents for proof of ID & ownership (if you want from all docs)
+        proof_ids = reg_doc.get('proof_id_files', [])
+        owner_ids = reg_doc.get('ownership_files', [])
+
+        for file_id in proof_ids:
+            try:
+                file = fs.get(ObjectId(file_id))
+                proof_of_id_files.append({'filename': file.filename, 'id': str(file._id)})
+            except Exception as e:
+                print(f"Proof of ID fetch error: {e}")
+
+        for file_id in owner_ids:
+            try:
+                file = fs.get(ObjectId(file_id))
+                ownership_id_files.append({'filename': file.filename, 'id': str(file._id)})
+            except Exception as e:
+                print(f"Ownership doc fetch error: {e}")
+
+    # If no documents exist, verified is false, otherwise maybe it's verified
+    verified = any(verified_statuses)
+
+    documents = {
+        'proof_of_id': proof_of_id_files,
+        'ownership_id': ownership_id_files
+    }
+
+    return render_template(
+        "profile_page.html",
+        first_name=user_first_name,
+        last_name=user_last_name,
+        email=email,
+        password=user_password,
+        links=user_links,  # ✅ Multiple links from registered_urls
+        documents=documents,
+        verified=verified
+    )
 
 @views.route('/validation', methods=['GET', 'POST'])
 def link_validation():
@@ -74,6 +151,11 @@ def link_validation():
         })
 
     return render_template("link_validation.html")
+
+@views.route('/results')
+def results():
+    # Render your results template (create it if missing)
+    return render_template("test_results.html")
 
 
 @views.route('/register-link', methods=['GET', 'POST'])
@@ -120,6 +202,8 @@ def link_registration():
 
         # Store registration in `registered_urls` collection
         db.registered_urls.insert_one({
+            "first_name": first_name,  # ✅ Added
+            "last_name": last_name,  # ✅ Added
             "email": email,
             "url": url,
             "proof_id_files": file_ids[:len(proof_id_files)],
