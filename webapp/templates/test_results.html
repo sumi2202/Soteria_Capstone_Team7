@@ -16,6 +16,25 @@
     <title>{% block title %}Home{% endblock %}</title>
 </head>
 <body>
+     <h2>Security Test Results</h2>
+    <p>Number of tests: <strong>{{ num_tests }}</strong></p>
+    <p>Number of tests failed: <strong>{{ num_failed }}</strong></p>
 
+    <canvas id="testChart"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('testChart').getContext('2d');
+        var testChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Failed Tests', 'Passed Tests'],
+                datasets: [{
+                    data: [{{ num_failed }}, {{ num_tests - num_failed }}],
+                    backgroundColor: ['red', 'green']
+                }]
+            }
+        });
+    </script>
 </body>
 </html>

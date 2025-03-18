@@ -1,6 +1,7 @@
 from flask import Flask
 from pymongo import MongoClient
 from gridfs import GridFS
+from .models import SQLResult, XSSResult
 
 def create_app():
     app = Flask(__name__)
@@ -15,10 +16,15 @@ def create_app():
     with app.app_context():
         fs = GridFS(app.db)
 
+    app.sql_results = SQLResult(app.db)
+    app.xss_results = XSSResult(app.db)
+
     from .views import views
     from .auth import auth
+    from .test_routes import test_routes
 
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth)
+    app.register_blueprint(test_routes, url_prefix='/run_tests')
 
     return app

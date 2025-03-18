@@ -10,7 +10,7 @@ from webapp.models import XSSResult
 from datetime import datetime, UTC
 from urllib.parse import urlparse
 import emoji
-from app import app #FOR TESTING, DELETE AFTER
+#from app import app #FOR TESTING, DELETE AFTER
 
 #function for xss tests
 def xss_testing(url):

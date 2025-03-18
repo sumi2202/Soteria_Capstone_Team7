@@ -8,7 +8,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from flask import current_app
 from webapp.models import SQLResult
 from datetime import datetime, UTC
-from app import app #FOR TESTING, DELETE AFTER
+#from app import app #FOR TESTING, DELETE AFTER
 
 
 #function for sql injection tests
