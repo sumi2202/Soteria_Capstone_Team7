@@ -19,18 +19,11 @@ def run_security_tests(url, task_id):
     try:
         # Run security tests
         xss_results = xss_testing(url)
-        sql_results = sql_injection(url)
+        sql_results = sql_injection(url, 1, 1)
 
         timestamp = datetime.utcnow()
         xss_results["timestamp"] = timestamp
         sql_results["timestamp"] = timestamp
-
-        db = current_app.db
-        if db:
-            db.xss_result.insert_one(xss_results)
-            db.sql_result.insert_one(sql_results)
-        else:
-            raise Exception("Database connection is missing")
 
         with status_lock:
             test_status[task_id] = {"status": "completed", "timestamp": timestamp}
