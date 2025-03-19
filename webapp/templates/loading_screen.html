@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/dash.css') }}">
     <title>Loading Screen</title>
     <style>
         #loadingScreen {
@@ -22,6 +21,11 @@
             align-items: center;
             z-index: 1000;
         }
+
+        #viewResultsButton {
+            display: none;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -29,29 +33,35 @@
         <div>Running security tests... Please wait.</div>
     </div>
 
-           <script>
-            function checkTestStatus(taskId) {
-                fetch(/test_status/${taskId})
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.redirect) {
-                            window.location.href = data.redirect; // Redirect when tests complete
-                        } else {
-                            setTimeout(() => checkTestStatus(taskId), 3000); // Poll every 3s
-                        }
-                    })
-                    .catch(error => console.error("Error checking test status:", error));
-            }
+    <button id="viewResultsButton" class="btn btn-primary">View Results</button>
 
-            // Get task ID from Flask template (passed in from the route)
-            const taskId = "{{ task_id }}"; // This should work fine if Flask is rendering it
+    <script>
+        function checkTestStatus(taskId) {
+            fetch(`/test_status/${taskId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'completed') {
+                        // Show the button when tests are completed
+                        document.getElementById("viewResultsButton").style.display = "block";
+                        document.getElementById("viewResultsButton").addEventListener("click", function() {
+                            window.location.href = data.redirect;
+                        });
+                    } else {
+                        setTimeout(() => checkTestStatus(taskId), 3000); // Poll every 3s
+                    }
+                })
+                .catch(error => console.error("Error checking test status:", error));
+        }
 
-            if (taskId) {
-                checkTestStatus(taskId);
-            } else {
-                console.error("No task ID found!");
-            }
-        </script>
+        const taskId = "{{ task_id }}"; // Flask will render this dynamically
 
+        if (taskId) {
+            checkTestStatus(taskId);
+        } else {
+            console.error("No task ID found!");
+        }
+    </script>
 </body>
 </html>
+
+

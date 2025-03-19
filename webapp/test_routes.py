@@ -1,5 +1,4 @@
 import time
-
 from flask import Blueprint, request, jsonify, render_template, redirect, url_for, current_app
 from .backend_scripts.XSS import xss_testing
 from .backend_scripts.SQL_Injection import sql_injection
@@ -34,10 +33,8 @@ def run_security_tests(url, task_id, db):
         db.xss_result.insert_one(xss_results)
         db.sql_result.insert_one(sql_results)
 
-
         # Use the app context here explicitly
         with current_app.app_context():
-
             # Generate the redirect URL using app context (url_for)
             redirect_url = url_for("test_routes.test_results", task_id=task_id)
 
@@ -47,21 +44,6 @@ def run_security_tests(url, task_id, db):
     except Exception as e:
         with status_lock:
             test_status[task_id] = {"status": "failed", "error": str(e)}
-
-# def run_security_tests(url, db):
-#
-#         # Run security tests
-#         xss_results = xss_testing(url)
-#         sql_results = sql_injection(url, 1, 1)
-#
-#         # Convert datetime to ISO format for MongoDB
-#         xss_results['timestamp'] = xss_results['timestamp'].isoformat()
-#         sql_results['timestamp'] = sql_results['timestamp'].isoformat()
-#
-#         db.xss_result.insert_one(xss_results)
-#         db.sql_result.insert_one(sql_results)
-#
-#         return redirect(url_for("test_routes.test_results"))
 
 @test_routes.route("/run_tests", methods=["POST"])
 def run_tests():
@@ -82,7 +64,6 @@ def run_tests():
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 
-
 @test_routes.route("/loading")
 def loading_screen():
     """Render the loading screen while tests are running."""
@@ -92,26 +73,21 @@ def loading_screen():
 
     return render_template("loading_screen.html", task_id=task_id)
 
-
 @test_routes.route("/test_status/<task_id>")
 def test_status_check(task_id):
     """Check the status of a running or completed security test."""
     with status_lock:
         status = test_status.get(task_id, {"status": "unknown"})
 
-    # If status is completed, auto-redirect to results
     if status['status'] == 'completed':
-        return redirect(status['redirect'])
-
-    return jsonify(status)
-
+        return jsonify({'status': 'completed', 'redirect': url_for("test_routes.test_results", task_id=task_id)})
+    else:
+        return jsonify({'status': 'running'})
 
 @test_routes.route("/test_results/<task_id>")
 def test_results(task_id):
     """Retrieve and display the test results for a given task_id."""
     db = current_app.db
-    # if not db:
-    #     return jsonify({"error": "Database connection is missing"}), 500
 
     # Get the test results for the provided task_id
     xss_result = db.xss_result.find_one({"task_id": task_id}) or {}
@@ -132,3 +108,4 @@ def test_results(task_id):
                            num_failed=num_failed,
                            xss_result=xss_result,
                            sql_result=sql_result)
+
