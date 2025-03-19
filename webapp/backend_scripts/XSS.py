@@ -173,7 +173,8 @@ def xss_testing(url):
         "num_failed": num_failed,
         "type_passed": type_passed,
         "type_failed": type_failed,
-        "timestamp": timestamp
+        "timestamp": timestamp,
+        "task_id": ""
     }
 
     # ** Insert result_analysis into database, table xss_results **
