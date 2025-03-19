@@ -24,40 +24,42 @@
         }
     </style>
 </head>
-
 <body>
     <div id="loadingScreen">
         <div>Running security tests... Please wait.</div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const taskId = sessionStorage.getItem("task_id");
+        function checkStatus(taskId) {
+            fetch(`/test_status/${taskId}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Test Status Data:", data);  // Log the response data for debugging
 
-            const checkTestStatus = async () => {
-                try {
-                    const statusResponse = await fetch(`/test_status/${taskId}`);
-                    const statusData = await statusResponse.json();
-
-                    if (statusData.status === "completed") {
-                        window.location.href = "/test_results";
-                    } else if (statusData.status === "failed") {
-                        alert("Tests failed: " + statusData.error);
-                        window.location.href = "/test_results";
+                    if (data.status === "completed") {
+                        window.location.replace(data.redirect);  // Use replace instead of href to avoid issues
+                    } else if (data.status === "failed") {
+                        alert("Test failed: " + data.error);
                     } else {
-                        setTimeout(checkTestStatus, 2000);
+                        setTimeout(() => checkStatus(taskId), 2000); // Check again in 2 sec
                     }
-                } catch (error) {
+                })
+                .catch(error => {
                     console.error("Error checking test status:", error);
-                    alert("An unexpected error occurred while checking test status.");
-                }
-            };
+                    alert("Error checking test status. Please try again later.");
+                });
+        }
 
-            // Start checking test status
-            checkTestStatus();
-        });
+        // Get task ID from URL query params
+        const params = new URLSearchParams(window.location.search);
+        const taskId = params.get("task_id");
+
+        if (taskId) {
+            checkStatus(taskId);
+        } else {
+            console.error("No task ID found!");
+        }
+
     </script>
 </body>
 </html>
-
-

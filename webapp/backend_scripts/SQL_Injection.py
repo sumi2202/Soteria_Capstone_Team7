@@ -214,12 +214,12 @@ def sql_injection(url, level, risk):
     }
 
     # ** Insert result_analysis into database, table sql_results **
-    sql_result_analysis = SQLResult(current_app.db)
-    sql_result_analysis.store_sqlresult(result_analysis)
+    #sql_result_analysis = SQLResult(current_app.db)
+    #sql_result_analysis.store_sqlresult(result_analysis)
 
     print("\U00002705 SQL Injection Testing has been Completed!")
 
-    return None
+    return result_analysis
 
 
 #FOR TESTING ONLY, DELETE AFTER

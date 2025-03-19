@@ -177,12 +177,12 @@ def xss_testing(url):
     }
 
     # ** Insert result_analysis into database, table xss_results **
-    xss_result_analysis = XSSResult(current_app.db)
-    xss_result_analysis.store_xssresult(result_analysis)
+    #xss_result_analysis = XSSResult(current_app.db)
+    #xss_result_analysis.store_xssresult(result_analysis)
 
     print("\U00002705 Cross Site Scripting Testing has been Completed!")
 
-    return None
+    return result_analysis
 
 
 #FOR TESTING ONLY, DELETE AFTER

@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Instead of an alert, just start the tests and redirect to loading screen
+            // Start security tests
             const testResponse = await fetch('/run_tests/run_tests', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -42,11 +42,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const taskId = testData.task_id;
 
-            // Save taskId to sessionStorage for later use
+            // Save taskId to sessionStorage for later use (optional)
             sessionStorage.setItem("task_id", taskId);
 
-            // Redirect the user to the loading page
-            window.location.href = "/run_tests/loading";  // Redirect to loading page
+            // Redirect the user to the loading page with task_id
+            window.location.href = `/run_tests/loading?task_id=${taskId}`;
 
         } catch (error) {
             console.error("Error:", error);
@@ -54,7 +54,3 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-
-
-
-

@@ -1,7 +1,12 @@
-from flask import Blueprint, request, jsonify, render_template, redirect, url_for, current_app
+from flask import Blueprint, request, jsonify, render_template, redirect, url_for, current_app, Flask
 from .backend_scripts.XSS import xss_testing
 from .backend_scripts.SQL_Injection import sql_injection
 from datetime import datetime
+from webapp.models import XSSResult
+from webapp.models import SQLResult
+from pymongo import MongoClient
+from flask import Blueprint, render_template, request, redirect, url_for, flash, send_from_directory, current_app, session
+import os
 import threading
 import uuid
 
@@ -21,12 +26,25 @@ def run_security_tests(url, task_id):
         xss_results = xss_testing(url)
         sql_results = sql_injection(url, 1, 1)
 
-        timestamp = datetime.utcnow()
-        xss_results["timestamp"] = timestamp
-        sql_results["timestamp"] = timestamp
+        # Convert datetime to ISO string for compatibility with MongoDB
+        xss_results['timestamp'] = xss_results['timestamp'].isoformat()
+        sql_results['timestamp'] = sql_results['timestamp'].isoformat()
+
+
+        # Check if the results are empty or invalid
+        if not xss_results or not sql_results:
+            raise ValueError("XSS or SQL Injection results are empty or invalid.")
+
+        db = current_app.db
+        if db:
+            db.xss_result.store_xssresult(xss_results)
+            db.sql_result.store_sqlresult(sql_results)
+
+        else:
+            raise Exception("Database connection is missing")
 
         with status_lock:
-            test_status[task_id] = {"status": "completed", "timestamp": timestamp}
+            test_status[task_id] = {"status": "completed"}
 
     except Exception as e:
         with status_lock:
@@ -35,25 +53,34 @@ def run_security_tests(url, task_id):
 @test_routes.route("/run_tests", methods=["POST"])
 def run_tests():
     try:
-        url = request.json.get("url")
+        url = request.json.get("url")  # ✅ Ensure JSON request parsing
         if not url:
             return jsonify({"success": False, "error": "No URL provided"}), 400
 
-        task_id = str(uuid.uuid4())
+        task_id = str(uuid.uuid4())  # ✅ Generate a unique task ID
 
         # Start the test in a separate thread
         thread = threading.Thread(target=run_security_tests, args=(url, task_id))
         thread.start()
 
+        # ✅ Return JSON response with task_id
         return jsonify({"success": True, "task_id": task_id})
 
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 
+
+
 @test_routes.route("/loading")
 def loading_screen():
     """Render the loading screen while tests are running."""
-    return render_template("loading_screen.html")
+    task_id = request.args.get("task_id")  # Get task_id from URL
+    if not task_id:
+        return "Missing task_id", 400  # Handle missing task ID
+
+    return render_template("loading_screen.html", task_id=task_id)
+
+
 
 @test_routes.route("/test_status/<task_id>")
 def test_status_check(task_id):
