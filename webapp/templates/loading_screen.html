@@ -37,7 +37,7 @@
                     console.log("Test Status Data:", data);  // Log the response data for debugging
 
                     if (data.status === "completed") {
-                        window.location.replace(data.redirect);  // Use replace instead of href to avoid issues
+                        window.location.replace(data.redirect);  // Redirect to the test results page
                     } else if (data.status === "failed") {
                         alert("Test failed: " + data.error);
                     } else {
@@ -49,6 +49,7 @@
                     alert("Error checking test status. Please try again later.");
                 });
         }
+
 
         // Get task ID from URL query params
         const params = new URLSearchParams(window.location.search);

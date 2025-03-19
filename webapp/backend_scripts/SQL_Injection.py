@@ -210,7 +210,8 @@ def sql_injection(url, level, risk):
         "type_passed": type_passed,
         "type_failed": type_failed,
         "database_list": database_list,
-        "timestamp": timestamp
+        "timestamp": timestamp,
+        "task_id": ""
     }
 
     # ** Insert result_analysis into database, table sql_results **
