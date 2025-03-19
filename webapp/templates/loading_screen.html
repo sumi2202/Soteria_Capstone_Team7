@@ -29,38 +29,29 @@
         <div>Running security tests... Please wait.</div>
     </div>
 
-    <script>
-        function checkStatus(taskId) {
-            fetch(`/test_status/${taskId}`)
-                .then(response => response.json())
-                .then(data => {
-                    console.log("Test Status Data:", data);  // Log the response data for debugging
+           <script>
+            function checkTestStatus(taskId) {
+                fetch(/test_status/${taskId})
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.redirect) {
+                            window.location.href = data.redirect; // Redirect when tests complete
+                        } else {
+                            setTimeout(() => checkTestStatus(taskId), 3000); // Poll every 3s
+                        }
+                    })
+                    .catch(error => console.error("Error checking test status:", error));
+            }
 
-                    if (data.status === "completed") {
-                        window.location.replace(data.redirect);  // Redirect to the test results page
-                    } else if (data.status === "failed") {
-                        alert("Test failed: " + data.error);
-                    } else {
-                        setTimeout(() => checkStatus(taskId), 2000); // Check again in 2 sec
-                    }
-                })
-                .catch(error => {
-                    console.error("Error checking test status:", error);
-                    alert("Error checking test status. Please try again later.");
-                });
-        }
+            // Get task ID from Flask template (passed in from the route)
+            const taskId = "{{ task_id }}"; // This should work fine if Flask is rendering it
 
+            if (taskId) {
+                checkTestStatus(taskId);
+            } else {
+                console.error("No task ID found!");
+            }
+        </script>
 
-        // Get task ID from URL query params
-        const params = new URLSearchParams(window.location.search);
-        const taskId = params.get("task_id");
-
-        if (taskId) {
-            checkStatus(taskId);
-        } else {
-            console.error("No task ID found!");
-        }
-
-    </script>
 </body>
 </html>
