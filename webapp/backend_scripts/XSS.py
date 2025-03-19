@@ -187,7 +187,7 @@ def xss_testing(url):
 
 #FOR TESTING ONLY, DELETE AFTER
 if __name__ == "__main__":
-
+    from app import app
     with app.app_context():
         url_input = input("Enter the URL to test (XSS TESTING): ")
         xss_testing(url_input)
