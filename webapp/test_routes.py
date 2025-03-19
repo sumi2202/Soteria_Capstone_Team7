@@ -12,42 +12,12 @@ test_routes = Blueprint("test_routes", __name__)
 test_status = {}
 status_lock = threading.Lock()  # Lock for thread-safe updates
 
-# def run_security_tests(url, task_id, db):
-#     """Function to run security tests and update test status safely."""
-#     with status_lock:
-#         test_status[task_id] = {"status": "running"}
-#
-#     try:
-#         # Run security tests
-#         xss_results = xss_testing(url)
-#         sql_results = sql_injection(url, 1, 1)
-#
-#         # Convert datetime to ISO format for MongoDB
-#         xss_results['timestamp'] = xss_results['timestamp'].isoformat()
-#         sql_results['timestamp'] = sql_results['timestamp'].isoformat()
-#
-#         # Ensure task_id is included in the results for tracking
-#         xss_results['task_id'] = task_id
-#         sql_results['task_id'] = task_id
-#
-#         # Use the app context here explicitly
-#         with current_app.app_context():
-#             # Insert into the database within the app context
-#             db.xss_result.insert_one(xss_results)
-#             db.sql_result.insert_one(sql_results)
-#
-#             # Generate the redirect URL using app context (url_for)
-#             redirect_url = url_for("test_routes.test_results", task_id=task_id)
-#
-#         with status_lock:
-#             test_status[task_id] = {"status": "completed", "redirect": redirect_url}
-#
-#     except Exception as e:
-#         with status_lock:
-#             test_status[task_id] = {"status": "failed", "error": str(e)}
+def run_security_tests(url, task_id, db):
+    """Function to run security tests and update test status safely."""
+    with status_lock:
+        test_status[task_id] = {"status": "running"}
 
-def run_security_tests(url, db):
-
+    try:
         # Run security tests
         xss_results = xss_testing(url)
         sql_results = sql_injection(url, 1, 1)
@@ -56,14 +26,42 @@ def run_security_tests(url, db):
         xss_results['timestamp'] = xss_results['timestamp'].isoformat()
         sql_results['timestamp'] = sql_results['timestamp'].isoformat()
 
+        # Ensure task_id is included in the results for tracking
+        xss_results['task_id'] = task_id
+        sql_results['task_id'] = task_id
+
+        # Insert into the database within the app context
         db.xss_result.insert_one(xss_results)
         db.sql_result.insert_one(sql_results)
 
-        return redirect(url_for("test_routes.test_results"))
 
+        # Use the app context here explicitly
+        with current_app.app_context():
 
+            # Generate the redirect URL using app context (url_for)
+            redirect_url = url_for("test_routes.test_results", task_id=task_id)
 
+        with status_lock:
+            test_status[task_id] = {"status": "completed", "redirect": redirect_url}
 
+    except Exception as e:
+        with status_lock:
+            test_status[task_id] = {"status": "failed", "error": str(e)}
+
+# def run_security_tests(url, db):
+#
+#         # Run security tests
+#         xss_results = xss_testing(url)
+#         sql_results = sql_injection(url, 1, 1)
+#
+#         # Convert datetime to ISO format for MongoDB
+#         xss_results['timestamp'] = xss_results['timestamp'].isoformat()
+#         sql_results['timestamp'] = sql_results['timestamp'].isoformat()
+#
+#         db.xss_result.insert_one(xss_results)
+#         db.sql_result.insert_one(sql_results)
+#
+#         return redirect(url_for("test_routes.test_results"))
 
 @test_routes.route("/run_tests", methods=["POST"])
 def run_tests():
@@ -76,7 +74,7 @@ def run_tests():
 
         db = current_app.db  # Get DB from Flask app
 
-        thread = threading.Thread(target=run_security_tests, args=(url, db))
+        thread = threading.Thread(target=run_security_tests, args=(url, task_id, db))
         thread.start()
 
         return jsonify({"success": True, "task_id": task_id})
