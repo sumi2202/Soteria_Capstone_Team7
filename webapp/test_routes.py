@@ -53,13 +53,12 @@ def run_tests():
             return jsonify({"success": False, "error": "No URL provided"}), 400
 
         task_id = str(uuid.uuid4())
-
         db = current_app.db  # Get DB from Flask app
 
         thread = threading.Thread(target=run_security_tests, args=(url, task_id, db))
         thread.start()
 
-        return jsonify({"success": True, "task_id": task_id})
+        return jsonify({"success": True, "task_id": task_id, "redirect": url_for("test_routes.loading_screen", task_id=task_id)})
 
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
@@ -89,23 +88,25 @@ def test_results(task_id):
     """Retrieve and display the test results for a given task_id."""
     db = current_app.db
 
-    # Get the test results for the provided task_id
-    xss_result = db.xss_result.find_one({"task_id": task_id}) or {}
-    sql_result = db.sql_result.find_one({"task_id": task_id}) or {}
+    retries = 5  # Maximum number of times to try fetching results
+    for _ in range(retries):
+        xss_result = db.xss_result.find_one({"task_id": task_id}) or {}
+        sql_result = db.sql_result.find_one({"task_id": task_id}) or {}
 
-    # If no results, return an error
+        if xss_result or sql_result:
+            break  # Stop retrying if results are found
+
+        time.sleep(1)  # Wait for 1 second before trying again
+
     if not xss_result and not sql_result:
         return jsonify({"error": "No results found for this test"}), 404
 
-    # Calculate the number of tests and failures
     num_tests = (xss_result.get("num_passed", 0) + xss_result.get("num_failed", 0) +
                  sql_result.get("num_passed", 0) + sql_result.get("num_failed", 0))
     num_failed = xss_result.get("num_failed", 0) + sql_result.get("num_failed", 0)
 
-    # Pass data to the template
     return render_template("test_results.html",
                            num_tests=num_tests,
                            num_failed=num_failed,
                            xss_result=xss_result,
                            sql_result=sql_result)
-

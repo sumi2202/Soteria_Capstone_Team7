@@ -36,31 +36,23 @@
     <button id="viewResultsButton" class="btn btn-primary">View Results</button>
 
     <script>
-        function checkTestStatus(taskId) {
-            fetch(`/test_status/${taskId}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'completed') {
-                        // Show the button when tests are completed
-                        document.getElementById("viewResultsButton").style.display = "block";
-                        document.getElementById("viewResultsButton").addEventListener("click", function() {
-                            window.location.href = data.redirect;
-                        });
-                    } else {
-                        setTimeout(() => checkTestStatus(taskId), 3000); // Poll every 3s
-                    }
-                })
-                .catch(error => console.error("Error checking test status:", error));
-        }
+    function checkStatus() {
+        const taskId = "{{ task_id }}";  // Ensure task_id is correctly passed from Flask
 
-        const taskId = "{{ task_id }}"; // Flask will render this dynamically
+        fetch(/test_status/${taskId})  // ✅ Fixed: Added backticks
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "completed") {
+                    window.location.href = data.redirect;  // Redirect when tests complete
+                } else {
+                    setTimeout(checkStatus, 2000);  // Check again in 2 seconds
+                }
+            })
+            .catch(error => console.error("Error checking status:", error));
+    }
 
-        if (taskId) {
-            checkTestStatus(taskId);
-        } else {
-            console.error("No task ID found!");
-        }
-    </script>
+    document.addEventListener("DOMContentLoaded", checkStatus);
+</script>
 </body>
 </html>
 
