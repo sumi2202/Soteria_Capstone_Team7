@@ -1,0 +1,229 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(245deg, #071e22, #1d7874, #d85461);
+    background-size: 600% 600%;
+    animation: gradient-animation 18s ease infinite;
+    color: #fff;
+}
+
+@keyframes gradient-animation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.navbar {
+    background-color: #071e22;
+    border-bottom: 3px solid #ffffff;
+    height: 60px;
+}
+
+.navbar-brand, .navbar-nav .nav-link {
+    color: #fff !important;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.navbar .bx-user-circle {
+    color: #fff;
+}
+
+.wrapper {
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 20px;
+    padding: 50px 60px;
+    max-width: 700px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+}
+
+.wrapper h1 {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+.wrapper h5 {
+    font-size: 14px;
+    color: #fff;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+}
+
+.input-group-text {
+    border-radius: 10px 0 0 10px;
+}
+
+.form-control {
+    border-radius: 0;
+}
+
+.btn-outline-danger {
+    border-radius: 0 10px 10px 0;
+}
+
+.result-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #cccccc;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.main-container {
+    padding-top: 100px; /* Matches or exceeds navbar height */
+}
+
+
+.search-btn,
+.register-btn {
+    background-color: #2CBE9B !important;
+    color: #ffffff !important;
+    border: 3px solid #ffffff;
+    border-radius: 10px;
+    height: 50px;
+    font-weight: 600;
+    font-size: 70px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 20px;
+
+    /* Centering */
+    margin: 0 auto;
+
+    /* Width Controls */
+    min-width: 200px; /* You can adjust this */
+    max-width: 300px; /* Optional for responsive design */
+    width: 50%; /* or a fixed width like 250px */
+}
+
+.search-btn:hover,
+.register-btn:hover {
+    background-color: #36d6b8 !important;
+    color: #ffffff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.register-btn:disabled {
+    background-color: #44FFD2 !important;
+    color: #ffffff !important;
+    cursor: not-allowed;
+    position: relative;
+    border: 3px solid #ffffff;
+}
+
+.register-btn:disabled::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(7, 30, 34, 0.7);
+    border-radius: 10px;
+}
+
+
+
+/* RESULTS */
+.results-container {
+    margin-top: 40px;
+}
+
+.results-container h2 {
+    font-size: 28px;
+    margin-bottom: 30px;
+    color: #ffffff; /* Make sure it's white */
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+
+.result-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: stretch;
+    gap: 40px;
+    flex-wrap: nowrap; /* if you want no wrap */
+}
+
+.result {
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid #fff;
+    border-radius: 10px;
+    width: 280px;
+    min-height: 220px;
+    padding: 30px;
+    color: #fff;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.result svg {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 10px;
+}
+
+.result p {
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+}
+
+/* SVG ANIMATIONS */
+.circle, .line, .check {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+}
+
+.circle {
+    animation: dash 0.9s ease-in-out forwards;
+}
+
+.line {
+    animation: dash 0.9s 0.35s ease-in-out forwards;
+}
+
+.check {
+    stroke-dashoffset: -100;
+    animation: dash-check 0.9s 0.35s ease-in-out forwards;
+}
+
+@keyframes dash {
+    from { stroke-dashoffset: 1000; }
+    to { stroke-dashoffset: 0; }
+}
+
+@keyframes dash-check {
+    from { stroke-dashoffset: -100; }
+    to { stroke-dashoffset: 900; }
+}
+
+/* STATUS COLORS */
+.error {
+    color: #D06079;
+}
+
+.success {
+    color: #73AF55;
+}

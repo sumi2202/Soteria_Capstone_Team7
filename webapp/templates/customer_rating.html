@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/customer_rating.css') }}">
+    <script src="{{ url_for('static', filename='frontend_scripts/customer_rating.js') }}"></script>
+    <title>Title</title>
+</head>
+<body>
+
+    <div class="wrapper">
+        <div class="wrapper1">
+            <!-- Logo -->
+            <div class="logo_container">
+                <img src="../static/assets/Soteria_logo.png" class="logo">
+                <h1 class="title_logo">SOTERIA</h1>
+            </div>
+        </div>
+
+        <div class="wrapper2">
+            <div>
+                <h1 class="title">FEEDBACK</h1>
+                <h2 class="question">How satisfied are you with our product?</h2>
+            </div>
+
+            <!-- Star Images -->
+            <div class= "stars">
+            {% for i in range(10) %}
+            <img src="{{ url_for('static',filename='assets/rating_unfilled.png') }}" width="50" height="50" id="star_{{i}}">
+            {% endfor %}
+            </div>
+
+            <!-- Submit Button -->
+            <button class="submit">Submit</button>
+        </div>
+    </div>
+
+</body>
+</html>

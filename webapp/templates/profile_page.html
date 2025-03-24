@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile - {{ first_name }} {{ last_name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-sm navbar-dark py-2 fixed-top">
+    <div class="container">
+        <a href="dashboard" class="navbar-brand" style="color:#f5f5f5ff;">
+            <strong>SOTERIA</strong>
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navmenu">
+            <ul class="navbar-nav ms-auto d-flex flex-row">
+                <li class="nav-item">
+                    <a href="validation" class="nav-link">Link Validation</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/" class="nav-link">Results</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/profile_page" class="nav-link"><i class='bx bx-user-circle'></i></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    <!-- Profile Card -->
+    <div class="profile-container">
+        <div class="profile-card">
+            <div class="avatar-section">
+                <img src="{{ url_for('static', filename='images/avatar.png') }}" alt="Avatar" class="avatar-img">
+            </div>
+
+            <h1 class="profile-name">{{ first_name }} {{ last_name }}</h1>
+
+            <div class="profile-info">
+                <p><strong>EMAIL</strong><br>{{ email }}</p>
+                <p><strong>PASSWORD</strong><br>*************</p> <!-- Show hashed password if necessary -->
+            </div>
+
+            <div class="links-section">
+    <h2>LINKS REGISTERED</h2>
+    <ul>
+        {% if links %}
+            {% for link in links %}
+                <li>{{ loop.index }}. <a href="{{ link }}" target="_blank">{{ link }}</a></li>
+            {% endfor %}
+        {% else %}
+            <li>No links registered yet.</li>
+        {% endif %}
+    </ul>
+</div>
+
+<div class="documents-section">
+    <h2>DOCUMENTS</h2>
+
+    <!-- Proof of ID Files -->
+    <div class="doc-category">
+        <h3>Proof of ID</h3>
+        <ul>
+            {% if documents.proof_of_id %}
+                {% for file in documents.proof_of_id %}
+                    <li title="{{ file.filename }}">
+    <a href="{{ url_for('views.view_file', file_id=file.id) }}" target="_blank">
+        {{ file.filename }}
+    </a>
+</li>
+
+                {% endfor %}
+            {% else %}
+                <li>No Proof of ID uploaded.</li>
+            {% endif %}
+        </ul>
+    </div>
+
+    <!-- Ownership Files -->
+    <div class="doc-category">
+        <h3>Proof of Ownership</h3>
+        <ul>
+            {% if documents.ownership_id %}
+                {% for file in documents.ownership_id %}
+                    <li>
+                        <a href="{{ url_for('views.view_file', file_id=file.id) }}" target="_blank">{{ file.filename }}</a>
+                    </li>
+                {% endfor %}
+            {% else %}
+                <li>No Proof of Ownership uploaded.</li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
+
+            <form method="POST" action="{{ url_for('views.launch') }}">
+                <button type="submit" class="logout-btn">LOG OUT</button>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

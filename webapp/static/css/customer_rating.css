@@ -1,0 +1,108 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(245deg,#071e22,#1d7874,#d85461) !important;
+    animation: gradient-animation 18s ease infinite
+}
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+}
+.wrapper1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    top: 90px;
+    width: 100%;
+
+}
+
+.wrapper2 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 40px;
+
+}
+
+.logo_container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.logo {
+    width: 150px;
+    height: auto;
+    margin: 0;
+    display: block;
+}
+
+.title_logo {
+    font-size: 26px;
+    margin: 0;
+    text-align:center;
+    padding 20px;
+    color: white;
+    font-family: JetBrains Mono;
+    font-weight: 800;
+    letter-spacing: 5.60px;
+    word-wrap: break-word
+}
+
+
+.title {
+    font-size: 42px;
+    margin: 15;
+    text-align:center;
+    padding 20px;
+    color: white;
+    font-family: JetBrains Mono;
+    font-weight: 800;
+    letter-spacing: 5.60px;
+    word-wrap: break-word
+}
+
+.question {
+    font-size: 26px;
+    margin: 0;
+    text-align:center;
+    padding 50px;
+    color: white;
+    font-family: JetBrains Mono;
+    font-weight: 800;
+    letter-spacing: 5.60px;
+    word-wrap: break-word
+}
+
+.stars img {
+    width: 60px;
+    height: 60px;
+
+}
+
+.submit {
+    margin-top: 25px;
+    width: 170px;
+    height: 55px;
+    background: linear-gradient(#44ffd2, #679289);
+    border: #FFFFFF;
+    outline: none;
+    padding: 5px;
+    border-radius: 40px;
+    cursor: pointer;
+    font-size: 28px;
+    color: #F4F3F3;
+    font-family: JetBrains Mono;
+    font-weight: 800;
+
+}

@@ -1,0 +1,293 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "JetBrains Mono", monospace;
+}
+
+/* === BODY & BACKGROUND === */
+body {
+    min-height: 100vh;
+    padding-top: 80px;
+    background: linear-gradient(245deg, #071e22, #1d7874, #d85461);
+    background-size: 600% 600%;
+    animation: gradient-animation 18s ease infinite;
+    color: #fff;
+}
+
+@keyframes gradient-animation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* === NAVBAR === */
+.navbar {
+    background-color: #000;
+    border-bottom: 2px solid #fff;
+    width: 100%;
+}
+
+.navbar-nav {
+    flex-direction: row;
+    gap: 15px;
+}
+
+.navbar .nav-link {
+    color: #fff !important;
+    padding: 8px 15px;
+    text-decoration: none;
+}
+
+.navbar-brand {
+    color: #fff !important;
+}
+
+/* === WRAPPER === */
+.wrapper {
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 20px;
+    padding: 50px 60px;
+    max-width: 700px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+}
+
+.wrapper h1 {
+    font-size: 40px;
+    font-weight: 800;
+    letter-spacing: 5.6px;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+.wrapper h5 {
+    font-size: 14px;
+    color: #cccccc;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+}
+
+/* === FORM INPUTS === */
+.input-box {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.input-box input {
+    width: 100%;
+    padding: 15px 20px 15px 45px;
+    border-radius: 10px;
+    border: none;
+    background-color: #fff;
+    color: #333;
+    font-size: 14px;
+}
+
+.input-box i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #333;
+}
+
+/* === BUTTONS === */
+.btn-upload,
+.btn-register {
+    background-color: #2CBE9B !important;
+    color: #ffffff !important;
+    border: 3px solid #ffffff;
+    border-radius: 10px;
+    height: 50px;
+    font-weight: 600;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 20px;
+    margin: 0 auto;
+    min-width: 200px;
+    max-width: 300px;
+    width: 50%;
+}
+
+.btn-upload:hover,
+.btn-register:hover {
+    background-color: #36d6b8;
+}
+
+.submit-btn {
+    background-color: #DB5461;
+    color: #ffffff;
+    padding: 12px 40px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: #c14655;
+}
+
+/* === MODAL BACKGROUND === */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.5s ease;
+}
+
+.modal.show {
+    display: flex;
+}
+
+/* === MODAL CONTENT === */
+.modal-content {
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color: #ffffff;
+    padding: 40px 30px;
+    border-radius: 40px;                   /* More rounded */
+    border: 2px solid #ffffff;             /* Clean white border */
+    width: 350px;                          /* Narrower */
+    max-width: 20%;
+    min-height: 600px;
+    max-height: 90vh;
+
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+
+    /* Animation Settings */
+    opacity: 0;
+    transform: scale(0.9);
+    transition: all 0.4s ease;
+}
+
+.modal.show .modal-content {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* === MODAL HEADINGS === */
+.modal-content h2 {
+    font-size: 30px;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    margin: 20px 0 10px;
+    text-align: center;
+    width: 100%;
+}
+
+/* === SECTIONS INSIDE MODAL === */
+.modal-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.modal-section .upload-btn {
+    margin-bottom: 15px;
+}
+
+/* === UPLOAD BUTTON === */
+.upload-btn {
+    background-color: #2CBE9B;
+    color: #ffffff;
+    border: 1px solid #ffffff;
+    padding: 12px 30px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 200px;
+}
+
+.upload-btn:hover {
+    background-color: #36d6b8;
+    border-color: #ffffff;
+}
+
+/* === FILE PREVIEW === */
+.file-preview {
+    background-color: #071e22;
+    border: 2px solid #ffffff;
+    color: #ffffff;
+    width: 100%;
+    min-height: 60px;
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 12px;
+    overflow-y: auto;
+}
+
+.file-preview ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.file-preview li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.file-preview li button {
+    background: none;
+    border: none;
+    color: #D06079;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.file-preview li button:hover {
+    color: #ff4757;
+}
+
+/* === CLOSE BUTTON === */
+.close-button {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-button:hover {
+    color: #F58220;
+}
