@@ -8,11 +8,10 @@ def create_app():
     app.config['SECRET_KEY'] = 'dhfbdbfjksd hfjksdkjdh'
     app.secret_key = 'SOFECapstone2425'
 
-
     app.config['MONGO_URI'] = 'mongodb+srv://SoteriaUser:SOFEcapstone2425@soteriacluster.g7txq.mongodb.net/'
     client = MongoClient(app.config['MONGO_URI'])
     app.db = client.get_database('soteria')  # Specify the database name here
-    db = client.get_database('soteria')  # Again, specifying the database name
+    db = client.get_database('soteria')      # Again, specifying the database name
 
     # Function to create indexes
     def create_indexes(db):
@@ -39,5 +38,5 @@ def create_app():
     app.register_blueprint(auth)
     app.register_blueprint(test_routes, url_prefix='/tests')
 
-
     return app
+
