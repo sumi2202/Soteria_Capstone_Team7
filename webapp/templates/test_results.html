@@ -11,6 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
     <title>Test Results for Task ID: {{ task_id }}</title>
+
 </head>
 <body>
     <!-- NAVBAR -->
@@ -37,7 +38,7 @@
         </div>
     </nav>
     <div class="container mt-5">
-        <h2 class="text-center">Test Results for Task ID: {{ task_id }}</h2>
+        <h2 class="text-center"><strong>Test Results for Task ID: {{ task_id }}</strong></h2>
 
         <div class="row">
             <div class="col-md-6">
@@ -45,10 +46,6 @@
                 <p>Number of tests: <strong>{{ num_tests }}</strong></p>
                 <p>Number of tests failed: <strong>{{ num_failed }}</strong></p>
 
-                <canvas id="testChart"></canvas>
-            </div>
-
-            <div class="col-md-6">
                 <h3>XSS Test Results</h3>
                 <ul>
                     <li>Passed: <strong>{{ xss_result.num_passed }}</strong></li>
@@ -61,27 +58,48 @@
                     <li>Failed: <strong>{{ sql_result.num_failed }}</strong></li>
                 </ul>
             </div>
+
+            <div class="col-md-6 d-flex justify-content-center align-items-center">
+                <canvas id="testChart"></canvas>
+            </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         var ctx = document.getElementById('testChart').getContext('2d');
+        var delayed;
+
         var testChart = new Chart(ctx, {
             type: 'pie',
             data: {
                 labels: ['Failed Tests', 'Passed Tests'],
                 datasets: [{
                     data: [{{ num_failed }}, {{ num_tests - num_failed }}],
-                    backgroundColor: ['red', 'green'],
-                    borderWidth: 1
+                    backgroundColor: ['#DB5461', '#2CBE9B'],
+                    borderColor: '#ffffff',
+                    borderWidth: 4,
+                    offset: [50, 0] // pull out the 'failed' slice
                 }]
             },
             options: {
                 responsive: true,
+                animation: {
+                    onComplete: () => { delayed = true; },
+                    delay: (context) => {
+                        let delay = 0;
+                        if (context.type === 'data' && context.mode === 'default' && !delayed) {
+                            delay = context.dataIndex * 500;
+                        }
+                        return delay;
+                    }
+                },
                 plugins: {
                     legend: {
-                        position: 'top'
+                        position: 'top',
+                        labels: {
+                            color: '#fff'
+                        }
                     },
                     tooltip: {
                         callbacks: {

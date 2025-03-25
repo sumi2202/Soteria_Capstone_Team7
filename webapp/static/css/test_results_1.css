@@ -1,46 +1,58 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+   @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "JetBrains Mono", monospace;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "JetBrains Mono", monospace;
+        }
 
-/* === BODY & BACKGROUND === */
-body {
-    min-height: 100vh;
-    padding-top: 80px;
-    background: linear-gradient(245deg, #071e22, #1d7874, #d85461);
-    background-size: 600% 600%;
-    animation: gradient-animation 18s ease infinite;
-    color: #fff;
-}
+        body {
+            min-height: 100vh;
+            padding-top: 80px;
+            background: linear-gradient(245deg, #071e22, #1d7874, #d85461);
+            background-size: 600% 600%;
+            animation: gradient-animation 18s ease infinite;
+            color: #fff;
+        }
 
-@keyframes gradient-animation {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
-/* === NAVBAR === */
-.navbar {
-    background-color: #000;
-    border-bottom: 2px solid #fff;
-    width: 100%;
-}
+        .navbar {
+            background-color: #000;
+            border-bottom: 2px solid #fff;
+            width: 100%;
+        }
 
-.navbar-nav {
-    flex-direction: row;
-    gap: 15px;
-}
+        .navbar-nav {
+            flex-direction: row;
+            gap: 15px;
+        }
 
-.navbar .nav-link {
-    color: #fff !important;
-    padding: 8px 15px;
-    text-decoration: none;
-}
+        .navbar .nav-link,
+        .navbar-brand {
+            color: #fff !important;
+            text-decoration: none;
+        }
 
-.navbar-brand {
-    color: #fff !important;
-}
+        .container h2,
+        .container h3,
+        .container p,
+        .container ul li {
+            color: #fff;
+            text-align: left;
+        }
+
+        .container ul {
+            padding-left: 20px;
+        }
+
+        canvas {
+            border: 4px solid white;
+            border-radius: 10px;
+            background-color: rgba(255,255,255,0.05);
+        }
