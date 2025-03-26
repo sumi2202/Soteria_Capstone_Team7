@@ -47,6 +47,16 @@
     <form action="/run_tests" class="search-bar" method="POST">
         <h2>SOTERIA</h2>
         <input type="url" placeholder="ENTER URL" name="url">
+        <div class="form-group">
+            <label for="sql_level_risk">Select SQL Injection Intensity:</label>
+            <select name="sql_level_risk" id="sql_level_risk" class="form-select mt-2">
+                <option value="1,1">Light Testing (Level 1, Risk 1)</option>
+                <option value="2,2">Option 2 (Level 2, Risk 2)</option>
+                <option value="3,2">Moderate Testing (Level 3, Risk 2)</option>
+                <option value="4,3">Heavy Testing (Level 4, Risk 3)</option>
+                <option value="5,3">Intense Testing (Level 5, Risk 3)</option>
+            </select>
+</div>
         <button type="submit">SUBMIT</button>
     </form>
 </div>

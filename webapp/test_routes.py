@@ -9,7 +9,7 @@ test_routes = Blueprint("test_routes", __name__)
 test_status = {}
 status_lock = threading.Lock()
 
-def run_security_tests(app, url, task_id):
+def run_security_tests(app, url, task_id, level, risk):
     with app.app_context():
         with status_lock:
             test_status[task_id] = {"status": "running", "progress": 0}
@@ -52,16 +52,21 @@ def run_security_tests(app, url, task_id):
 
 @test_routes.route("/run_tests", methods=["POST"])
 def run_tests():
-    url = request.json.get("url")
+    data = request.json if request.is_json else request.form
+    url = data.get("url")
+    level_risk = data.get("sql_level_risk", "1,1").split(",")
+    level, risk = int(level_risk[0]), int(level_risk[1])
+
     if not url:
         return jsonify({"success": False, "error": "No URL provided"}), 400
 
     task_id = str(uuid.uuid4())
     app = current_app._get_current_object()
-    thread = threading.Thread(target=run_security_tests, args=(app, url, task_id))
+    thread = threading.Thread(target=run_security_tests, args=(app, url, task_id, level, risk))
     thread.start()
 
     return jsonify({"success": True, "task_id": task_id, "redirect": url_for("test_routes.loading_screen", task_id=task_id)})
+
 
 @test_routes.route("/loading")
 def loading_screen():
