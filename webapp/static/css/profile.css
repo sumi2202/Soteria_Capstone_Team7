@@ -54,10 +54,11 @@ body {
     background: rgba(0, 0, 0, 0.8);
     border-radius: 15px;
     padding: 40px 30px;
-    width: 400px;
+    height: 400px;
+    width: 800px;
     text-align: center;
     box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-    border: 1px solid #4CAF50;
+    border: 1px solid #FFFFFF;
 }
 
 .avatar-section {
