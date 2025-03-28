@@ -2,12 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Profile - {{ first_name }} {{ last_name }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}PROFILE{% endblock %}</title>
+
+    <!-- Styles -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-sm navbar-dark fixed-top py-1">
+<!-- Navbar -->
+<nav class="navbar navbar-expand-sm navbar-dark fixed-top py-1">
     <div class="container">
         <a href="dashboard" class="navbar-brand d-flex align-items-center gap-2">
             <img src="{{ url_for('static', filename='assets/Soteria_logo.png') }}" class="img-fluid" style="max-height: 30px;" alt="Soteria Logo">
@@ -22,83 +31,94 @@
             <ul class="navbar-nav d-flex flex-row gap-3 align-items-center">
                 <li class="nav-item"><a href="validation" class="nav-link">Link Validation</a></li>
                 <li class="nav-item"><a href="/" class="nav-link">Results</a></li>
-                <li class="nav-item"><a href="/profile_page" class="nav-link"><i class='bx bx-user-circle' style="font-size: 24px;"></i></a></li>
+                <li class="nav-item">
+                    <a href="/profile_page" class="nav-link">
+                        <i class='bx bx-user-circle' style="font-size: 24px;"></i>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
 </nav>
 
-    <!-- Profile Card -->
-    <div class="profile-container">
-        <div class="profile-card">
-            <div class="avatar-section">
-                <img src="{{ url_for('static', filename='images/avatar.png') }}" alt="Avatar" class="avatar-img">
-            </div>
-
-            <h1 class="profile-name">{{ first_name }} {{ last_name }}</h1>
-
-            <div class="profile-info">
-                <p><strong>EMAIL</strong><br>{{ email }}</p>
-                <p><strong>PASSWORD</strong><br>*************</p> <!-- Show hashed password if necessary -->
-            </div>
-
-            <div class="links-section">
-    <h2>LINKS REGISTERED</h2>
-    <ul>
-        {% if links %}
-            {% for link in links %}
-                <li>{{ loop.index }}. <a href="{{ link }}" target="_blank">{{ link }}</a></li>
-            {% endfor %}
-        {% else %}
-            <li>No links registered yet.</li>
-        {% endif %}
-    </ul>
-</div>
-
-<div class="documents-section">
-    <h2>DOCUMENTS</h2>
-
-    <!-- Proof of ID Files -->
-    <div class="doc-category">
-        <h3>Proof of ID</h3>
-        <ul>
-            {% if documents.proof_of_id %}
-                {% for file in documents.proof_of_id %}
-                    <li title="{{ file.filename }}">
-    <a href="{{ url_for('views.view_file', file_id=file.id) }}" target="_blank">
-        {{ file.filename }}
-    </a>
-</li>
-
-                {% endfor %}
-            {% else %}
-                <li>No Proof of ID uploaded.</li>
-            {% endif %}
-        </ul>
-    </div>
-
-    <!-- Ownership Files -->
-    <div class="doc-category">
-        <h3>Proof of Ownership</h3>
-        <ul>
-            {% if documents.ownership_id %}
-                {% for file in documents.ownership_id %}
-                    <li>
-                        <a href="{{ url_for('views.view_file', file_id=file.id) }}" target="_blank">{{ file.filename }}</a>
-                    </li>
-                {% endfor %}
-            {% else %}
-                <li>No Proof of Ownership uploaded.</li>
-            {% endif %}
-        </ul>
-    </div>
-</div>
-
+<!-- Profile Section -->
+<div class="profile-container">
+    <div class="profile-card">
+        <!-- LEFT SIDE -->
+        <div class="avatar-section">
+            <img src="{{ url_for('static', filename='images/avatar.png') }}" alt="Avatar" class="avatar-img">
             <form method="POST" action="{{ url_for('views.launch') }}">
                 <button type="submit" class="logout-btn">LOG OUT</button>
             </form>
         </div>
+
+        <!-- RIGHT SIDE -->
+        <div class="profile-content">
+            <h1 class="profile-name">{{ first_name }} {{ last_name }}</h1>
+
+            <div class="profile-info">
+                <p><strong>EMAIL</strong><br>{{ email }}</p>
+                <p><strong>PASSWORD</strong><br>*************</p>
+            </div>
+
+            <div class="links-section">
+                <h2>LINKS REGISTERED</h2>
+                <ul>
+                    {% if links %}
+                        {% for link in links %}
+                            <li>{{ loop.index }}. <a href="{{ link }}" target="_blank">{{ link }}</a></li>
+                        {% endfor %}
+                    {% else %}
+                        <li>No links registered yet.</li>
+                    {% endif %}
+                </ul>
+            </div>
+
+            <div class="documents-section">
+                <h2>DOCUMENTS</h2>
+                <table class="table-docs">
+                    <thead>
+                        <tr>
+                            <th>Proof of ID</th>
+                            <th>Proof of Ownership</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% set max_len = [documents.proof_of_id|length, documents.ownership_id|length]|max %}
+                        {% for i in range(max_len) %}
+                        <tr>
+                            <td>
+                                {% if documents.proof_of_id and documents.proof_of_id[i] is defined %}
+                                    <a href="{{ url_for('views.view_file', file_id=documents.proof_of_id[i].id) }}" target="_blank">
+                                        {{ documents.proof_of_id[i].filename }}
+                                    </a>
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if documents.ownership_id and documents.ownership_id[i] is defined %}
+                                    <a href="{{ url_for('views.view_file', file_id=documents.ownership_id[i].id) }}" target="_blank">
+                                        {{ documents.ownership_id[i].filename }}
+                                    </a>
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% if not documents.proof_of_id and not documents.ownership_id %}
+                        <tr>
+                            <td colspan="2">No documents uploaded.</td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
+</div>
 
 </body>
+
 </html>

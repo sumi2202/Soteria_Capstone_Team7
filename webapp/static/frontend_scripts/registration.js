@@ -43,27 +43,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Update preview of files
     function updatePreview(previewElement, fileList) {
-        previewElement.innerHTML = "";
-        const ul = document.createElement('ul');
-        fileList.forEach((file, index) => {
-            const li = document.createElement('li');
-            li.textContent = file.name;
+    previewElement.innerHTML = "";
+    const ul = document.createElement('ul');
+    fileList.forEach((file, index) => {
+        const li = document.createElement('li');
 
-            const removeBtn = document.createElement('button');
-            removeBtn.textContent = '❌';
-            removeBtn.style.marginLeft = '10px';
-            removeBtn.style.cursor = 'pointer';
+        // Trimmed display name
+        const maxLength = 15;
+        const fileName = file.name.length > maxLength
+            ? file.name.slice(0, maxLength) + '...'
+            : file.name;
 
-            removeBtn.addEventListener('click', () => {
-                fileList.splice(index, 1);
-                updatePreview(previewElement, fileList);
-            });
+        li.textContent = fileName;
 
-            li.appendChild(removeBtn);
-            ul.appendChild(li);
+        const removeBtn = document.createElement('button');
+        removeBtn.textContent = '❌';
+        removeBtn.style.marginLeft = '10px';
+        removeBtn.style.cursor = 'pointer';
+
+        removeBtn.addEventListener('click', () => {
+            fileList.splice(index, 1);
+            updatePreview(previewElement, fileList);
         });
-        previewElement.appendChild(ul);
-    }
+
+        li.appendChild(removeBtn);
+        ul.appendChild(li);
+    });
+    previewElement.appendChild(ul);
+}
+
 
     // File input change event listeners
     proofIdInput.addEventListener('change', () => {
