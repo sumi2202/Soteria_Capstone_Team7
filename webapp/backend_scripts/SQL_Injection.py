@@ -92,10 +92,20 @@ def sql_injection(url, level, risk, progress_callback=None):
     for i, page in enumerate(filteredURLs):
         print(f"[-->] Testing page: {page}")
         cmd = ["sqlmap", "-u", page, "--batch", "--dbs", "--tamper=space2comment,charencode", "--random-agent",
-               f"--level={level}", f"--risk={risk}", "--threads=5"]
+               f"--level={level}", f"--risk={risk}", "--threads=3", "--time-sec=5"]
         try:
-            run = subprocess.run(cmd, capture_output=True, text=True, timeout=500)
-            test_result = run.stdout.lower()
+            #run = subprocess.run(cmd, capture_output=True, text=True, timeout=500)
+            process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            try:
+                test_result, error_output = process.communicate(timeout=1600)
+            except subprocess.TimeoutExpired:
+                process.kill()
+                test_result, error_output = process.communicate()
+                type_failed.append(f"SQLMap test timed out after 1200 seconds, Location: {page}")
+                continue
+
+            #test_result = run.stdout.lower()
+            test_result = test_result.lower()
 
             if "1=1" in test_result and "and" in test_result:
                 num_failed += 1
