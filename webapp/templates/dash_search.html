@@ -31,7 +31,7 @@
         <div class="collapse navbar-collapse" id="navmenu">
             <ul class="navbar-nav ms-auto d-flex flex-row">
                 <li class="nav-item">
-                    <a href="validation" class="nav-link">Link Validation</a>
+                    <a href="/validation" class="nav-link">Link Validation</a>
                 </li>
                 <li class="nav-item">
                     <a href="/" class="nav-link">Results</a>
@@ -46,7 +46,7 @@
 <div class="container2">
     <form action="/run_tests" class="search-bar" method="POST">
         <h2>SOTERIA</h2>
-        <input type="url" placeholder="ENTER URL" name="url">
+        <input type="url" placeholder="ENTER URL" name="url" required>
         <div class="form-group">
             <label for="sql_level_risk">Select SQL Injection Intensity:</label>
             <select name="sql_level_risk" id="sql_level_risk" class="form-select mt-2">
@@ -60,6 +60,15 @@
         <button type="submit">SUBMIT</button>
     </form>
 </div>
+
+<script>
+document.querySelector("form").addEventListener("submit", function (e) {
+    const levelRisk = document.querySelector("#sql_level_risk").value;
+    const urlInput = document.querySelector("input[name='url']").value;
+    console.log("Submitting form with URL:", urlInput);
+    console.log("SQLi Level,Risk:", levelRisk);
+});
+</script>
 
 </body>
 </html>
