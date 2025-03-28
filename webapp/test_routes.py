@@ -25,7 +25,7 @@ def run_security_tests(app, url, task_id, level, risk):
             update_progress(10)  # initial
             xss_results = xss_testing(url, progress_callback=update_progress)
             update_progress(55)  # halfway through
-            sql_results = sql_injection(url, 4, 3, progress_callback=update_progress)
+            sql_results = sql_injection(url, level, risk, progress_callback=update_progress)
             update_progress(95)  # almost done
 
             xss_results['timestamp'] = xss_results['timestamp'].isoformat()
