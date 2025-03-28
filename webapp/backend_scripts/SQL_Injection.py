@@ -68,14 +68,14 @@ def sql_injection(url, level, risk, progress_callback=None):
             firefox.close()
         return url_listing
 
-    def run_sqlmap_with_timeout(cmd):
+    def run_sqlmap(cmd):
         process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         try:
-            output, error = process.communicate(timeout=120)  # Hard timeout for sqlmap
+            output, error = process.communicate(timeout=1600)  # still let sqlmap self-timeout
             return output.lower(), error
         except subprocess.TimeoutExpired:
             process.kill()
-            return "timeout", "SQLMap timed out"
+            return "timeout", "SQLMap timed out internally"
 
     print("[-->] Crawling for additional pages...")
     try:
@@ -100,23 +100,23 @@ def sql_injection(url, level, risk, progress_callback=None):
             "--tamper=space2comment,charencode", "--random-agent",
             f"--level={level}", f"--risk={risk}",
             "--threads=3", "--time-sec=5",
-            "--timeout=10", "--retries=1"
+            "--timeout=10", "--retries=2"
         ]
 
         try:
             with ThreadPoolExecutor(max_workers=1) as executor:
-                future = executor.submit(run_sqlmap_with_timeout, cmd)
+                future = executor.submit(run_sqlmap, cmd)
                 try:
-                    test_result, error_output = future.result(timeout=150)  # Total timeout per page
+                    test_result, error_output = future.result(timeout=7200)  # 2 hour failsafe
                 except TimeoutError:
-                    type_failed.append(f"Timeout while testing: {page}")
+                    type_failed.append(f"Failsafe timeout reached for: {page}")
                     continue
 
             if test_result == "timeout":
-                type_failed.append(f"SQLMap process timed out for: {page}")
+                type_failed.append(f"SQLMap self-timeout for: {page}")
                 continue
 
-            # Check types of injection found
+            # Test result analysis
             if "1=1" in test_result and "and" in test_result:
                 num_failed += 1
                 type_failed.append(f"Boolean-based Blind SQL Injection, Location: {page}")
