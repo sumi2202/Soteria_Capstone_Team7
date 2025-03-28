@@ -1,116 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/test_results_1.css') }}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
-    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
-    <title>Test Results for Task ID: {{ task_id }}</title>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/test_results_1.css') }}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <title>Test Results</title>
 </head>
+
 <body>
-    <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-sm navbar-dark fixed-top py-1">
-        <div class="container">
-            <a href="/dashboard" class="navbar-brand d-flex align-items-center gap-2">
-                <img src="{{ url_for('static', filename='assets/Soteria_logo.png') }}" class="img-fluid"
-                    style="max-height: 30px;" alt="Soteria Logo">
-                <strong>SOTERIA</strong>
-            </a>
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-sm navbar-dark fixed-top py-1">
+    <div class="container">
+      <a href="/dashboard" class="navbar-brand d-flex align-items-center gap-2">
+        <img src="{{ url_for('static', filename='assets/Soteria_logo.png') }}" class="img-fluid" style="max-height: 30px;" alt="Soteria Logo">
+        <strong>SOTERIA</strong>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navmenu">
+        <ul class="navbar-nav d-flex flex-row gap-3 align-items-center">
+          <li class="nav-item"><a href="/validation" class="nav-link">Link Validation</a></li>
+          <li class="nav-item"><a href="/" class="nav-link">Results</a></li>
+          <li class="nav-item"><a href="/profile_page" class="nav-link"><i class='bx bx-user-circle' style="font-size: 24px;"></i></a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+  <!-- MAIN CONTAINER -->
+  <div class="container custom-results-container">
 
-            <div class="collapse navbar-collapse justify-content-end" id="navmenu">
-                <ul class="navbar-nav d-flex flex-row gap-3 align-items-center">
-                    <li class="nav-item"><a href="/validation" class="nav-link">Link Validation</a></li>
-                    <li class="nav-item"><a href="/" class="nav-link">Results</a></li>
-                    <li class="nav-item"><a href="/profile_page" class="nav-link"><i class='bx bx-user-circle'
-                                style="font-size: 24px;"></i></a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <div class="container mt-5">
-        <h2 class="text-center"><strong>Test Results for Task ID: {{ task_id }}</strong></h2>
-
-        <div class="row">
-            <div class="col-md-6">
-                <h3>Overall Test Summary</h3>
-                <p>Number of tests: <strong>{{ num_tests }}</strong></p>
-                <p>Number of tests failed: <strong>{{ num_failed }}</strong></p>
-
-                <h3>XSS Test Results</h3>
-                <ul>
-                    <li>Passed: <strong>{{ xss_result.num_passed }}</strong></li>
-                    <li>Failed: <strong>{{ xss_result.num_failed }}</strong></li>
-                </ul>
-
-                <h3>SQL Injection Test Results</h3>
-                <ul>
-                    <li>Passed: <strong>{{ sql_result.num_passed }}</strong></li>
-                    <li>Failed: <strong>{{ sql_result.num_failed }}</strong></li>
-                </ul>
-            </div>
-
-            <div class="col-md-6 d-flex justify-content-center align-items-center">
-                <canvas id="testChart"></canvas>
-            </div>
-        </div>
+    <!-- SCAN DETAILS CARD -->
+    <div class="info-card mb-4">
+      <h4>SCAN DETAILS</h4>
+      <p><span class="info-label">Submitted URL:</span> {{ xss_result.url }}</p>
+      <p><span class="info-label">SQLi Intensity Level:</span> Level {{ sql_result.level }} / Risk {{ sql_result.risk }}</p>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        var ctx = document.getElementById('testChart').getContext('2d');
-        var delayed;
+    <div class="row align-items-start">
+      <!-- SUMMARY -->
+      <div class="col-md-6">
+        <h2 class="mb-4"><strong>Overall Test Summary</strong></h2>
+        <p><span class="result-label">Number of tests:</span></p>
+        <p><span class="result-value">{{ num_tests }}</span></p>
+        <p><span class="result-label">Number of tests failed:</span></p>
+        <p><span class="result-value">{{ num_failed }}</span></p>
+      </div>
 
-        var testChart = new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: ['Failed Tests', 'Passed Tests'],
-                datasets: [{
-                    data: [{{ num_failed }}, {{ num_tests - num_failed }}],
-                    backgroundColor: ['#DB5461', '#2CBE9B'],
-                    borderColor: '#ffffff',
-                    borderWidth: 4,
-                    offset: [50, 0] // pull out the 'failed' slice
-                }]
-            },
-            options: {
-                responsive: true,
-                animation: {
-                    onComplete: () => { delayed = true; },
-                    delay: (context) => {
-                        let delay = 0;
-                        if (context.type === 'data' && context.mode === 'default' && !delayed) {
-                            delay = context.dataIndex * 500;
-                        }
-                        return delay;
-                    }
-                },
-                plugins: {
-                    legend: {
-                        position: 'top',
-                        labels: {
-                            color: '#fff'
-                        }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(tooltipItem) {
-                                return tooltipItem.label + ': ' + tooltipItem.raw;
-                            }
-                        }
-                    }
-                }
+      <!-- CHART -->
+      <div class="col-md-6 d-flex justify-content-center align-items-start">
+        <canvas id="testChart"></canvas>
+      </div>
+
+      <!-- TABLE -->
+      <div class="col-12 mt-5">
+        <h3 class="text-start">Detailed Test Results</h3>
+        <table class="table test-table text-white mt-3">
+          <thead>
+            <tr>
+              <th scope="col">Test Type</th>
+              <th scope="col">Passed</th>
+              <th scope="col">Failed</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>XSS</td>
+              <td><span class="result-value">{{ xss_result.num_passed }}</span></td>
+              <td><span class="result-value">{{ xss_result.num_failed }}</span></td>
+            </tr>
+            <tr>
+              <td>SQL Injection</td>
+              <td><span class="result-value">{{ sql_result.num_passed }}</span></td>
+              <td><span class="result-value">{{ sql_result.num_failed }}</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- EXPAND BUTTON -->
+    <div class="text-center mt-4">
+      <button class="expand-btn">EXPAND</button>
+    </div>
+  </div>
+
+  <!-- CHART SCRIPT -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    var ctx = document.getElementById('testChart').getContext('2d');
+    var delayed;
+
+    var testChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: ['Failed Tests', 'Passed Tests'],
+        datasets: [{
+          data: [{{ num_failed }}, {{ num_tests - num_failed }}],
+          backgroundColor: ['#DB5461', '#2CBE9B'],
+          borderColor: '#ffffff',
+          borderWidth: 4,
+          offset: [50, 0]
+        }]
+      },
+      options: {
+        responsive: true,
+        animation: {
+          onComplete: () => { delayed = true; },
+          delay: (context) => {
+            let delay = 0;
+            if (context.type === 'data' && context.mode === 'default' && !delayed) {
+              delay = context.dataIndex * 500;
             }
-        });
-    </script>
+            return delay;
+          }
+        },
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: {
+              color: '#fff'
+            }
+          },
+          tooltip: {
+            callbacks: {
+              label: function(tooltipItem) {
+                return tooltipItem.label + ': ' + tooltipItem.raw;
+              }
+            }
+          }
+        }
+      }
+    });
+  </script>
 </body>
 </html>
