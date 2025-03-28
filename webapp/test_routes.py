@@ -56,6 +56,7 @@ def run_tests():
     url = data.get("url")
     level_risk = data.get("sql_level_risk", "1,1").split(",")
     level, risk = int(level_risk[0]), int(level_risk[1])
+    print(f"Received SQLi Level: {level}, Risk: {risk}")
 
     if not url:
         return jsonify({"success": False, "error": "No URL provided"}), 400

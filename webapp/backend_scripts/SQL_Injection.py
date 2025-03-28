@@ -4,6 +4,7 @@ import os
 import sys
 from urllib.parse import urlparse
 from playwright.sync_api import sync_playwright
+from concurrent.futures import ThreadPoolExecutor, TimeoutError
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from flask import current_app
@@ -11,12 +12,6 @@ from webapp.models import SQLResult
 from datetime import datetime, UTC
 
 
-# from app import app #FOR TESTING, DELETE AFTER
-
-
-# function for sql injection tests
-# level values = 1,2,3,4,5
-# risk values = 1,2,3
 def sql_injection(url, level, risk, progress_callback=None):
     print(f"[-->] Initiating SQL Injection Testing on: {url}")
 
@@ -73,6 +68,15 @@ def sql_injection(url, level, risk, progress_callback=None):
             firefox.close()
         return url_listing
 
+    def run_sqlmap_with_timeout(cmd):
+        process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        try:
+            output, error = process.communicate(timeout=120)  # Hard timeout for sqlmap
+            return output.lower(), error
+        except subprocess.TimeoutExpired:
+            process.kill()
+            return "timeout", "SQLMap timed out"
+
     print("[-->] Crawling for additional pages...")
     try:
         url_list = crawler(url)
@@ -91,22 +95,28 @@ def sql_injection(url, level, risk, progress_callback=None):
     print(f"[-->] Testing {len(filteredURLs)} page(s)...")
     for i, page in enumerate(filteredURLs):
         print(f"[-->] Testing page: {page}")
-        cmd = ["sqlmap", "-u", page, "--batch", "--dbs", "--tamper=space2comment,charencode", "--random-agent",
-               f"--level={level}", f"--risk={risk}", "--threads=3", "--time-sec=5"]
+        cmd = [
+            "sqlmap", "-u", page, "--batch", "--dbs",
+            "--tamper=space2comment,charencode", "--random-agent",
+            f"--level={level}", f"--risk={risk}",
+            "--threads=3", "--time-sec=5",
+            "--timeout=10", "--retries=1"
+        ]
+
         try:
-            #run = subprocess.run(cmd, capture_output=True, text=True, timeout=500)
-            process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-            try:
-                test_result, error_output = process.communicate(timeout=1600)
-            except subprocess.TimeoutExpired:
-                process.kill()
-                test_result, error_output = process.communicate()
-                type_failed.append(f"SQLMap test timed out after 1200 seconds, Location: {page}")
+            with ThreadPoolExecutor(max_workers=1) as executor:
+                future = executor.submit(run_sqlmap_with_timeout, cmd)
+                try:
+                    test_result, error_output = future.result(timeout=150)  # Total timeout per page
+                except TimeoutError:
+                    type_failed.append(f"Timeout while testing: {page}")
+                    continue
+
+            if test_result == "timeout":
+                type_failed.append(f"SQLMap process timed out for: {page}")
                 continue
 
-            #test_result = run.stdout.lower()
-            test_result = test_result.lower()
-
+            # Check types of injection found
             if "1=1" in test_result and "and" in test_result:
                 num_failed += 1
                 type_failed.append(f"Boolean-based Blind SQL Injection, Location: {page}")
@@ -155,7 +165,7 @@ def sql_injection(url, level, risk, progress_callback=None):
             continue
 
         if progress_callback:
-            progress_callback(60 + int((i + 1) / len(filteredURLs) * 30))  # 60 → 90
+            progress_callback(60 + int((i + 1) / len(filteredURLs) * 30))
 
     timestamp = datetime.now(UTC)
     result_analysis = {
@@ -172,18 +182,5 @@ def sql_injection(url, level, risk, progress_callback=None):
     if progress_callback:
         progress_callback(90)
 
-    print("\U00002705 Cross Site Scripting Testing has been Completed!")
+    print("✅ SQL Injection Testing has been Completed!")
     return result_analysis
-
-# #FOR TESTING ONLY, DELETE AFTER
-# if __name__ == "__main__":
-#
-#     with app.app_context():
-#         url_input = input("Enter the URL to test (SQLi TESTING): ")
-#         sql_injection(url_input, 3, 2)
-
-
-
-
-
-    
