@@ -72,7 +72,7 @@ body::before {
   z-index: 1;
   width: 420px;
    background: linear-gradient(145deg, rgba(0, 0, 0, 0.6), rgba(29, 120, 116, 0.6));
-   border: 3px solid #ffffff;
+  border: 1px solid #ccc;
   backdrop-filter: blur(20px);
   border-radius: 20px;
   padding: 30px 40px;
