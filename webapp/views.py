@@ -1,3 +1,6 @@
+import io
+from datetime import datetime
+
 from flask import Blueprint, render_template, request, redirect, url_for, flash, send_from_directory, jsonify, session, \
     current_app, send_file
 from .backend_scripts.URLValidation import url_validation
@@ -152,10 +155,35 @@ def link_validation():
 
     return render_template("link_validation.html")
 
-@views.route('/results')
-def results():
-    # Render your results template (create it if missing)
-    return render_template("result_history.html")
+from datetime import datetime
+
+@views.route("/results")
+def results_page():
+    db = current_app.db
+    xss_results = list(db.xss_result.find().sort("timestamp", -1).limit(10))
+    sql_results = list(db.sql_result.find().sort("timestamp", -1).limit(10))
+
+    history = []
+    for xss in xss_results:
+        task_id = xss.get("task_id")
+        matching_sql = next((sql for sql in sql_results if sql.get("task_id") == task_id), {})
+
+        raw_timestamp = xss.get("timestamp", None)
+        if isinstance(raw_timestamp, datetime):
+            formatted_timestamp = raw_timestamp.strftime("%Y-%m-%d %I:%M %p")
+        else:
+            formatted_timestamp = "---"
+
+        history.append({
+            "url": xss.get("url", "---"),
+            "timestamp": formatted_timestamp,
+            "task_id": task_id,
+            "has_results": bool(xss and matching_sql)
+        })
+
+    return render_template("result_history.html", history=history)
+
+
 
 
 @views.route('/register-link', methods=['GET', 'POST'])

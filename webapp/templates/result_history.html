@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-
     <title>{% block title %}Register Domain{% endblock %}</title>
 
     <!-- Styles -->
@@ -38,5 +37,30 @@
             </div>
         </div>
     </nav>
+
+    <!-- MAIN CONTENT -->
+    <div class="container" style="margin-top: 80px;">
+        <h1 class="results-title">RESULTS</h1>
+        <div class="history-card">
+            <h2 class="history-header">HISTORY</h2>
+
+            {% for entry in history %}
+            <div class="history-entry">
+                <span class="entry-url">{{ entry.url }}</span>
+                <span class="entry-time">{{ entry.timestamp }}</span>
+                <div class="entry-buttons">
+                    <a href="/tests/test_results/{{ entry.task_id }}" class="btn-view {% if not entry.has_results %}disabled{% endif %}">
+                        <i class='bx bx-show'></i>
+                    </a>
+                    <a href="/download/{{ entry.task_id }}" class="btn-download {% if not entry.has_results %}disabled{% endif %}">
+                        <i class='bx bx-download'></i>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+
 </body>
 </html>

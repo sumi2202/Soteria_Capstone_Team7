@@ -13,6 +13,7 @@ body {
     background-size: 600% 600%;
     animation: gradient-animation 18s ease infinite;
     color: #fff;
+    padding-top: 80px;
 }
 
 @keyframes gradient-animation {
@@ -27,7 +28,8 @@ body {
     height: 60px;
 }
 
-.navbar-brand, .navbar-nav .nav-link {
+.navbar-brand,
+.navbar-nav .nav-link {
     color: #fff !important;
     font-size: 14px;
     text-transform: uppercase;
@@ -35,4 +37,75 @@ body {
 
 .navbar .bx-user-circle {
     color: #fff;
+}
+
+/* === RESULTS TITLE === */
+.results-title {
+    font-size: 36px;
+    font-weight: bold;
+    letter-spacing: 5px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* === HISTORY CARD === */
+.history-card {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid #5dd39e;
+    border-radius: 15px;
+    padding: 30px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.history-header {
+    font-size: 22px;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+}
+
+/* === HISTORY ENTRIES === */
+.history-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.07);
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.entry-url {
+    flex: 1;
+    color: #ffffff;
+    font-size: 0.95rem;
+}
+
+.entry-time {
+    color: #d3d3d3;
+    margin-right: 20px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+/* === BUTTON STYLES === */
+.entry-buttons a {
+    margin-left: 10px;
+    background: #2cbe9b;
+    padding: 8px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #fff;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.entry-buttons a:hover {
+    background: #00b38f;
+}
+
+.entry-buttons a.disabled {
+    background: #666;
+    pointer-events: none;
+    opacity: 0.5;
 }
