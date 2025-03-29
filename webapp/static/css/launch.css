@@ -1,81 +1,117 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "JetBrains+Momo", sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
 }
 
 body {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(245deg, #071e22, #1d7874, #d85461);
+  background-size: 600% 600%;
+  animation: gradient-animation 18s ease infinite;
+  color: #fff;
+  overflow: hidden;
+}
+
+/* Flickering white dots layer with pulsing glow */
+body::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: radial-gradient(white 1px, transparent 2px);
+  background-size: 20px 20px;
+  mix-blend-mode: lighten;
+  opacity: 0.07;
+  animation: flicker 3s infinite ease-in-out, pulseGlow 4s infinite ease-in-out;
+  z-index: 0;
+  pointer-events: none;
+  filter: blur(0.8px);
+}
+
+/* Glow pulse animation */
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.05; }
+  50% { opacity: 0.12; }
+}
+
+/* Background gradient animation */
+@keyframes gradient-animation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Optional slight flicker motion */
+@keyframes flicker {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-0.5px, 0.5px); }
+}
+
+.logo-container {
     display: flex;
     justify-content: center;
+    background: transparent !important;
     align-items: center;
-    min-height: 100vh;
-    position: relative;
-    background: linear-gradient(245deg,#071e22,#1d7874,#d85461) !important;
-    animation: gradient-animation 18s ease infinite
+    margin-bottom: 20px;
 }
-
-@keyframes gradient-animation {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-.wrapper{
-    width: 420px;
-    color: #fbf5f3;
-    justify-content: center;
-    align-items: center;
-    background-image: linear-gradient(to bottom, rgba(255,0,0,0), rgba(0,60,113,1));;
-    border: 2px solid rgba(255, 255, 255, .2);
-    backdrop-filter: blur(20px);
-    border-radius: 20px;
-    padding: 30px 40px;
-}
-.wrapper h1{
-    font-size: 36px;
-    text-align:center;
-    padding 20px;
-    color: white;
-    font-size: 40px;
-    font-family: JetBrains Mono;
-    font-weight: 800;
-    letter-spacing: 5.60px;
-    word-wrap: break-word
-}
-.wrapper h2{
-    font-size: 14px;
-    text-align: center;
-    padding: 20px;
-    font-family: JetBrains Mono;
-
-}
-.wrapper h3{
-    font-size: 14px;
-    text-align: center;
-    padding: 20px;
-        font-family: JetBrains Mono;
-
-
+.logo-container video {
+    background-color: transparent !important;
 }
 
 
-.wrapper .begin{
-    width: 100%;
-    height: 45px;
-    background: linear-gradient(#44ffd2, #679289);
-    border: #FFFFFF;
-    outline: none;
-    padding: 3px;
-    border-radius: 40px;
-    cursor: pointer;
-    font-size: 16px;
-    color:#FFFFFF;
-    font-weight: 600;
+.wrapper {
+  position: relative;
+  z-index: 1;
+  width: 420px;
+   background: linear-gradient(145deg, rgba(0, 0, 0, 0.6), rgba(29, 120, 116, 0.6));
+   border: 3px solid #ffffff;
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 30px 40px;
+  text-align: center;
+  color: #fbf5f3;
+}
+
+.wrapper h1 {
+  font-size: 40px;
+  padding: 20px;
+  color: white;
+  font-weight: 800;
+  letter-spacing: 5.6px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.wrapper h2,
+.wrapper h3 {
+  font-size: 14px;
+  padding: 20px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.wrapper .begin {
+  width: 100%;
+  height: 45px;
+  background: linear-gradient(#44ffd2, #679289);
+  border: none;
+  outline: none;
+  padding: 3px;
+  border-radius: 40px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #ffffff;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.wrapper .begin:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 12px #44ffd2;
 }

@@ -13,6 +13,23 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 </head>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const passwordField = document.getElementById("passwordField");
+    const togglePassword = document.getElementById("togglePassword");
+    const passwordIcon = document.getElementById("passwordIcon");
+
+    let isPasswordVisible = false;
+
+    togglePassword.addEventListener("click", () => {
+        isPasswordVisible = !isPasswordVisible;
+        passwordField.type = isPasswordVisible ? "text" : "password";
+        passwordIcon.setAttribute("name", isPasswordVisible ? "hide" : "show-alt");
+    });
+});
+</script>
+
 <body>
 
 <!-- Navbar -->
@@ -30,7 +47,7 @@
         <div class="collapse navbar-collapse justify-content-end" id="navmenu">
             <ul class="navbar-nav d-flex flex-row gap-3 align-items-center">
                 <li class="nav-item"><a href="validation" class="nav-link">Link Validation</a></li>
-                <li class="nav-item"><a href="/" class="nav-link">Results</a></li>
+                <li class="nav-item"><a href="/results" class="nav-link">Results</a></li>
                 <li class="nav-item">
                     <a href="/profile_page" class="nav-link">
                         <i class='bx bx-user-circle' style="font-size: 24px;"></i>
@@ -46,8 +63,8 @@
     <div class="profile-card">
         <!-- LEFT SIDE -->
         <div class="avatar-section">
-            <img src="{{ url_for('static', filename='images/avatar.png') }}" alt="Avatar" class="avatar-img">
-            <form method="POST" action="{{ url_for('views.launch') }}">
+            <img src="{{ url_for('static', filename='images/avatar.png') }}"  class="avatar-img">
+            <form method="GET" action="{{ url_for('views.launch') }}">
                 <button type="submit" class="logout-btn">LOG OUT</button>
             </form>
         </div>
@@ -57,8 +74,26 @@
             <h1 class="profile-name">{{ first_name }} {{ last_name }}</h1>
 
             <div class="profile-info">
-                <p><strong>EMAIL</strong><br>{{ email }}</p>
-                <p><strong>PASSWORD</strong><br>*************</p>
+                <h2><strong>EMAIL</strong></h2>
+                <p>{{ email }}</p>
+                <h2><strong>PASSWORD</strong></h2>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <input
+                            type="password"
+                            id="passwordField"
+                            value="{{ password }}"
+                            readonly
+                            style="background: transparent; border: none; color: #ffffff;"
+                        >
+                        <button
+                            type="button"
+                            id="togglePassword"
+                            style="background: none; border: none; cursor: pointer; display: flex; align-items: center;"
+                            aria-label="Toggle password visibility"
+                        >
+                            <box-icon name='show-alt' id="passwordIcon" color="#44FFE2"></box-icon>
+                        </button>
+                    </div>
             </div>
 
             <div class="links-section">
@@ -89,8 +124,10 @@
                         <tr>
                             <td>
                                 {% if documents.proof_of_id and documents.proof_of_id[i] is defined %}
-                                    <a href="{{ url_for('views.view_file', file_id=documents.proof_of_id[i].id) }}" target="_blank">
-                                        {{ documents.proof_of_id[i].filename }}
+                                    <a href="{{ url_for('views.view_file', file_id=documents.proof_of_id[i].id) }}"
+                                       target="_blank"
+                                       title="{{ documents.proof_of_id[i].filename }}">
+                                        {{ documents.proof_of_id[i].filename[:15] ~ '...' if documents.proof_of_id[i].filename|length > 15 else documents.proof_of_id[i].filename }}
                                     </a>
                                 {% else %}
                                     —
@@ -98,13 +135,16 @@
                             </td>
                             <td>
                                 {% if documents.ownership_id and documents.ownership_id[i] is defined %}
-                                    <a href="{{ url_for('views.view_file', file_id=documents.ownership_id[i].id) }}" target="_blank">
-                                        {{ documents.ownership_id[i].filename }}
+                                    <a href="{{ url_for('views.view_file', file_id=documents.ownership_id[i].id) }}"
+                                       target="_blank"
+                                       title="{{ documents.ownership_id[i].filename }}">
+                                        {{ documents.ownership_id[i].filename[:15] ~ '...' if documents.ownership_id[i].filename|length > 15 else documents.ownership_id[i].filename }}
                                     </a>
                                 {% else %}
                                     —
                                 {% endif %}
                             </td>
+
                         </tr>
                         {% endfor %}
                         {% if not documents.proof_of_id and not documents.ownership_id %}

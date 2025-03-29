@@ -5,6 +5,7 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase; /* ✅ Force uppercase globally */
 }
 
 body {
@@ -12,7 +13,7 @@ body {
     background: linear-gradient(245deg, #071e22, #1d7874, #d85461);
     background-size: 600% 600%;
     animation: gradient-animation 18s ease infinite;
-    color: #fff;
+    color: #ffffff; /* ✅ Default text color: white */
 }
 
 @keyframes gradient-animation {
@@ -28,9 +29,28 @@ body {
 }
 
 .navbar-brand, .navbar-nav .nav-link {
-    color: #fff !important;
+    color: #ffffff !important;
     font-size: 14px;
     text-transform: uppercase;
+}
+
+/* ✅ All text to white (excluding links) */
+h1, h2, h3, h4, h5, h6,
+p, span, div, strong,
+th, td, ul, li {
+    color: #ffffff !important;
+}
+
+/* ✅ All links turquoise */
+a {
+    color: #44FFE2 !important;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #ffffff !important;
+    text-decoration: underline;
 }
 
 .profile-container {
@@ -125,13 +145,14 @@ body {
     font-size: 14px;
 }
 
+/* ✅ Update link colors */
 .links-section li a {
-    color: #00ccff;
+    color: #44FFE2 !important;
     text-decoration: none;
 }
 
 .links-section li a:hover {
-    color: #ff6600;
+    color: #ffffff !important;
 }
 
 /* Document Table */
@@ -147,7 +168,7 @@ body {
     border: 1px solid #ccc;
     padding: 8px 10px;
     text-align: left;
-    color: #fff;
+    color: #ffffff;
 }
 
 .table-docs th {
@@ -156,11 +177,12 @@ body {
     font-weight: 600;
 }
 
+/* ✅ Table link colors */
 .table-docs td a {
-    color: #00ccff;
+    color: #44FFE2 !important;
     text-decoration: underline;
 }
 
 .table-docs td a:hover {
-    color: #ff6600;
+    color: #ffffff !important;
 }

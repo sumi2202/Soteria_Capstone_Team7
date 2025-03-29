@@ -155,7 +155,7 @@ def link_validation():
 @views.route('/results')
 def results():
     # Render your results template (create it if missing)
-    return render_template("test_results.html")
+    return render_template("result_history.html")
 
 
 @views.route('/register-link', methods=['GET', 'POST'])

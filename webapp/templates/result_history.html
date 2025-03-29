@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{% block title %}Register Domain{% endblock %}</title>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/result_history.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top py-1">
+        <div class="container">
+            <a href="dashboard" class="navbar-brand d-flex align-items-center gap-2">
+                <img src="{{ url_for('static', filename='assets/Soteria_logo.png') }}" class="img-fluid"
+                    style="max-height: 30px;" alt="Soteria Logo">
+                <strong>SOTERIA</strong>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-end" id="navmenu">
+                <ul class="navbar-nav d-flex flex-row gap-3 align-items-center">
+                    <li class="nav-item"><a href="validation" class="nav-link">Link Validation</a></li>
+                    <li class="nav-item"><a href="/results" class="nav-link">Results</a></li>
+                    <li class="nav-item"><a href="/profile_page" class="nav-link"><i class='bx bx-user-circle'
+                                style="font-size: 24px;"></i></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</body>
+</html>
