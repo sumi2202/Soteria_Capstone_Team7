@@ -34,14 +34,12 @@ body {
     text-transform: uppercase;
 }
 
-/* ✅ All text to white (excluding links) */
 h1, h2, h3, h4, h5, h6,
 p, span, div, strong,
 th, td, ul, li {
     color: #ffffff !important;
 }
 
-/* ✅ All links turquoise */
 a {
     color: #44FFE2 !important;
     text-decoration: none;
@@ -65,7 +63,6 @@ a:hover {
     display: flex;
     gap: 40px;
     background: linear-gradient(145deg, rgba(0, 0, 0, 0.6), rgba(29, 120, 116, 0.6));
-    border: 3px solid #ffffff;
     border-radius: 15px;
     padding: 40px;
     width: 100%;
