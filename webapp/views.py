@@ -1,5 +1,6 @@
 import io
 from datetime import datetime
+import pytz
 
 from flask import Blueprint, render_template, request, redirect, url_for, flash, send_from_directory, jsonify, session, \
     current_app, send_file
@@ -125,64 +126,57 @@ def profile():
         verified=verified
     )
 
-@views.route('/validation', methods=['GET', 'POST'])
-def link_validation():
-    if request.method == 'POST':
-        data = request.get_json()
-        url = data.get('url', '')
-
-        email = session.get('email')
-        if not email:
-            return jsonify({'error': 'User not logged in'}), 401
-
-        validURL, invalidURL, alreadyRegistered = url_validation(email, url)
-
-        print(
-            f"✅ [DEBUG] Validation Results → valid: {validURL}, invalid: {invalidURL}, alreadyRegistered: {alreadyRegistered}")
-
-        if validURL == 0 and invalidURL == 0 and alreadyRegistered == 0:
-            session['validated_url'] = url  # Store URL in session
-            session.modified = True  # Mark session as modified
-            print(f"✅ [DEBUG] Stored in session: {session.get('validated_url')}")
-
-        print("🔍 [DEBUG] Session content after validation:", dict(session))  # Print session contents
-
-        return jsonify({
-            'validURL': validURL,
-            'alreadyRegistered': alreadyRegistered,
-            'invalidURL': invalidURL
-        })
-
-    return render_template("link_validation.html")
-
-from datetime import datetime
-
 @views.route("/results")
 def results_page():
     db = current_app.db
-    xss_results = list(db.xss_result.find().sort("timestamp", -1).limit(10))
-    sql_results = list(db.sql_result.find().sort("timestamp", -1).limit(10))
+    page = int(request.args.get("page", 1))
+    per_page = int(request.args.get("per_page", 5))
+    skip = (page - 1) * per_page
+
+    all_xss_task_ids = db.xss_result.distinct("task_id")
+    valid_task_ids = db.sql_result.distinct("task_id", {"task_id": {"$in": all_xss_task_ids}})
+    total = len(valid_task_ids)
+    total_pages = (total + per_page - 1) // per_page
+
+    paged_task_ids = valid_task_ids[skip:skip + per_page]
+
+    xss_results = list(db.xss_result.find({"task_id": {"$in": paged_task_ids}}))
+    sql_results = list(db.sql_result.find({"task_id": {"$in": paged_task_ids}}))
+    sql_map = {s["task_id"]: s for s in sql_results}
 
     history = []
     for xss in xss_results:
         task_id = xss.get("task_id")
-        matching_sql = next((sql for sql in sql_results if sql.get("task_id") == task_id), {})
+        if task_id not in sql_map:
+            continue
 
-        raw_timestamp = xss.get("timestamp", None)
-        if isinstance(raw_timestamp, datetime):
-            formatted_timestamp = raw_timestamp.strftime("%Y-%m-%d %I:%M %p")
-        else:
-            formatted_timestamp = "---"
+        raw_ts = xss.get("timestamp")
+        formatted_ts = "---"
+
+        if isinstance(raw_ts, str):
+            try:
+                raw_ts = datetime.fromisoformat(raw_ts.replace("Z", "+00:00"))
+            except Exception:
+                pass
+        if isinstance(raw_ts, datetime):
+            # Optional: Convert to local timezone
+            formatted_ts = raw_ts.strftime("%Y-%m-%d %I:%M %p")
 
         history.append({
             "url": xss.get("url", "---"),
-            "timestamp": formatted_timestamp,
+            "timestamp": formatted_ts,
             "task_id": task_id,
-            "has_results": bool(xss and matching_sql)
+            "has_results": True
         })
 
-    return render_template("result_history.html", history=history)
+    print(f"[DEBUG] page={page} per_page={per_page} total_valid_tasks={total} total_pages={total_pages} entries_on_this_page={len(history)}")
 
+    return render_template("result_history.html",
+        history=history,
+        page=page,
+        per_page=per_page,
+        total_pages=total_pages
+    )
 
 
 

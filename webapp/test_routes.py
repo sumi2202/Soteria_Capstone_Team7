@@ -2,6 +2,7 @@ import time
 from flask import Blueprint, request, jsonify, render_template, redirect, url_for, current_app
 from .backend_scripts.XSS import xss_testing
 from .backend_scripts.SQL_Injection import sql_injection
+from datetime import datetime
 import threading
 import uuid
 
@@ -28,8 +29,8 @@ def run_security_tests(app, url, task_id, level, risk):
             sql_results = sql_injection(url, level, risk, progress_callback=update_progress)
             update_progress(95)  # almost done
 
-            xss_results['timestamp'] = xss_results['timestamp'].isoformat()
-            sql_results['timestamp'] = sql_results['timestamp'].isoformat()
+            xss_results['timestamp'] = datetime.utcnow()
+            sql_results['timestamp'] = datetime.utcnow()
             xss_results['task_id'] = task_id
             sql_results['task_id'] = task_id
 
