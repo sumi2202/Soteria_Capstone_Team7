@@ -40,7 +40,7 @@
         <div class="history-card">
             <h2 class="history-header">HISTORY</h2>
             {% if page is defined and total_pages is defined %}
-                <h5 class="text-white">DEBUG: Page {{ page }} of {{ total_pages }} (showing {{ history | length }} entries)</h5>
+                <h5 class="text-white">Page {{ page }} of {{ total_pages }} (showing {{ history | length }} entries)</h5>
             {% endif %}
 
             {% for entry in history %}

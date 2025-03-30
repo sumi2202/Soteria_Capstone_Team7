@@ -129,50 +129,48 @@ def profile():
 @views.route("/results")
 def results_page():
     db = current_app.db
+
     page = int(request.args.get("page", 1))
     per_page = int(request.args.get("per_page", 5))
-    skip = (page - 1) * per_page
 
-    all_xss_task_ids = db.xss_result.distinct("task_id")
-    valid_task_ids = db.sql_result.distinct("task_id", {"task_id": {"$in": all_xss_task_ids}})
-    total = len(valid_task_ids)
-    total_pages = (total + per_page - 1) // per_page
+    xss_results = list(db.xss_result.find().sort("timestamp", -1))
+    task_ids = [x.get("task_id") for x in xss_results if "task_id" in x]
+    sql_results = db.sql_result.find({"task_id": {"$in": task_ids}})
+    sql_map = {sql["task_id"]: sql for sql in sql_results}
 
-    paged_task_ids = valid_task_ids[skip:skip + per_page]
-
-    xss_results = list(db.xss_result.find({"task_id": {"$in": paged_task_ids}}))
-    sql_results = list(db.sql_result.find({"task_id": {"$in": paged_task_ids}}))
-    sql_map = {s["task_id"]: s for s in sql_results}
-
-    history = []
+    # Filter + Format
+    valid_results = []
     for xss in xss_results:
         task_id = xss.get("task_id")
-        if task_id not in sql_map:
+        if not task_id or task_id not in sql_map:
             continue
 
-        raw_ts = xss.get("timestamp")
-        formatted_ts = "---"
-
-        if isinstance(raw_ts, str):
+        # Fix timestamp formatting
+        raw_timestamp = xss.get("timestamp")
+        if isinstance(raw_timestamp, str):
             try:
-                raw_ts = datetime.fromisoformat(raw_ts.replace("Z", "+00:00"))
+                raw_timestamp = datetime.fromisoformat(raw_timestamp.replace("Z", "+00:00"))
             except Exception:
-                pass
-        if isinstance(raw_ts, datetime):
-            # Optional: Convert to local timezone
-            formatted_ts = raw_ts.strftime("%Y-%m-%d %I:%M %p")
+                raw_timestamp = None
 
-        history.append({
+        formatted = raw_timestamp.strftime("%Y-%m-%d %I:%M %p") if isinstance(raw_timestamp, datetime) else "---"
+
+        valid_results.append({
             "url": xss.get("url", "---"),
-            "timestamp": formatted_ts,
+            "timestamp": formatted,
             "task_id": task_id,
             "has_results": True
         })
 
-    print(f"[DEBUG] page={page} per_page={per_page} total_valid_tasks={total} total_pages={total_pages} entries_on_this_page={len(history)}")
+    # PAGINATE AFTER FILTERING
+    total = len(valid_results)
+    total_pages = (total + per_page - 1) // per_page
+    start = (page - 1) * per_page
+    end = start + per_page
+    paginated = valid_results[start:end]
 
     return render_template("result_history.html",
-        history=history,
+        history=paginated,
         page=page,
         per_page=per_page,
         total_pages=total_pages
