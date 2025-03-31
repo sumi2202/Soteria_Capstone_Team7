@@ -1,5 +1,7 @@
 import time
-from flask import Blueprint, request, jsonify, render_template, redirect, url_for, current_app
+import os
+from flask import Blueprint, request, jsonify, render_template, redirect, url_for, current_app, send_file
+from .backend_scripts.pdf_generator import pdf_converter
 from .backend_scripts.XSS import xss_testing
 from .backend_scripts.SQL_Injection import sql_injection
 from datetime import datetime
@@ -109,3 +111,19 @@ def test_results(task_id):
                            num_failed=num_failed,
                            xss_result=xss_result,
                            sql_result=sql_result)
+
+
+@test_routes.route("/download/<task_id>")
+def download_pdf(task_id):
+    db = current_app.db
+    xss_result = db.xss_result.find_one({"task_id": task_id})
+
+    if not xss_result:
+        return "No test data found", 404
+
+    url = xss_result.get("url")
+    pdf_path = pdf_converter(url, task_id)
+
+    if os.path.exists(pdf_path):
+        return send_file(pdf_path, as_attachment=True)
+    return "PDF not found", 404
