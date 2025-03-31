@@ -48,7 +48,7 @@
 
 <!-- FORM SECTION -->
 <div class="container2" style="margin-top: 80px;">
-  <form action="/run_tests" class="search-bar" method="POST">
+  <form action="/run_tests" class="search-bar" method="POST" id="scanForm">
     <h2>SOTERIA</h2>
     <input type="url" placeholder="ENTER URL" name="url" required>
 
@@ -63,24 +63,29 @@
       </select>
     </div>
 
-    <!-- Hidden field to pass readable label -->
+    <!-- Hidden input to pass the label -->
     <input type="hidden" name="sql_label" id="sql_label" value="">
 
-    <button type="submit" onclick="addLabel()">SUBMIT</button>
+    <button type="submit">SUBMIT</button>
   </form>
 </div>
 
-<!-- Label assignment before form submission -->
+<!-- Inject readable label before form submits -->
 <script>
-  function addLabel() {
+  document.getElementById("scanForm").addEventListener("submit", function (e) {
     const select = document.getElementById("sql_level_risk");
     const selectedText = select.options[select.selectedIndex].text;
-    const label = selectedText.split(" - ")[0]; // Remove timing info
-    document.getElementById("sql_label").value = label;
-  }
+    const cleanLabel = selectedText.split(" - ")[0].trim(); // Removes timing info
+
+    document.getElementById("sql_label").value = cleanLabel;
+
+    // Debug log (optional)
+    console.log("Sending clean label:", cleanLabel);
+  });
 </script>
 
-<!-- Bootstrap JS (for dropdowns to work) -->
+<!-- Bootstrap JS for dropdowns -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
