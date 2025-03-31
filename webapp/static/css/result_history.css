@@ -50,9 +50,9 @@ body {
 
 /* === HISTORY CARD === */
 .history-card {
-    background-color: rgba(255, 255, 255, 0.05);
-    border: 1px solid #5dd39e;
-    border-radius: 15px;
+    background: linear-gradient(145deg, rgba(0, 0, 0, 0.6), rgba(29, 120, 116, 0.6));
+    border-radius: 20px;
+    border: 1px solid #cccccc;
     padding: 30px;
     max-width: 900px;
     margin: 0 auto;
