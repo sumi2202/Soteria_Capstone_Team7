@@ -1,17 +1,16 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap');
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "JetBrains Mono", monospace;
+    font-family: 'JetBrains Mono', monospace;
 }
 
-/* === BODY & BACKGROUND === */
 body {
     min-height: 100vh;
-    padding-top: 80px;
     background: linear-gradient(245deg, #071e22, #1d7874, #d85461);
+    padding-top: 80px;
     background-size: 600% 600%;
     animation: gradient-animation 18s ease infinite;
     color: #fff;
@@ -23,26 +22,20 @@ body {
     100% { background-position: 0% 50%; }
 }
 
-/* === NAVBAR === */
 .navbar {
-    background-color: #000;
-    border-bottom: 2px solid #fff;
-    width: 100%;
+    background-color: #071e22;
+    border-bottom: 3px solid #ffffff;
+    height: 60px;
 }
 
-.navbar-nav {
-    flex-direction: row;
-    gap: 15px;
-}
-
-.navbar .nav-link {
+.navbar-brand, .navbar-nav .nav-link {
     color: #fff !important;
-    padding: 8px 15px;
-    text-decoration: none;
+    font-size: 14px;
+    text-transform: uppercase;
 }
 
-.navbar-brand {
-    color: #fff !important;
+.navbar .bx-user-circle {
+    color: #fff;
 }
 
 /* === WRAPPER === */
