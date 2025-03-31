@@ -1,9 +1,7 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, send_from_directory, current_app, session
+from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, session
 from .models import User
-import os
 
 auth = Blueprint('auth', __name__)
-
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
@@ -13,11 +11,13 @@ def login():
 
         db = current_app.db
 
+        # Validate user credentials
         user = db.users.find_one({"email": email, "password": password})
 
         if user:
-            # ✅ Save the session to track login (simple version)
-            session['email'] = user['email']  # or email
+            session['user_id'] = str(user['_id'])  # This is the unique MongoDB ID
+            session['email'] = user['email']
+
             flash('LOG IN SUCCESSFUL!', category='success')
             return redirect(url_for('views.dashboard'))
         else:
@@ -28,7 +28,10 @@ def login():
 
 @auth.route('/logout')
 def logout():
-    return render_template("launch.html")
+    session.clear()
+    flash('You have been logged out.', category='info')
+    return redirect(url_for('auth.login'))
+
 
 @auth.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
@@ -48,13 +51,14 @@ def sign_up():
         if password != confirm_password:
             flash('PASSWORD DOES NOT MATCH!', category='error')
             return redirect(url_for('auth.sign_up'))
-
-        if db.users.find_one({"email" : email}):
-            flash('Email already exists.', category='error')
+        if db.users.find_one({"email": email}):
+            flash('EMAIL ALREADY EXISTS.', category='error')
             return redirect(url_for('auth.sign_up'))
 
         user = User(db)
         user_id = user.signup(first_name, last_name, email, password)
+
+        flash('ACCOUNT CREATED SUCCESSFULLY! PLEASE LOG IN.', category='success')
         return redirect(url_for('auth.login'))
 
     return render_template("signup.html")

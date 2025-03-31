@@ -1,5 +1,7 @@
 import time
 import os
+from flask_login import current_user
+from flask import session
 from flask import Blueprint, request, jsonify, render_template, redirect, url_for, current_app, send_file
 from .backend_scripts.pdf_generator import pdf_converter
 from .backend_scripts.XSS import xss_testing
@@ -12,7 +14,7 @@ test_routes = Blueprint("test_routes", __name__)
 test_status = {}
 status_lock = threading.Lock()
 
-def run_security_tests(app, url, task_id, level, risk):
+def run_security_tests(app, url, task_id, level, risk, user_id):
     with app.app_context():
         with status_lock:
             test_status[task_id] = {"status": "running", "progress": 0}
@@ -25,26 +27,32 @@ def run_security_tests(app, url, task_id, level, risk):
         try:
             print(f"Starting tests for {task_id}...")
 
-            update_progress(10)  # initial
+            update_progress(10)
             xss_results = xss_testing(url, progress_callback=update_progress)
-            update_progress(55)  # halfway through
+            update_progress(55)
             sql_results = sql_injection(url, level, risk, progress_callback=update_progress)
-            update_progress(95)  # almost done
+            update_progress(95)
 
-            xss_results['timestamp'] = datetime.utcnow()
-            sql_results['timestamp'] = datetime.utcnow()
-            xss_results['task_id'] = task_id
-            sql_results['task_id'] = task_id
+            timestamp = datetime.utcnow()
+            xss_results.update({
+                "timestamp": timestamp,
+                "task_id": task_id,
+                "user_id": user_id
+            })
+            sql_results.update({
+                "timestamp": timestamp,
+                "task_id": task_id,
+                "user_id": user_id
+            })
 
             db = app.db
             db.xss_result.insert_one(xss_results)
             db.sql_result.insert_one(sql_results)
 
-            redirect_url = f"/tests/test_results/{task_id}"
             with status_lock:
                 test_status[task_id] = {
                     "status": "completed",
-                    "redirect": redirect_url,
+                    "redirect": f"/tests/test_results/{task_id}",
                     "progress": 100
                 }
 
@@ -52,6 +60,8 @@ def run_security_tests(app, url, task_id, level, risk):
             with status_lock:
                 test_status[task_id] = {"status": "failed", "error": str(e), "progress": 100}
             print(f"Test for {task_id} failed: {e}")
+
+
 
 @test_routes.route("/run_tests", methods=["POST"])
 def run_tests():
@@ -65,11 +75,20 @@ def run_tests():
         return jsonify({"success": False, "error": "No URL provided"}), 400
 
     task_id = str(uuid.uuid4())
+    user_id = session.get("user_id")  # <-- Get user ID from session
+
+    if not user_id:
+        return jsonify({"success": False, "error": "User not logged in"}), 401
+
     app = current_app._get_current_object()
-    thread = threading.Thread(target=run_security_tests, args=(app, url, task_id, level, risk))
+    thread = threading.Thread(target=run_security_tests, args=(app, url, task_id, level, risk, user_id))
     thread.start()
 
-    return jsonify({"success": True, "task_id": task_id, "redirect": url_for("test_routes.loading_screen", task_id=task_id)})
+    return jsonify({
+        "success": True,
+        "task_id": task_id,
+        "redirect": url_for("test_routes.loading_screen", task_id=task_id)
+    })
 
 
 @test_routes.route("/loading")
@@ -121,7 +140,7 @@ def download_pdf(task_id):
     if not xss_result:
         return "No test data found", 404
 
-    url = xss_result.get("url")
+    url = xss_result.get("url") or "---"  # ✅ fallback here
     pdf_path = pdf_converter(url, task_id)
 
     if os.path.exists(pdf_path):

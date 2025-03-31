@@ -4,6 +4,8 @@ import pytz
 
 from flask import Blueprint, render_template, request, redirect, url_for, flash, send_from_directory, jsonify, session, \
     current_app, send_file
+from flask_login import current_user
+
 from .backend_scripts.URLValidation import url_validation
 from .models import Rating
 import os
@@ -129,27 +131,28 @@ def profile():
         verified=verified
     )
 
-
 @views.route("/results")
 def results_page():
     db = current_app.db
+    user_id = session.get("user_id")
+
+    if not user_id:
+        return redirect("/login")  # Or display error
 
     page = int(request.args.get("page", 1))
     per_page = int(request.args.get("per_page", 5))
 
-    xss_results = list(db.xss_result.find().sort("timestamp", -1))
+    xss_results = list(db.xss_result.find({"user_id": user_id}).sort("timestamp", -1))
     task_ids = [x.get("task_id") for x in xss_results if "task_id" in x]
     sql_results = db.sql_result.find({"task_id": {"$in": task_ids}})
     sql_map = {sql["task_id"]: sql for sql in sql_results}
 
-    # Filter + Format
     valid_results = []
     for xss in xss_results:
         task_id = xss.get("task_id")
         if not task_id or task_id not in sql_map:
             continue
 
-        # Fix timestamp formatting
         raw_timestamp = xss.get("timestamp")
         if isinstance(raw_timestamp, str):
             try:
@@ -166,19 +169,13 @@ def results_page():
             "has_results": True
         })
 
-    # PAGINATE AFTER FILTERING
     total = len(valid_results)
     total_pages = (total + per_page - 1) // per_page
     start = (page - 1) * per_page
     end = start + per_page
     paginated = valid_results[start:end]
 
-    return render_template("result_history.html",
-                           history=paginated,
-                           page=page,
-                           per_page=per_page,
-                           total_pages=total_pages
-                           )
+    return render_template("result_history.html", history=paginated, page=page, per_page=per_page, total_pages=total_pages)
 
 
 @views.route('/validation', methods=['GET', 'POST'])

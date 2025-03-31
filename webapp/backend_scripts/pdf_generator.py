@@ -4,7 +4,6 @@ from reportlab.lib.pagesizes import A4
 from datetime import datetime
 import os
 
-# Set up absolute paths to static assets
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "static", "assets"))
 
@@ -14,17 +13,30 @@ MED_EMOJI = os.path.join(STATIC_DIR, "med.png")
 LOW_EMOJI = os.path.join(STATIC_DIR, "low.png")
 NO_EMOJI = os.path.join(STATIC_DIR, "no.png")
 
+def safe_text(value):
+    try:
+        if value is None or str(value).strip().lower() in ["", "none"]:
+            return "---"
+        return str(value)
+    except Exception:
+        return "---"
+
+def safe_get(data, key, default="---"):
+    try:
+        return safe_text(data.get(key, default))
+    except Exception:
+        return default
+
 def pdf_converter(url, task_id):
     db = current_app.db
-
-    # ✅ Fetch results for the specific task_id
     sql_result_data = db.sql_result.find_one({"task_id": task_id})
     xss_result_data = db.xss_result.find_one({"task_id": task_id})
 
     if not sql_result_data or not xss_result_data:
         return None
 
-    # ✅ Absolute output path
+    safe_url = safe_text(url)
+
     pdf_dir = os.path.abspath(os.path.join(BASE_DIR, "..", "pdf_cache"))
     os.makedirs(pdf_dir, exist_ok=True)
     pdf_path = os.path.join(pdf_dir, f"Soteria_Results_{task_id}.pdf")
@@ -40,25 +52,25 @@ def pdf_converter(url, task_id):
             return h - 130
         return remaining_space
 
-    # ✅ Header
+    # Header
     file.drawImage(LOGO_PATH, 40, h - 80, width=65, height=65)
     file.setFont("Times-Bold", 20)
     file.drawString(w / 3, h - 90, "Soteria Testing Overview")
 
-    # ✅ URL
+    # URL
     file.setFont("Times-Bold", 13)
     file.drawString(50, h - 130, "URL:")
     file.setFont("Times-Roman", 13)
-    file.drawString(85, h - 130, url)
+    file.drawString(85, h - 130, safe_url)
 
-    # ✅ Formatted Timestamp
+    # Timestamp
     raw_ts = xss_result_data.get('timestamp')
     if isinstance(raw_ts, str):
         try:
             raw_ts = datetime.fromisoformat(raw_ts.replace("Z", "+00:00"))
         except Exception:
-            pass
-    formatted_time = raw_ts.strftime("%Y-%m-%d %I:%M %p") if isinstance(raw_ts, datetime) else str(raw_ts)
+            raw_ts = None
+    formatted_time = raw_ts.strftime("%Y-%m-%d %I:%M %p") if isinstance(raw_ts, datetime) else safe_text(raw_ts)
 
     file.setFont("Times-Bold", 13)
     file.drawString(50, h - 150, "Time of Completion:")
@@ -67,37 +79,36 @@ def pdf_converter(url, task_id):
 
     height = h - 180
 
-    # ✅ Write results
     def write_test_results(title, data, category):
         nonlocal height
         file.setFont("Times-Bold", 16)
         height = check_space_needed(height, 30)
-        file.drawString(50, height, title)
+        file.drawString(50, height, safe_text(title))
         height -= 30
 
         file.setFont("Times-Roman", 14)
-        file.drawString(50, height, f"Passed Tests: {data.get('num_passed', 0)}")
+        file.drawString(50, height, f"Passed Tests: {safe_get(data, 'num_passed')}")
         height -= 20
         for i in data.get("type_passed", []):
             height = check_space_needed(height, 15)
-            file.drawString(70, height, f"--> {i}")
+            file.drawString(70, height, f"--> {safe_text(i)}")
             height -= 15
 
         height -= 10
-        file.drawString(50, height, f"Failed Tests: {data.get('num_failed', 0)}")
+        file.drawString(50, height, f"Failed Tests: {safe_get(data, 'num_failed')}")
         height -= 20
         for j in data.get("type_failed", []):
             height = check_space_needed(height, 15)
-            file.drawString(70, height, f"--> {j}")
+            file.drawString(70, height, f"--> {safe_text(j)}")
             height -= 15
 
         if category == "sql":
             height -= 20
             file.drawString(50, height, "Detected Databases:")
             height -= 20
-            for j in data.get("database_list", []):
+            for db_item in data.get("database_list", []):
                 height = check_space_needed(height, 15)
-                file.drawString(70, height, f"--> {j}")
+                file.drawString(70, height, f"--> {safe_text(db_item)}")
                 height -= 15
 
         height -= 20
@@ -105,7 +116,7 @@ def pdf_converter(url, task_id):
     write_test_results("SQL Injection Results:", sql_result_data, "sql")
     write_test_results("XSS Results:", xss_result_data, "xss")
 
-    # ✅ Final Risk Analysis
+    # Risk Analysis
     sqlPassed = sql_result_data.get('num_passed', 0)
     sqlFailed = sql_result_data.get('num_failed', 0)
     xssPassed = xss_result_data.get('num_passed', 0)
@@ -134,7 +145,7 @@ def pdf_converter(url, task_id):
     height -= 30
     file.drawImage(emojiAnalysis, 50, height - 5, width=20, height=20)
     file.setFont("Times-Roman", 17)
-    file.drawString(70, height, finalRating)
+    file.drawString(70, height, safe_text(finalRating))
 
     file.save()
     return pdf_path
