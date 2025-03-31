@@ -1,6 +1,7 @@
 import io
 from datetime import datetime
 import pytz
+from zoneinfo import ZoneInfo
 
 from flask import Blueprint, render_template, request, redirect, url_for, flash, send_from_directory, jsonify, session, \
     current_app, send_file
@@ -137,7 +138,7 @@ def results_page():
     user_id = session.get("user_id")
 
     if not user_id:
-        return redirect("/login")  # Or display error
+        return redirect("/login")
 
     page = int(request.args.get("page", 1))
     per_page = int(request.args.get("per_page", 5))
@@ -160,7 +161,11 @@ def results_page():
             except Exception:
                 raw_timestamp = None
 
-        formatted = raw_timestamp.strftime("%Y-%m-%d %I:%M %p") if isinstance(raw_timestamp, datetime) else "---"
+        if isinstance(raw_timestamp, datetime):
+            raw_timestamp = raw_timestamp.replace(tzinfo=ZoneInfo("UTC")).astimezone(ZoneInfo("America/Toronto"))
+            formatted = raw_timestamp.strftime("%Y-%m-%d %I:%M %p %Z")
+        else:
+            formatted = "---"
 
         valid_results.append({
             "url": xss.get("url", "---"),
