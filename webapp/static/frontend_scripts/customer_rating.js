@@ -10,9 +10,9 @@ document.addEventListener("DOMContentLoaded", function () {
         current_star.addEventListener("click", function () {
             for (let j = 0; j < stars.length; j++){
                 if (j <= i ) { // filling in clicked star and all stars before it
-                    stars[j].src = "static/assets/rating_filled.png";
+                    stars[j].src = "static/assets/rating_filled_edit.png";
                 } else {
-                    stars[j].src = "static/assets/rating_unfilled.png";
+                    stars[j].src = "static/assets/rating_unfilled_edit.png";
                 }
             }
 
