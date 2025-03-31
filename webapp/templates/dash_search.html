@@ -48,7 +48,7 @@
 
 <!-- FORM SECTION -->
 <div class="container2" style="margin-top: 80px;">
-  <form action="/run_tests" method="POST" id="scanForm" class="search-bar">
+  <form action="/tests/run_tests" method="POST" id="scanForm" class="search-bar">
     <div class="logo-container text-center">
       <img src="{{ url_for('static', filename='assets/animated_logo.gif') }}" alt="Soteria Logo" width="100">
     </div>
@@ -77,17 +77,39 @@
 
 <!-- Script: inject clean label before form submits -->
 <script>
-  document.getElementById("scanForm").addEventListener("submit", function (e) {
+  document.getElementById("scanForm").addEventListener("submit", async function (e) {
     e.preventDefault();
 
-    const select = document.getElementById("sql_level_risk");
-    const selectedOptionText = select.options[select.selectedIndex].text;
-    const labelOnly = selectedOptionText.split(" - ")[0].trim();
+    const form = e.target;
+    const url = form.url.value;
+    const levelRisk = form.sql_level_risk.value;
+    const label = form.sql_level_risk.options[form.sql_level_risk.selectedIndex].text.split(" - ")[0].trim();
 
-    document.getElementById("sql_label").value = labelOnly;
+    const formData = new URLSearchParams();
+    formData.append("url", url);
+    formData.append("sql_level_risk", levelRisk);
+    formData.append("sql_label", label);
 
-    // Proceed with form submission
-    this.submit();
+    try {
+      const response = await fetch("/tests/run_tests", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: formData.toString()
+      });
+
+      const result = await response.json();
+
+      if (result.success && result.redirect) {
+        window.location.href = result.redirect;
+      } else {
+        alert("Test failed to start. Try again.");
+      }
+    } catch (err) {
+      console.error("Error starting test:", err);
+      alert("An error occurred.");
+    }
   });
 </script>
 
