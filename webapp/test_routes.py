@@ -42,7 +42,9 @@ def run_security_tests(app, url, task_id, level, risk, user_id):
             sql_results.update({
                 "timestamp": timestamp,
                 "task_id": task_id,
-                "user_id": user_id
+                "user_id": user_id,
+                "level": level,
+                "risk": risk
             })
 
             db = app.db
