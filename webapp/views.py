@@ -176,6 +176,36 @@ def results_page():
         total_pages=total_pages
     )
 
+@views.route('/validation', methods=['GET', 'POST'])
+def link_validation():
+    if request.method == 'POST':
+        data = request.get_json()
+        url = data.get('url', '')
+
+        email = session.get('email')
+        if not email:
+            return jsonify({'error': 'User not logged in'}), 401
+
+        validURL, invalidURL, alreadyRegistered = url_validation(email, url)
+
+        print(
+            f"✅ [DEBUG] Validation Results → valid: {validURL}, invalid: {invalidURL}, alreadyRegistered: {alreadyRegistered}"
+        )
+
+        if validURL == 0 and invalidURL == 0 and alreadyRegistered == 0:
+            session['validated_url'] = url  # Store URL in session
+            session.modified = True  # Mark session as modified
+            print(f"✅ [DEBUG] Stored in session: {session.get('validated_url')}")
+
+        print("🧠 [DEBUG] Session content after validation:", dict(session))  # Print session contents
+
+        return jsonify({
+            'validURL': validURL,
+            'alreadyRegistered': alreadyRegistered,
+            'invalidURL': invalidURL
+        })
+
+    return render_template("link_validation.html")
 
 
 @views.route('/register-link', methods=['GET', 'POST'])
