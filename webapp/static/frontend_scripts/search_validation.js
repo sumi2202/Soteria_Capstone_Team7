@@ -2,9 +2,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchForm = document.querySelector('.search-bar');
     const urlInput = searchForm.querySelector('input[name="url"]');
     const levelRiskSelect = searchForm.querySelector('#sql_level_risk');
+    const sqlLabelInput = document.querySelector('#sql_label');
 
     searchForm.addEventListener('submit', async (event) => {
-        event.preventDefault(); // Prevent default form submit
+        event.preventDefault();
 
         const url = urlInput.value.trim();
         const sqlLevelRisk = levelRiskSelect.value;
@@ -14,32 +15,38 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // Inject the clean label text
+        const label = levelRiskSelect.options[levelRiskSelect.selectedIndex].text.split(" - ")[0].trim();
+        sqlLabelInput.value = label;
+
         try {
             // Step 1: Check if URL is registered
-            const response = await fetch('/check-registered-url', {
+            const checkResponse = await fetch('/check-registered-url', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ url })
             });
 
-            const data = await response.json();
-            if (!data.success) {
-                alert(data.message);  // Show message if registration fails
+            const checkData = await checkResponse.json();
+            if (!checkData.success) {
+                alert(checkData.message);
                 return;
             }
 
-            // Step 2: Run security tests with URL and SQLi level/risk
+            // Step 2: Run the tests
+            const formData = {
+                url,
+                sql_level_risk: sqlLevelRisk,
+                sql_label: label
+            };
+
             const testResponse = await fetch('/tests/run_tests', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    url,
-                    sql_level_risk: sqlLevelRisk
-                })
+                body: JSON.stringify(formData)
             });
 
             const testData = await testResponse.json();
-            console.log("✅ Test Response Data:", testData);
 
             if (!testData.success) {
                 alert("Error running tests: " + testData.error);
@@ -47,11 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const taskId = testData.task_id;
-
-            // Optional: Store task ID
             sessionStorage.setItem("task_id", taskId);
-
-            // Redirect to loading screen
             window.location.href = `/tests/loading?task_id=${taskId}`;
 
         } catch (error) {

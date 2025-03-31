@@ -75,43 +75,43 @@
   </form>
 </div>
 
-<!-- Script: inject clean label before form submits -->
-<script>
-  document.getElementById("scanForm").addEventListener("submit", async function (e) {
-    e.preventDefault();
+<!--&lt;!&ndash; Script: inject clean label before form submits &ndash;&gt;-->
+<!--<script>-->
+<!--  document.getElementById("scanForm").addEventListener("submit", async function (e) {-->
+<!--    e.preventDefault();-->
 
-    const form = e.target;
-    const url = form.url.value;
-    const levelRisk = form.sql_level_risk.value;
-    const label = form.sql_level_risk.options[form.sql_level_risk.selectedIndex].text.split(" - ")[0].trim();
+<!--    const form = e.target;-->
+<!--    const url = form.url.value;-->
+<!--    const levelRisk = form.sql_level_risk.value;-->
+<!--    const label = form.sql_level_risk.options[form.sql_level_risk.selectedIndex].text.split(" - ")[0].trim();-->
 
-    const formData = new URLSearchParams();
-    formData.append("url", url);
-    formData.append("sql_level_risk", levelRisk);
-    formData.append("sql_label", label);
+<!--    const formData = new URLSearchParams();-->
+<!--    formData.append("url", url);-->
+<!--    formData.append("sql_level_risk", levelRisk);-->
+<!--    formData.append("sql_label", label);-->
 
-    try {
-      const response = await fetch("/tests/run_tests", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: formData.toString()
-      });
+<!--    try {-->
+<!--      const response = await fetch("/tests/run_tests", {-->
+<!--        method: "POST",-->
+<!--        headers: {-->
+<!--          "Content-Type": "application/x-www-form-urlencoded"-->
+<!--        },-->
+<!--        body: formData.toString()-->
+<!--      });-->
 
-      const result = await response.json();
+<!--      const result = await response.json();-->
 
-      if (result.success && result.redirect) {
-        window.location.href = result.redirect;
-      } else {
-        alert("Test failed to start. Try again.");
-      }
-    } catch (err) {
-      console.error("Error starting test:", err);
-      alert("An error occurred.");
-    }
-  });
-</script>
+<!--      if (result.success && result.redirect) {-->
+<!--        window.location.href = result.redirect;-->
+<!--      } else {-->
+<!--        alert("Test failed to start. Try again.");-->
+<!--      }-->
+<!--    } catch (err) {-->
+<!--      console.error("Error starting test:", err);-->
+<!--      alert("An error occurred.");-->
+<!--    }-->
+<!--  });-->
+<!--</script>-->
 
 <!-- Bootstrap Bundle for dropdowns -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
