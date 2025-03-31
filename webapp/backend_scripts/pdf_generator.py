@@ -1,51 +1,73 @@
 from flask import current_app
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
+from datetime import datetime
 import os
+
+# Set up absolute paths to static assets
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "static", "assets"))
+
+LOGO_PATH = os.path.join(STATIC_DIR, "Soteria_logo_white.png")
+SOS_EMOJI = os.path.join(STATIC_DIR, "sos.png")
+MED_EMOJI = os.path.join(STATIC_DIR, "med.png")
+LOW_EMOJI = os.path.join(STATIC_DIR, "low.png")
+NO_EMOJI = os.path.join(STATIC_DIR, "no.png")
 
 def pdf_converter(url, task_id):
     db = current_app.db
 
-    # Fetch latest results for the given URL
-    sql_result_data = db.sql_result.find_one({"url": url}, sort=[("timestamp", -1)])
-    xss_result_data = db.xss_result.find_one({"url": url}, sort=[("timestamp", -1)])
+    # ✅ Fetch results for the specific task_id
+    sql_result_data = db.sql_result.find_one({"task_id": task_id})
+    xss_result_data = db.xss_result.find_one({"task_id": task_id})
 
     if not sql_result_data or not xss_result_data:
         return None
 
-    # Ensure the output folder exists
-    os.makedirs("pdf_cache", exist_ok=True)
-    pdf_path = f"pdf_cache/Soteria_Results_{task_id}.pdf"
+    # ✅ Absolute output path
+    pdf_dir = os.path.abspath(os.path.join(BASE_DIR, "..", "pdf_cache"))
+    os.makedirs(pdf_dir, exist_ok=True)
+    pdf_path = os.path.join(pdf_dir, f"Soteria_Results_{task_id}.pdf")
+
     w, h = A4
     file = canvas.Canvas(pdf_path, pagesize=A4)
 
     def check_space_needed(remaining_space, needed_space):
         if remaining_space < needed_space:
             file.showPage()
-            file.drawImage("static/assets/Soteria_logo_white.png", 40, h - 80, width=65, height=65)
+            file.drawImage(LOGO_PATH, 40, h - 80, width=65, height=65)
             file.setFont("Times-Roman", 14)
             return h - 130
         return remaining_space
 
-    # Header
-    file.drawImage("static/assets/Soteria_logo_white.png", 40, h - 80, width=65, height=65)
+    # ✅ Header
+    file.drawImage(LOGO_PATH, 40, h - 80, width=65, height=65)
     file.setFont("Times-Bold", 20)
     file.drawString(w / 3, h - 90, "Soteria Testing Overview")
 
-    # URL and timestamp
+    # ✅ URL
     file.setFont("Times-Bold", 13)
     file.drawString(50, h - 130, "URL:")
     file.setFont("Times-Roman", 13)
     file.drawString(85, h - 130, url)
 
+    # ✅ Formatted Timestamp
+    raw_ts = xss_result_data.get('timestamp')
+    if isinstance(raw_ts, str):
+        try:
+            raw_ts = datetime.fromisoformat(raw_ts.replace("Z", "+00:00"))
+        except Exception:
+            pass
+    formatted_time = raw_ts.strftime("%Y-%m-%d %I:%M %p") if isinstance(raw_ts, datetime) else str(raw_ts)
+
     file.setFont("Times-Bold", 13)
     file.drawString(50, h - 150, "Time of Completion:")
     file.setFont("Times-Roman", 13)
-    file.drawString(170, h - 150, str(xss_result_data.get('timestamp')))
+    file.drawString(170, h - 150, formatted_time)
 
     height = h - 180
 
-    # Helper to write result sections
+    # ✅ Write results
     def write_test_results(title, data, category):
         nonlocal height
         file.setFont("Times-Bold", 16)
@@ -80,31 +102,31 @@ def pdf_converter(url, task_id):
 
         height -= 20
 
-    # Inject both test results
     write_test_results("SQL Injection Results:", sql_result_data, "sql")
     write_test_results("XSS Results:", xss_result_data, "xss")
 
-    # Risk Analysis
+    # ✅ Final Risk Analysis
     sqlPassed = sql_result_data.get('num_passed', 0)
     sqlFailed = sql_result_data.get('num_failed', 0)
     xssPassed = xss_result_data.get('num_passed', 0)
     xssFailed = xss_result_data.get('num_failed', 0)
+
     totalPassed = sqlPassed + xssPassed
     totalTests = totalPassed + sqlFailed + xssFailed
     ratio = (totalPassed / totalTests) * 100 if totalTests > 0 else 0
 
     if ratio <= 40:
         finalRating = " High Security Risk [0% - 40% Tests Passed]"
-        emojiAnalysis = "static/assets/sos.png"
+        emojiAnalysis = SOS_EMOJI
     elif ratio <= 69:
         finalRating = " Medium Security Risk [41% - 69% Tests Passed]"
-        emojiAnalysis = "static/assets/med.png"
+        emojiAnalysis = MED_EMOJI
     elif ratio <= 99:
         finalRating = " Low Security Risk [70% - 99% Tests Passed]"
-        emojiAnalysis = "static/assets/low.png"
+        emojiAnalysis = LOW_EMOJI
     else:
         finalRating = " No Security Risk [100% Tests Passed]"
-        emojiAnalysis = "static/assets/no.png"
+        emojiAnalysis = NO_EMOJI
 
     height = check_space_needed(height, 30)
     file.setFont("Times-Bold", 20)
