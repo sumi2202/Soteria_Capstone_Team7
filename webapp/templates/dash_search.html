@@ -63,28 +63,24 @@
       </select>
     </div>
 
-    <!-- Hidden input to pass the label -->
+    <!-- Hidden input to pass the readable label -->
     <input type="hidden" name="sql_label" id="sql_label" value="">
 
     <button type="submit">SUBMIT</button>
   </form>
 </div>
 
-<!-- Inject readable label before form submits -->
+<!-- JS to extract and inject label before form submission -->
 <script>
   document.getElementById("scanForm").addEventListener("submit", function (e) {
     const select = document.getElementById("sql_level_risk");
     const selectedText = select.options[select.selectedIndex].text;
-    const cleanLabel = selectedText.split(" - ")[0].trim(); // Removes timing info
-
+    const cleanLabel = selectedText.split(" - ")[0].trim(); // Removes the time
     document.getElementById("sql_label").value = cleanLabel;
-
-    // Debug log (optional)
-    console.log("Sending clean label:", cleanLabel);
   });
 </script>
 
-<!-- Bootstrap JS for dropdowns -->
+<!-- Bootstrap JS for dropdown functionality -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
