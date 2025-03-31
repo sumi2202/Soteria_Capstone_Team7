@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
 <!-- Navbar -->
 <nav class="navbar navbar-expand-sm navbar-dark fixed-top py-1">
     <div class="container">
-        <a href="dashboard" class="navbar-brand d-flex align-items-center gap-2">
+        <a href="/dashboard" class="navbar-brand d-flex align-items-center gap-2">
             <img src="{{ url_for('static', filename='assets/Soteria_logo.png') }}" class="img-fluid" style="max-height: 30px;" alt="Soteria Logo">
             <strong>SOTERIA</strong>
         </a>
@@ -45,19 +45,24 @@ document.addEventListener("DOMContentLoaded", () => {
         </button>
 
         <div class="collapse navbar-collapse justify-content-end" id="navmenu">
-            <ul class="navbar-nav d-flex flex-row gap-3 align-items-center">
-                <li class="nav-item"><a href="validation" class="nav-link">Link Validation</a></li>
-                <li class="nav-item"><a href="/results" class="nav-link">Results</a></li>
-                <li class="nav-item">
-                    <a href="/profile_page" class="nav-link">
-                        <i class='bx bx-user-circle' style="font-size: 24px;"></i>
-                    </a>
-                </li>
-            </ul>
+            <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a href="/validation" class="nav-link">Link Validation</a></li>
+                    <li class="nav-item"><a href="/results?page=1&per_page=5" class="nav-link">Results</a></li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class='bx bx-user-circle' style="font-size: 24px;"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
+                            <li><a class="dropdown-item" href="/profile_page">Profile</a></li>
+                            <li><a class="dropdown-item" href="/customer-rating">Feedback</a></li>
+                            <li><a class="dropdown-item" href="/legal">Legal</a></li>
+                        </ul>
+                    </li>
+                </ul>
         </div>
     </div>
 </nav>
-
 <!-- Profile Section -->
 <div class="profile-container">
     <div class="profile-card">

@@ -15,8 +15,8 @@ from bson import ObjectId
 from flask import current_app as app
 from gridfs import GridFS
 
-
 views = Blueprint('views', __name__)
+
 
 @views.route('/download/<file_id>')
 def download_file(file_id):
@@ -29,6 +29,8 @@ def download_file(file_id):
     except Exception as e:
         flash("File not found or error downloading.")
         return redirect(url_for('views.profile'))
+
+
 def get_gridfs():
     """HELPER FUNCTION TO ACCESS GRIDFS"""
     return gridfs.GridFS(current_app.db)
@@ -49,6 +51,7 @@ def sign_options():
 @views.route('/dashboard')
 def dashboard():
     return render_template("dash_search.html")
+
 
 @views.route('/profile_page')
 def profile():
@@ -126,6 +129,7 @@ def profile():
         verified=verified
     )
 
+
 @views.route("/results")
 def results_page():
     db = current_app.db
@@ -170,11 +174,12 @@ def results_page():
     paginated = valid_results[start:end]
 
     return render_template("result_history.html",
-        history=paginated,
-        page=page,
-        per_page=per_page,
-        total_pages=total_pages
-    )
+                           history=paginated,
+                           page=page,
+                           per_page=per_page,
+                           total_pages=total_pages
+                           )
+
 
 @views.route('/validation', methods=['GET', 'POST'])
 def link_validation():
@@ -312,6 +317,11 @@ def check_registered_url():
 @views.route('/customer-rating', methods=['GET'])
 def customer_rating():
     return render_template('customer_rating.html')
+
+
+@views.route('/legal', methods=['GET'])
+def legal():
+    return render_template('legal.html')
 
 
 @views.route('/submit_rating', methods=['POST'])
