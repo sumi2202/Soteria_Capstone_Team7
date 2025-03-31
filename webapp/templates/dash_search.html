@@ -73,10 +73,14 @@
 <!-- JS to extract and inject label before form submission -->
 <script>
   document.getElementById("scanForm").addEventListener("submit", function (e) {
+    e.preventDefault(); 
     const select = document.getElementById("sql_level_risk");
     const selectedText = select.options[select.selectedIndex].text;
-    const cleanLabel = selectedText.split(" - ")[0].trim(); // Removes the time
+    const cleanLabel = selectedText.split(" - ")[0].trim();
     document.getElementById("sql_label").value = cleanLabel;
+
+    // ✅ Now safely submit the form
+    this.submit();
   });
 </script>
 
