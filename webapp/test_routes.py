@@ -14,7 +14,7 @@ test_routes = Blueprint("test_routes", __name__)
 test_status = {}
 status_lock = threading.Lock()
 
-def run_security_tests(app, url, task_id, level, risk, user_id):
+def run_security_tests(app, url, task_id, level, risk, user_id, label):
     with app.app_context():
         with status_lock:
             test_status[task_id] = {"status": "running", "progress": 0}
@@ -44,7 +44,8 @@ def run_security_tests(app, url, task_id, level, risk, user_id):
                 "task_id": task_id,
                 "user_id": user_id,
                 "level": level,
-                "risk": risk
+                "risk": risk,
+                "label": label
             })
 
             db = app.db
@@ -64,26 +65,26 @@ def run_security_tests(app, url, task_id, level, risk, user_id):
             print(f"Test for {task_id} failed: {e}")
 
 
-
 @test_routes.route("/run_tests", methods=["POST"])
 def run_tests():
     data = request.json if request.is_json else request.form
     url = data.get("url")
     level_risk = data.get("sql_level_risk", "1,1").split(",")
     level, risk = int(level_risk[0]), int(level_risk[1])
-    print(f"Received SQLi Level: {level}, Risk: {risk}")
+    label = data.get("sql_label", "Unknown Testing Level")
+    print(f"Received SQLi Level: {level}, Risk: {risk}, Label: {label}")
 
     if not url:
         return jsonify({"success": False, "error": "No URL provided"}), 400
 
     task_id = str(uuid.uuid4())
-    user_id = session.get("user_id")  # <-- Get user ID from session
+    user_id = session.get("user_id")
 
     if not user_id:
         return jsonify({"success": False, "error": "User not logged in"}), 401
 
     app = current_app._get_current_object()
-    thread = threading.Thread(target=run_security_tests, args=(app, url, task_id, level, risk, user_id))
+    thread = threading.Thread(target=run_security_tests, args=(app, url, task_id, level, risk, user_id, label))
     thread.start()
 
     return jsonify({
@@ -91,6 +92,7 @@ def run_tests():
         "task_id": task_id,
         "redirect": url_for("test_routes.loading_screen", task_id=task_id)
     })
+
 
 
 @test_routes.route("/loading")
