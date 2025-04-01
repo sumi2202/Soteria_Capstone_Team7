@@ -43,6 +43,7 @@ body {
 .results-title {
     font-size: 36px;
     font-weight: bold;
+    color: #ffffff;
     letter-spacing: 5px;
     margin-bottom: 30px;
     text-align: center;
@@ -61,6 +62,7 @@ body {
 .history-header {
     font-size: 22px;
     letter-spacing: 2px;
+    color: #ffffff;
     margin-bottom: 20px;
 }
 
@@ -91,9 +93,10 @@ body {
 /* === BUTTON STYLES === */
 .entry-buttons a {
     margin-left: 10px;
-    background: #2cbe9b;
+    background-color: #2CBE9B !important;
+    border: 2px solid #cccccc;
+    border-radius: 10px;
     padding: 8px 12px;
-    border-radius: 8px;
     text-decoration: none;
     color: #fff;
     display: inline-block;
@@ -101,7 +104,7 @@ body {
 }
 
 .entry-buttons a:hover {
-    background: #00b38f;
+    background: #44ffe2;
 }
 
 .entry-buttons a.disabled {

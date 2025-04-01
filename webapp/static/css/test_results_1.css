@@ -202,6 +202,8 @@ p {
 .test-item {
   padding: 8px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  text-transform: uppercase;
   font-size: 14px;
 }
 
