@@ -1,10 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap');
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'JetBrains Mono', monospace;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'JetBrains Mono', monospace;
 }
 
 body {
@@ -17,10 +17,9 @@ body {
   background-size: 600% 600%;
   animation: gradient-animation 18s ease infinite;
   color: #fff;
-  overflow: hidden;
+  overflow: visible;
 }
 
-/* Flickering white dots layer with pulsing glow */
 body::before {
   content: '';
   position: absolute;
@@ -35,97 +34,213 @@ body::before {
   filter: blur(0.8px);
 }
 
-/* Glow pulse animation */
-@keyframes pulseGlow {
-  0%, 100% { opacity: 0.05; }
-  50% { opacity: 0.12; }
-}
-
-/* Background gradient animation */
 @keyframes gradient-animation {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
-/* Optional slight flicker motion */
 @keyframes flicker {
   0%, 100% { transform: translate(0, 0); }
   50% { transform: translate(-0.5px, 0.5px); }
 }
 
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.05; }
+  50% { opacity: 0.12; }
+}
+
 .navbar {
-    background-color: #071e22;
-    border-bottom: 3px solid #ffffff;
-    height: 60px;
+  background-color: #071e22;
+  border-bottom: 3px solid #ffffff;
+  height: 60px;
 }
 
 .navbar-brand, .navbar-nav .nav-link {
-    color: #fff !important;
-    font-size: 14px;
-    text-transform: uppercase;
+  color: #fff !important;
+  font-size: 14px;
+  text-transform: uppercase;
 }
 
 .navbar .bx-user-circle {
-    color: #fff;
+  color: #fff;
 }
 
-.search-bar h2{
-     font-size: 40px;
-    font-family: 'JetBrains Mono', monospace;
-    font-weight: 800;
-    letter-spacing: 5.6px;
-    color: white;
-    -webkit-text-stroke: 3.5px transparent;
-    text-shadow:
-        -1px -1px 0 #44ffd2,
-         1px -1px 0 #44ffd2,
-        -1px  1px 0 #29997e,
-         1px  1px 0 #29997e;
-    display: inline-block;
+.dropdown-menu {
+  background: linear-gradient(135deg, rgba(68, 255, 226, 0.25), rgba(103, 146, 137, 0.2));
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(68, 255, 226, 0.4);
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  animation: dropdownFade 0.4s ease;
 }
+
+@keyframes dropdownFade {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-item {
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+  font-size: 14px;
+  padding: 12px 20px;
+  transition: all 0.3s ease;
+  border-radius: 6px;
+}
+
+.dropdown-item:hover {
+  background: rgba(68, 255, 226, 0.15);
+  color: #44ffe2;
+}
+
 .container2 {
-    width: 100%;
-    min-height: 100vh;
-    padding: 5%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 100%;
+  min-height: 100vh;
+  padding: 5%;
+  display: flex;
+  overflow: visible;
+  position: relative;
+  padding-bottom: 200px; /* optional safety space */
+  align-items: center;
+  justify-content: center;
+}
+
+.search-bar h2 {
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: 5.6px;
+  color: white;
+  text-shadow:
+    -1px -1px 0 #44ffd2,
+     1px -1px 0 #44ffd2,
+    -1px  1px 0 #29997e,
+     1px  1px 0 #29997e;
+  display: inline-block;
 }
 
 .search-bar {
-    width: 100%;
-    max-width: 700px;
-    display: flex;
-    flex-direction: column; /* Stack items vertically */
-    align-items: center;
-    padding: 10px;
-    gap: 20px; /* Adds spacing between input and button */
+  width: 100%;
+  max-width: 700px;
+  display: flex;
+  overflow: visible;
+  position: relative;
+  padding-bottom: 200px; /* optional safety space */
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  gap: 20px;
 }
 
 .search-bar input {
-    width: 100%;
-    background: #fff;
-    border: 0;
-    outline: none;
-    padding: 12px 20px;
-    font-size: 20px;
-    color: #071E22;
-    border-radius: 10px;
+  width: 100%;
+  background: #fff;
+  border: 0;
+  outline: none;
+  padding: 12px 20px;
+  font-size: 20px;
+  color: #071E22;
+  border-radius: 10px;
 }
 
 .search-bar button {
-    width: 170px;
-    background: #071E22;
-    color: white;
-    border: none;
-    padding: 15px;
-    font-size: 18px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background 0.3s;
+  width: 30%;
+  height: 45px;
+  background: linear-gradient(#44ffd2, #679289);
+  border: 1px solid #ccc;
+  outline: 1px solid #ccc;
+  padding: 3px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #ffffff;
+  font-weight: 800;
+  letter-spacing: 5.6px;
+  transition: all 0.3s ease;
 }
 
 .search-bar button:hover {
-    background: #1d7874;
+  transform: scale(1.03);
+  box-shadow: 0 0 12px #44ffd2;
+}
+
+/* Custom Dropdown */
+.custom-dropdown {
+  position: relative;
+  width: 100%;
+  font-family: 'JetBrains Mono', monospace;
+  user-select: none;
+}
+
+.selected {
+  background: linear-gradient(135deg, rgba(7, 30, 34, 0.9), rgba(103, 146, 137, 0.2));
+  border: 1px solid #44ffe2;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(68, 255, 226, 0.2);
+  text-transform: uppercase;
+  position: relative;
+}
+
+.selected::after {
+  content: "\25BC";
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: #44ffe2;
+}
+label {
+  color: #ffffff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+
+.options {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, rgba(7, 30, 34, 0.95), rgba(103, 146, 137, 0.3));
+  border: 1px solid #44ffe2;
+  border-top: none;
+  position: absolute;
+  width: 100%;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
+  border-radius: 0 0 10px 10px;
+  z-index: 5;
+  opacity: 0;
+  backdrop-filter: blur(12px);
+}
+
+.options.show {
+  max-height: 300px;
+  opacity: 1;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.options li {
+  padding: 12px 20px;
+  cursor: pointer;
+  color: white;
+  transition: background 0.3s ease, color 0.3s ease;
+  text-transform: uppercase;
+}
+
+.options li:hover {
+  background-color: rgba(68, 255, 226, 0.1);
+  color: #44ffe2;
 }

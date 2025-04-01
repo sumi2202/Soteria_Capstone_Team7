@@ -13,15 +13,16 @@
 
   <!-- Scripts -->
   <script src="{{ url_for('static', filename='frontend_scripts/search_validation.js') }}"></script>
+   <script src="{{ url_for('static', filename='frontend_scripts/dropdown.js') }}"></script>
 </head>
 
 <body>
 
 <!-- NAVBAR -->
-<nav class="navbar navbar-expand-sm navbar-dark fixed-top py-1" style="background-color: #071e22;">
+<nav class="navbar navbar-expand-sm navbar-dark fixed-top py-1">
   <div class="container">
     <a href="/dashboard" class="navbar-brand d-flex align-items-center gap-2">
-      <img src="{{ url_for('static', filename='assets/Soteria_logo.png') }}" class="img-fluid" style="max-height: 30px;" alt="Soteria Logo">
+      <img src="static/assets/Soteria_logo.png" class="img-fluid" style="max-height: 30px;" alt="Soteria Logo">
       <strong>SOTERIA</strong>
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
@@ -50,7 +51,7 @@
 <div class="container2" style="margin-top: 80px;">
   <form action="/tests/run_tests" method="POST" id="scanForm" class="search-bar">
     <div class="logo-container text-center">
-      <img src="{{ url_for('static', filename='assets/animated_logo.gif') }}" alt="Soteria Logo" width="100">
+      <img src="static/assets/animated_logo.gif" alt="Soteria Logo" width="100">
     </div>
 
     <h2>SOTERIA</h2>
@@ -59,18 +60,20 @@
 
     <div class="form-group mt-3">
       <label for="sql_level_risk">Select SQL Injection Intensity:</label>
-      <select name="sql_level_risk" id="sql_level_risk" class="form-select mt-2">
-        <option value="1,1">Light Testing - 1min</option>
-        <option value="2,2">Standard Testing - 2min</option>
-        <option value="3,2">Moderate Testing - 10min</option>
-        <option value="4,3">Extensive Testing - 25min</option>
-        <option value="5,3">Comprehensive Testing - 1h</option>
-      </select>
+      <div class="custom-dropdown" id="dropdown">
+        <div class="selected" id="selected">LIGHT TESTING - 1MIN</div>
+        <ul class="options" id="options">
+          <li data-value="1,1">LIGHT TESTING - 1MIN</li>
+          <li data-value="2,2">STANDARD TESTING - 2MIN</li>
+          <li data-value="3,2">MODERATE TESTING - 10MIN</li>
+          <li data-value="4,3">EXTENSIVE TESTING - 25MIN</li>
+          <li data-value="5,3">COMPREHENSIVE TESTING - 1H</li>
+        </ul>
+      </div>
+      <input type="hidden" name="sql_level_risk" id="sql_level_risk" value="1,1">
     </div>
 
-    <!-- Hidden label input -->
     <input type="hidden" name="sql_label" id="sql_label" value="">
-
     <button type="submit" class="mt-3">SUBMIT</button>
   </form>
 </div>

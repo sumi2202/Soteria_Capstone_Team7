@@ -1,22 +1,24 @@
 document.addEventListener('DOMContentLoaded', () => {
     const searchForm = document.querySelector('.search-bar');
     const urlInput = searchForm.querySelector('input[name="url"]');
-    const levelRiskSelect = searchForm.querySelector('#sql_level_risk');
+    const sqlLevelRiskInput = searchForm.querySelector('#sql_level_risk'); // hidden input
     const sqlLabelInput = document.querySelector('#sql_label');
+    const selectedDisplay = document.getElementById('selected'); // visible div in custom dropdown
 
     searchForm.addEventListener('submit', async (event) => {
         event.preventDefault();
 
         const url = urlInput.value.trim();
-        const sqlLevelRisk = levelRiskSelect.value;
+        const sqlLevelRisk = sqlLevelRiskInput.value;
+        const selectedText = selectedDisplay.textContent;
 
         if (!url) {
             alert("Please enter a URL.");
             return;
         }
 
-        // Inject the clean label text
-        const label = levelRiskSelect.options[levelRiskSelect.selectedIndex].text.split(" - ")[0].trim();
+        // Extract label from custom dropdown display
+        const label = selectedText.split(" - ")[0].trim();
         sqlLabelInput.value = label;
 
         try {
