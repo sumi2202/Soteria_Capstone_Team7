@@ -227,9 +227,19 @@ label {
 }
 
 .options.show {
-  max-height: 300px;
+  max-height: 200px;              /* Limit height to make it scrollable */
+  overflow-y: auto;
   opacity: 1;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.options::-webkit-scrollbar {
+  width: 6px;
+}
+
+.options::-webkit-scrollbar-thumb {
+  background-color: #44ffe2;
+  border-radius: 3px;
 }
 
 .options li {
