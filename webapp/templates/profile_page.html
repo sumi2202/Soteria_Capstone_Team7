@@ -124,40 +124,46 @@ document.addEventListener("DOMContentLoaded", () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {% set max_len = [documents.proof_of_id|length, documents.ownership_id|length]|max %}
-                        {% for i in range(max_len) %}
-                        <tr>
-                            <td>
-                                {% if documents.proof_of_id and documents.proof_of_id[i] is defined %}
-                                    <a href="{{ url_for('views.view_file', file_id=documents.proof_of_id[i].id) }}"
-                                       target="_blank"
-                                       title="{{ documents.proof_of_id[i].filename }}">
-                                        {{ documents.proof_of_id[i].filename[:15] ~ '...' if documents.proof_of_id[i].filename|length > 15 else documents.proof_of_id[i].filename }}
-                                    </a>
-                                {% else %}
-                                    —
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if documents.ownership_id and documents.ownership_id[i] is defined %}
-                                    <a href="{{ url_for('views.view_file', file_id=documents.ownership_id[i].id) }}"
-                                       target="_blank"
-                                       title="{{ documents.ownership_id[i].filename }}">
-                                        {{ documents.ownership_id[i].filename[:15] ~ '...' if documents.ownership_id[i].filename|length > 15 else documents.ownership_id[i].filename }}
-                                    </a>
-                                {% else %}
-                                    —
-                                {% endif %}
-                            </td>
+                          {% set proof_of_id_len = documents.proof_of_id | length if documents.proof_of_id is defined else 0 %}
+                          {% set ownership_id_len = documents.ownership_id | length if documents.ownership_id is defined else 0 %}
+                          {% set max_len = [proof_of_id_len, ownership_id_len] | max %}
 
-                        </tr>
-                        {% endfor %}
-                        {% if not documents.proof_of_id and not documents.ownership_id %}
-                        <tr>
+                          {% for i in range(max_len) %}
+                          <tr>
+                            <td>
+                              {% if documents.proof_of_id is defined and documents.proof_of_id[i] is defined %}
+                                <a href="{{ url_for('views.view_file', file_id=documents.proof_of_id[i].id) }}"
+                                   target="_blank"
+                                   title="{{ documents.proof_of_id[i].filename }}">
+                                  {{ 'id_proof' ~ loop.index }}
+                                </a>
+                              {% else %}
+                                —
+                              {% endif %}
+                            </td>
+                            <td>
+                              {% if documents.ownership_id is defined and documents.ownership_id[i] is defined %}
+                                <a href="{{ url_for('views.view_file', file_id=documents.ownership_id[i].id) }}"
+                                   target="_blank"
+                                   title="{{ documents.ownership_id[i].filename }}">
+                                  {{ 'ownership_proof' ~ loop.index }}
+                                </a>
+                              {% else %}
+                                —
+                              {% endif %}
+                            </td>
+                          </tr>
+                          {% endfor %}
+
+                          {% if max_len == 0 %}
+                          <tr>
                             <td colspan="2">No documents uploaded.</td>
-                        </tr>
-                        {% endif %}
-                    </tbody>
+                          </tr>
+                          {% endif %}
+                        </tbody>
+
+
+
                 </table>
             </div>
         </div>
