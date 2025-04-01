@@ -40,7 +40,7 @@
       <h4>SCAN DETAILS</h4>
       <p><span class="info-label">Submitted URL:</span> {{ xss_result.url }}</p>
       <p><span class="info-label">SQLi Intensity:</span> {{ sql_result.label }}</p>
-      <p><span class="info-label">Date: </span> {{ xss_result.timestamp }}</p>
+      <p><span class="info-label">Date: </span> {{ formatted_timestamp | safe }}</p>
     </div>
 
     <div class="row align-items-start">

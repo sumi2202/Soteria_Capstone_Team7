@@ -6,7 +6,7 @@ from flask import Blueprint, request, jsonify, render_template, redirect, url_fo
 from .backend_scripts.pdf_generator import pdf_converter
 from .backend_scripts.XSS import xss_testing
 from .backend_scripts.SQL_Injection import sql_injection
-from datetime import datetime
+from datetime import datetime, timezone
 import threading
 import uuid
 
@@ -33,7 +33,7 @@ def run_security_tests(app, url, task_id, level, risk, user_id, label):
             sql_results = sql_injection(url, level, risk, progress_callback=update_progress)
             update_progress(95)
 
-            timestamp = datetime.utcnow()
+            timestamp = datetime.now(timezone.utc)
             xss_results.update({
                 "timestamp": timestamp,
                 "task_id": task_id,
@@ -114,6 +114,9 @@ def test_status_check(task_id):
 
 @test_routes.route("/test_results/<task_id>")
 def test_results(task_id):
+    from zoneinfo import ZoneInfo
+    from datetime import datetime, timezone
+
     db = current_app.db
     for _ in range(5):
         xss_result = db.xss_result.find_one({"task_id": task_id}) or {}
@@ -125,15 +128,36 @@ def test_results(task_id):
     if not xss_result and not sql_result:
         return jsonify({"error": "No results found for this test"}), 404
 
+    # Compute number of tests
     num_tests = (xss_result.get("num_passed", 0) + xss_result.get("num_failed", 0) +
                  sql_result.get("num_passed", 0) + sql_result.get("num_failed", 0))
     num_failed = xss_result.get("num_failed", 0) + sql_result.get("num_failed", 0)
+
+    # Convert and format the timestamp to America/Toronto timezone
+    raw_ts = xss_result.get("timestamp")
+    formatted_ts = "---"
+    try:
+        if isinstance(raw_ts, str):
+            if raw_ts.endswith("Z"):
+                raw_ts = raw_ts.replace("Z", "+00:00")
+            raw_ts = datetime.fromisoformat(raw_ts)
+
+        if isinstance(raw_ts, datetime):
+            if raw_ts.tzinfo is None:
+                raw_ts = raw_ts.replace(tzinfo=timezone.utc)
+            raw_ts = raw_ts.astimezone(ZoneInfo("America/Toronto"))
+
+        formatted_ts = raw_ts.strftime("%Y-%m-%d %I:%M %p %Z")
+    except Exception as e:
+        print(f"[ERROR] Failed to format timestamp for task {task_id}: {e}")
 
     return render_template("test_results.html",
                            num_tests=num_tests,
                            num_failed=num_failed,
                            xss_result=xss_result,
-                           sql_result=sql_result)
+                           sql_result=sql_result,
+                           formatted_timestamp=formatted_ts)
+
 
 
 @test_routes.route("/download/<task_id>")

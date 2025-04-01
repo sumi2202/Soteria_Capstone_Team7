@@ -1,7 +1,8 @@
 from flask import current_app
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
-from datetime import datetime
+from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -63,14 +64,22 @@ def pdf_converter(url, task_id):
     file.setFont("Times-Roman", 13)
     file.drawString(85, h - 130, safe_url)
 
-    # Timestamp
+    # Timestamp (force into America/Toronto timezone)
     raw_ts = xss_result_data.get('timestamp')
-    if isinstance(raw_ts, str):
-        try:
-            raw_ts = datetime.fromisoformat(raw_ts.replace("Z", "+00:00"))
-        except Exception:
-            raw_ts = None
-    formatted_time = raw_ts.strftime("%Y-%m-%d %I:%M %p") if isinstance(raw_ts, datetime) else safe_text(raw_ts)
+    try:
+        if isinstance(raw_ts, str):
+            if raw_ts.endswith("Z"):
+                raw_ts = raw_ts.replace("Z", "+00:00")
+            raw_ts = datetime.fromisoformat(raw_ts)
+
+        if isinstance(raw_ts, datetime):
+            if raw_ts.tzinfo is None:
+                raw_ts = raw_ts.replace(tzinfo=timezone.utc)
+            raw_ts = raw_ts.astimezone(ZoneInfo("America/Toronto"))
+
+        formatted_time = raw_ts.strftime("%Y-%m-%d %I:%M %p %Z")
+    except Exception:
+        formatted_time = "---"
 
     file.setFont("Times-Bold", 13)
     file.drawString(50, h - 150, "Time of Completion:")
