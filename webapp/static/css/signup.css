@@ -1,64 +1,133 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "JetBrains+Momo", sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
 }
 
 body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    position: relative;
-    background: linear-gradient(245deg,#071e22,#1d7874,#d85461) !important;
-    animation: gradient-animation 18s ease infinite
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(245deg, #071e22, #1d7874, #d85461);
+  background-size: 600% 600%;
+  animation: gradient-animation 18s ease infinite;
+  color: #fff;
+  overflow: hidden;
 }
 
+/* Flickering white dots layer with pulsing glow */
+body::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: radial-gradient(white 1px, transparent 2px);
+  background-size: 20px 20px;
+  mix-blend-mode: lighten;
+  opacity: 0.07;
+  animation: flicker 3s infinite ease-in-out, pulseGlow 4s infinite ease-in-out;
+  z-index: 0;
+  pointer-events: none;
+  filter: blur(0.8px);
+}
+
+/* Glow pulse animation */
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.05; }
+  50% { opacity: 0.12; }
+}
+
+/* Background gradient animation */
 @keyframes gradient-animation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Optional slight flicker motion */
+@keyframes flicker {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-0.5px, 0.5px); }
+}
+body::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: inherit;
+  z-index: 0;
+  opacity: 0.3;
+  animation: waveEffect 12s ease-in-out infinite;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+}
+
+/* Wavy distortion effect */
+@keyframes waveEffect {
   0% {
-    background-position: 0% 50%;
+    transform: scale(1) translateY(0px) skewY(0deg);
+    filter: blur(1px);
+  }
+  25% {
+    transform: scale(1.03) translateY(-2px) skewY(0.6deg);
+    filter: blur(2px);
   }
   50% {
-    background-position: 100% 50%;
+    transform: scale(1) translateY(2px) skewY(-0.6deg);
+    filter: blur(1.5px);
+  }
+  75% {
+    transform: scale(1.02) translateY(-1px) skewY(0.4deg);
+    filter: blur(2.5px);
   }
   100% {
-    background-position: 0% 50%;
+    transform: scale(1) translateY(0px) skewY(0deg);
+    filter: blur(1px);
   }
 }
-.form-container{
+
+
+.logo-container {
     display: flex;
-    justify-content: space-between;
-    gap: 20px;
-}
-.column{
-    flex: 1;
-}
-.input-wrapper{
-    position: relative;
-}
-.wrapper{
-    width: 420px;
-    color: #fbf5f3;
     justify-content: center;
+    background: transparent !important;
     align-items: center;
-    background: linear-gradient(145deg, rgba(0, 0, 0, 0.6), rgba(29, 120, 116, 0.6));
-    border: 1px solid #ccc;
-    backdrop-filter: blur(20px);
-    border-radius: 20px;
-    padding: 30px 40px;
+    margin-bottom: 20px;
 }
-.wrapper h1{
-    font-size: 36px;
-    text-align:center;
-    padding 20px;
-    color: white;
-    font-size: 40px;
-    font-family: JetBrains Mono;
-    font-weight: 800;
-    letter-spacing: 5.60px;
-    word-wrap: break-word
+.logo-container video {
+    background-color: transparent !important;
+}
+
+
+.wrapper {
+  position: relative;
+  z-index: 1;
+  width: 420px;
+   background: linear-gradient(145deg, rgba(0, 0, 0, 0.6), rgba(29, 120, 116, 0.6));
+  border: 1px solid #ccc;
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 30px 40px;
+  text-align: center;
+  color: #fbf5f3;
+}
+
+.wrapper h1 {
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: 5.6px;
+  color: white;
+  text-shadow:
+    -1px -1px 0 #44ffd2,
+     1px -1px 0 #44ffd2,
+    -1px  1px 0 #29997e,
+     1px  1px 0 #29997e;
+  display: inline-block;
 }
 .wrapper .login{
        width: 50%;

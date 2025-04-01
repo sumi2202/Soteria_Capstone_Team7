@@ -15,6 +15,12 @@
 <body>
     <div class="wrapper">
         <form action="{{ url_for('auth.login') }}" method="POST" id="loginForm">
+            <div class="logo-container text-center">
+                <div class="logo-container text-center">
+                    <img src="{{ url_for('static', filename='assets/animated_logo.gif') }}" alt="Soteria Logo" width="100">
+                </div>
+
+            </div>
             <h1>SOTERIA</h1>
             <div class="input-box">
                 <div class="input-wrapper">

@@ -54,6 +54,43 @@ body::before {
   0%, 100% { transform: translate(0, 0); }
   50% { transform: translate(-0.5px, 0.5px); }
 }
+body::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: inherit;
+  z-index: 0;
+  opacity: 0.3;
+  animation: waveEffect 12s ease-in-out infinite;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+}
+
+/* Wavy distortion effect */
+@keyframes waveEffect {
+  0% {
+    transform: scale(1) translateY(0px) skewY(0deg);
+    filter: blur(1px);
+  }
+  25% {
+    transform: scale(1.03) translateY(-2px) skewY(0.6deg);
+    filter: blur(2px);
+  }
+  50% {
+    transform: scale(1) translateY(2px) skewY(-0.6deg);
+    filter: blur(1.5px);
+  }
+  75% {
+    transform: scale(1.02) translateY(-1px) skewY(0.4deg);
+    filter: blur(2.5px);
+  }
+  100% {
+    transform: scale(1) translateY(0px) skewY(0deg);
+    filter: blur(1px);
+  }
+}
+
 
 .logo-container {
     display: flex;
@@ -82,11 +119,15 @@ body::before {
 
 .wrapper h1 {
   font-size: 40px;
-  padding: 20px;
-  color: white;
   font-weight: 800;
   letter-spacing: 5.6px;
-  font-family: 'JetBrains Mono', monospace;
+  color: white;
+  text-shadow:
+    -1px -1px 0 #44ffd2,
+     1px -1px 0 #44ffd2,
+    -1px  1px 0 #29997e,
+     1px  1px 0 #29997e;
+  display: inline-block;
 }
 
 .wrapper h2,
