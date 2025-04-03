@@ -239,3 +239,67 @@ def debug_insert_notification():
     except Exception as e:
         print(f"[DEBUG] Manual insert failed: {e}")
         return jsonify({"success": False, "error": str(e)})
+
+
+def check_verified_links(user_email, app):
+    """ Continuously checks for verified URLs that need notifications and updates their status. """
+    with app.app_context():
+        db = current_app.db  # Ensure we are in app context
+        print(f"🔍 Checking verified links for {user_email}...")  # Debug message
+
+        while True:
+            users = db.registered_urls.distinct("email", {"verified": True, "notified": False})
+
+            for email in users:
+                # Find URLs that are verified but not notified for the given user
+                urls_to_notify = db.registered_urls.find({
+                    "email": email,
+                    "verified": True,
+                    "notified": False
+                })
+
+                for url_doc in urls_to_notify:
+                    user_id = url_doc.get("user_id")
+                    url = url_doc.get("url")
+
+                    if not user_id:
+                        continue
+
+                    # Create the notification
+                    timestamp = datetime.now(timezone.utc)
+                    notification = {
+                        "user_id": str(user_id),
+                        "message": f"✅ Your link {url} has been verified!",
+                        "timestamp": timestamp,
+                        "type": "link_verified"
+                    }
+
+                    db.notifications.insert_one(notification)
+
+                    # Mark the URL as notified to avoid duplicate notifications
+                    db.registered_urls.update_one(
+                        {"_id": url_doc["_id"]},
+                        {"$set": {"notified": True}}
+                    )
+
+                    print(f"[INFO] 🔔 Notification sent for {url}")
+
+            # Wait before checking again
+            time.sleep(30)  # Runs every 30 seconds
+
+
+@test_routes.route('/start_checking_verified_links')
+def start_checking_verified_links():
+    """ Starts the background process if not already running. """
+    global notification_thread  # Keep track of the thread globally
+
+    if not session.get('email'):
+        return "User not logged in or session expired", 400
+
+    if "notification_thread" not in globals() or not notification_thread.is_alive():
+        app = current_app._get_current_object()
+        notification_thread = threading.Thread(target=check_verified_links, args=(app,), daemon=True)
+        notification_thread.start()
+        print("[INFO] ✅ Background notification thread started.")
+
+    return "Background notification thread is running."

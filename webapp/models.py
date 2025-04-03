@@ -29,6 +29,7 @@ class URLRegistration:
             "id_document": id_document,
             "ownership_document": ownership_document,
             "verified": verified,
+            "notified": False,
         }
         result = self.db.URL_Registration.insert_one(url_entry)
         return str(result.inserted_id)
