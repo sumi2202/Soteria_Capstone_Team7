@@ -301,7 +301,7 @@ async function submitForm() {
   }
 
   try {
-    const res = await fetch("http://localhost:5001/send-mfa", {
+    const res = await fetch("http://127.0.0.1:5001/send-mfa", {
 
       method: "POST",
       headers: { "Content-Type": "application/json" },
