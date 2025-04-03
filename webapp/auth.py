@@ -93,3 +93,26 @@ def sign_up():
         return redirect(url_for('auth.login'))
 
     return render_template("signup.html")
+
+
+@auth.route("/complete-signup", methods=["POST"])
+def complete_signup():
+    data = request.get_json()
+    first_name = data.get("firstName")
+    last_name = data.get("lastName")
+    email = data.get("email")
+    password = data.get("password")
+
+    db = current_app.db
+
+    if db.users.find_one({"email": email}):
+        return jsonify(success=False, message="Email already exists.")
+
+    user = User(db)
+    user_id = user.signup(first_name, last_name, email, password)
+
+    session['user_id'] = str(user_id)
+    session['email'] = email
+
+    return jsonify(success=True)
+

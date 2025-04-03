@@ -332,17 +332,40 @@ async function submitForm() {
     document.getElementById("mfaInput").value = "";
   }
 
-  function verifyMFA() {
-    const input = document.getElementById("mfaInput").value.trim();
-    const error = document.getElementById("mfaError");
+  async function verifyMFA() {
+  const input = document.getElementById("mfaInput").value.trim();
+  const error = document.getElementById("mfaError");
 
-    if (input === generatedMFA) {
-      alert("MFA Verified! Account created.");
-      closeMFAModal();
-    } else {
-      error.style.display = "block";
+  if (input === generatedMFA) {
+    try {
+      const res = await fetch("/complete-signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName: document.getElementById("fname").value,
+          lastName: document.getElementById("lname").value,
+          email: document.getElementById("email").value,
+          password: document.getElementById("password").value
+        })
+      });
+
+      const result = await res.json();
+
+      if (result.success) {
+        window.location.href = "/dashboard";
+      } else {
+        alert("❌ Failed to complete signup: " + result.message);
+      }
+
+    } catch (e) {
+      alert("Server error. Try again later.");
+      console.error(e);
     }
+  } else {
+    error.style.display = "block";
   }
+}
+
 
   function resendCode() {
     generatedMFA = Math.floor(100000 + Math.random() * 900000).toString();
