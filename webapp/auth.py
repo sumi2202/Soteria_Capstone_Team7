@@ -1,9 +1,14 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, session
+from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, session, jsonify
 from .models import User
+from webapp.backend_scripts.MFA_generation import (
+    email_validation,
+    generate_code,
+    send_code
+)
 
 auth = Blueprint('auth', __name__)
 
-@auth.route('/login', methods=['GET', 'POST'])
+@auth.route('/login', methods=['GpythET', 'POST'])
 def login():
     if request.method == 'POST':
         email = request.form.get('email')
@@ -32,6 +37,32 @@ def logout():
     flash('You have been logged out.', category='info')
     return redirect(url_for('auth.login'))
 
+@auth.route("/send-mfa", methods=["POST"])
+def send_mfa():
+    data = request.get_json()
+    email = data.get("email")
+
+    if not email:
+        return jsonify(success=False, error="No email provided")
+
+    try:
+        current_app.logger.info(f"[MFA] Email submitted: {email}")
+
+        if not email_validation(email):
+            current_app.logger.warning(f"[MFA] Invalid email: {email}")
+            return jsonify(success=False, error="Invalid email address")
+
+        code = generate_code()
+        current_app.logger.info(f"[MFA] Code generated: {code}")
+
+        send_code(email, code)
+        current_app.logger.info(f"[MFA] Email successfully sent to {email}")
+
+        return jsonify(success=True, code=code)
+
+    except Exception as e:
+        current_app.logger.error(f"[MFA] Error occurred: {e}")
+        return jsonify(success=False, error="Something went wrong while sending the code.")
 
 @auth.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():

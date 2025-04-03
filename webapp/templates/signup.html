@@ -13,65 +13,345 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
     <title>{% block title %}Sign Up{% endblock %}</title>
+
+
+      <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'JetBrains', monospace;
+      background: radial-gradient(circle at top left, #1e2c2b, #042D2B);
+      color: white;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .signup-modal {
+      background: linear-gradient(to right, #0b3d3c, #21514f);
+      border: 2px solid #00c2c2;
+      border-radius: 20px;
+      padding: 40px;
+      width: 90%;
+      max-width: 850px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      position: relative;
+      margin: auto;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .logo-container {
+      grid-column: span 2;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .logo-container img {
+      height: 60px;
+    }
+
+    .logo-container h2 {
+      margin: 10px 0 0;
+      color: #00fff7;
+      font-size: 1.8rem;
+      letter-spacing: 2px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .input-group label {
+      margin-bottom: 5px;
+      font-size: 0.85rem;
+    }
+
+    .input-group input {
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      color: black;
+    }
+
+    .input-group input[type="password"] {
+      -webkit-text-security: disc;
+      text-security: disc;
+    }
+
+    .checkbox-group {
+      grid-column: span 2;
+      font-size: 0.9rem;
+    }
+
+    .button-group {
+      grid-column: span 2;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 10px;
+    }
+
+    .btn {
+      padding: 12px 30px;
+      background-color: #00c2c2;
+      color: black;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .btn:hover {
+      background-color: #00e0e0;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(circle at center, #0b2b2b, #001616);
+      z-index: 9999;
+      border-radius: 40px;
+      border: 2px solid #00f0ff;
+      padding: 2rem;
+      overflow: hidden;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      position: relative;
+      margin: auto;
+      max-width: 700px;
+      background: rgba(0, 30, 30, 0.8);
+      border: 1px solid #00f0ff;
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: left;
+      color: #d8f3f3;
+      line-height: 1.6;
+    }
+
+    .modal-title {
+      text-align: center;
+      font-size: 2rem;
+      letter-spacing: 0.2rem;
+      margin-bottom: 1.5rem;
+      color: #ffffff;
+      font-family: 'Courier New', monospace;
+      text-transform: uppercase;
+    }
+
+    .terms-text {
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      white-space: pre-wrap;
+      color: #d8f3f3;
+      line-height: 1.6;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 24px;
+      right: 32px;
+      font-size: 1.1rem;
+      color: white;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      outline: 2px solid #ffffff88;
+      transition: background 0.2s ease, outline-color 0.2s;
+    }
+
+    .close-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      outline-color: #ffffff;
+    }
+  </style>
 </head>
 <body>
-    <div class="wrapper">
-        <form action = "{{ url_for('auth.sign_up') }}" method="POST" id="signUpForm">
-            <div class="logo-container text-center">
-                <div class="logo-container text-center">
-                    <img src="{{ url_for('static', filename='assets/animated_logo.gif') }}" alt="Soteria Logo" width="100">
-                </div>
 
-            </div>
-            <h1>SOTERIA</h1>
-            <div class = "form-container">
-                <div class = "column">
-                <div class="input-box">
-                 <div class="input-wrapper">
-                    <input type="text" placeholder="First Name" id="FirstName" name = "firstName" required>
-                    <i class='bx bxs-user-badge'></i>
-                </div>
-                </div>
-                <div class="input-box">
-                <div class="input-wrapper">
-                    <input type="text" placeholder="Email" id="EmailAdd" name = "email" required>
-                    <i class='bx bxs-lock' ></i>
-                </div>
-                </div>
-                <div class="input-box">
-                <div class="input-wrapper">
-                    <input type="text" style="-webkit-text-security: circle" placeholder="Password" id="loginPassword" name = "password" required>
-                    <i class='bx bxs-lock' ></i>
-                </div>
-                </div>
-                </div>
-                <div class = "column">
-                <div class="input-box">
-                 <div class="input-wrapper">
-                    <input type="text" placeholder="Last Name" id="LastName" name = "lastName" required>
-                    <i class='bx bxs-user-badge'></i>
-                </div>
-                 <div class="input-wrapper">
-                    <input type="text" placeholder="Re-enter Email" id="EmailReenter" name = "confirmEmail" required>
-                    <i class='bx bxs-user-badge'></i>
-                </div>
-                </div>
-                <div class="input-box">
-                <div class="input-wrapper">
-                    <input type="text" style="-webkit-text-security: circle" placeholder="Re-enter Password" id="PasswordReenter" name = "confirmPassword" required>
-                    <i class='bx bxs-lock' ></i>
-                </div>
-                </div>
-                </div>
-            </div>
+<!-- Signup Form -->
+<div class="signup-modal">
+  <div class="logo-container">
+    <img src="placeholder-logo.png" alt="Soteria Logo" />
+    <h2>SOTERIA</h2>
+  </div>
 
-            <button type="submit" class="login">TERMS</button>
-             <button type="submit" class="signup">SIGN UP</button>
+  <div class="input-group"><label for="fname">FIRST NAME</label><input type="text" id="fname"></div>
+  <div class="input-group"><label for="lname">LAST NAME</label><input type="text" id="lname"></div>
+  <div class="input-group"><label for="email">EMAIL</label><input type="email" id="email"></div>
+  <div class="input-group"><label for="email2">RE-ENTER EMAIL</label><input type="email" id="email2"></div>
+  <div class="input-group"><label for="password">PASSWORD</label><input type="password" id="password"></div>
+  <div class="input-group"><label for="password2">RE-ENTER PASSWORD</label><input type="password" id="password2"></div>
 
-        </form>
+  <div class="checkbox-group">
+    <input type="checkbox" id="termsCheckbox">
+    <label for="termsCheckbox">
+      I agree to the <a href="#" onclick="openTermsModal(event)">Terms & Conditions</a>
+    </label>
+  </div>
 
+  <div class="button-group">
+    <button class="btn" onclick="submitForm()">SIGN UP</button>
+  </div>
+</div>
+
+<!-- Terms Modal -->
+<div class="modal" id="termsModal">
+  <div class="modal-content">
+    <button class="close-btn" onclick="closeTermsModal()">✕</button>
+    <div class="modal-title">TERMS OF SERVICE</div>
+    <div class="terms-text">
+Terms and Conditions for Personal Information Collection and Application
+
+By submitting your application, you agree to the following:
+
+1. Purpose: Your personal information is collected to verify your identity, prevent fraud, and comply with legal requirements.
+
+2. Data Security: Your information is securely stored with encryption and accessed only by authorized personnel. It will not be shared without your consent unless required by law.
+
+3. Application Validity: Applications are valid for 6 months. You must reapply and resubmit required documents for re-verification after this period.
+
+4. User Responsibility: You agree to provide accurate information and update it promptly if needed.
+
+5. Fraud Prevention: Submitting false information will result in disqualification and may be reported to authorities.
+
+6. Retention: Your information is securely stored during the application period and deleted after a legally required retention period.
+
+7. Changes: We may update these terms, and continued use implies your acceptance of changes.
+
+For questions, contact us at soteria.solutions@gmail.com. By applying, you agree to these terms.
     </div>
+  </div>
+</div>
+
+<!-- Terms Warning Modal -->
+<div class="modal" id="warningModal">
+  <div class="modal-content" style="text-align: center;">
+    <button class="close-btn" onclick="closeWarning()">✕</button>
+    <p>You must agree to the <a href="#" onclick="openTermsModal(event)">Terms & Conditions</a> to continue.</p>
+  </div>
+</div>
+
+<!-- MFA Modal -->
+<div class="modal" id="mfaModal">
+  <div class="modal-content" style="text-align: center;">
+    <button class="close-btn" onclick="closeMFAModal()">✕</button>
+    <div class="modal-title">SIGN UP SUCCESSFUL!</div>
+    <p>
+      An email has been sent to you with a verification code.<br />
+      Please enter the 6-digit code below:
+    </p>
+    <div style="margin: 20px 0;">
+      <input id="mfaInput" type="text" maxlength="6" placeholder="______" style="
+        padding: 10px;
+        font-size: 1.2rem;
+        border-radius: 8px;
+        border: none;
+        width: 150px;
+        text-align: center;
+        letter-spacing: 6px;
+      " />
+      <button class="btn" onclick="verifyMFA()">VERIFY</button>
+    </div>
+    <p id="mfaError" style="color: red; display: none;">Invalid code. Please try again.</p>
+    <div style="margin-top: 10px;">
+      <a href="#" style="color: #00e0c0;" onclick="resendCode()">resend code</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  let generatedMFA = "";
+
+  function openTermsModal(event) {
+    event.preventDefault();
+    document.getElementById("termsModal").style.display = "flex";
+  }
+
+  function closeTermsModal() {
+    document.getElementById("termsModal").style.display = "none";
+  }
+
+  function closeWarning() {
+    document.getElementById("warningModal").style.display = "none";
+  }
+
+async function submitForm() {
+  const email = document.getElementById("email").value.trim();
+  const checkbox = document.getElementById("termsCheckbox");
+
+  if (!checkbox.checked) {
+    document.getElementById("warningModal").style.display = "flex";
+    return;
+  }
+
+  try {
+    const res = await fetch("http://localhost:5001/send-mfa", {
+
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email })
+    });
+
+    const result = await res.json();
+
+    if (result.success) {
+      generatedMFA = result.code;
+      document.getElementById("mfaModal").style.display = "flex";
+      document.getElementById("mfaInput").value = "";
+      console.log("MFA code sent:", generatedMFA); // for testing only
+    } else {
+      alert("⚠️ " + result.error);
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Something went wrong while sending the code.");
+  }
+}
+
+
+
+  function closeMFAModal() {
+    document.getElementById("mfaModal").style.display = "none";
+    document.getElementById("mfaError").style.display = "none";
+    document.getElementById("mfaInput").value = "";
+  }
+
+  function verifyMFA() {
+    const input = document.getElementById("mfaInput").value.trim();
+    const error = document.getElementById("mfaError");
+
+    if (input === generatedMFA) {
+      alert("MFA Verified! Account created.");
+      closeMFAModal();
+    } else {
+      error.style.display = "block";
+    }
+  }
+
+  function resendCode() {
+    generatedMFA = Math.floor(100000 + Math.random() * 900000).toString();
+    console.log("New MFA code sent:", generatedMFA);
+    alert("A new code has been sent to your email.");
+  }
+</script>
+
 </body>
-<script src="{{ url_for('static', filename='index.js') }}"></script>
+
 
 </html>
