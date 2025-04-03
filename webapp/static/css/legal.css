@@ -1,10 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap');
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'JetBrains Mono', monospace;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'JetBrains Mono', monospace;
 }
 
 body {
@@ -17,10 +17,9 @@ body {
   background-size: 600% 600%;
   animation: gradient-animation 18s ease infinite;
   color: #fff;
-  overflow: hidden;
+  overflow: visible;
 }
 
-/* Flickering white dots layer with pulsing glow */
 body::before {
   content: '';
   position: absolute;
@@ -35,37 +34,69 @@ body::before {
   filter: blur(0.8px);
 }
 
-/* Glow pulse animation */
-@keyframes pulseGlow {
-  0%, 100% { opacity: 0.05; }
-  50% { opacity: 0.12; }
-}
-
-/* Background gradient animation */
 @keyframes gradient-animation {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
-/* Optional slight flicker motion */
 @keyframes flicker {
   0%, 100% { transform: translate(0, 0); }
   50% { transform: translate(-0.5px, 0.5px); }
 }
 
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.05; }
+  50% { opacity: 0.12; }
+}
+
 .navbar {
-    background-color: #071e22;
-    border-bottom: 3px solid #ffffff;
-    height: 60px;
+  background-color: #071e22;
+  border-bottom: 3px solid #ffffff;
+  height: 60px;
 }
 
 .navbar-brand, .navbar-nav .nav-link {
-    color: #fff !important;
-    font-size: 14px;
-    text-transform: uppercase;
+  color: #fff !important;
+  font-size: 14px;
+  text-transform: uppercase;
 }
 
 .navbar .bx-user-circle {
-    color: #fff;
+  color: #fff;
+}
+
+.dropdown-menu {
+  background: linear-gradient(135deg, rgba(68, 255, 226, 0.25), rgba(103, 146, 137, 0.2));
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(68, 255, 226, 0.4);
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  animation: dropdownFade 0.4s ease;
+}
+
+@keyframes dropdownFade {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-item {
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+  font-size: 14px;
+  padding: 12px 20px;
+  transition: all 0.3s ease;
+  border-radius: 6px;
+}
+
+.dropdown-item:hover {
+  background: rgba(68, 255, 226, 0.15);
+  color: #44ffe2;
 }

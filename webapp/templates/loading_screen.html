@@ -63,18 +63,18 @@
 <body>
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-sm navbar-dark fixed-top py-1">
-  <div class="container">
-    <a href="/dashboard" class="navbar-brand d-flex align-items-center gap-2">
-      <img src="static/assets/Soteria_logo.png" class="img-fluid" style="max-height: 30px;" alt="Soteria Logo">
-      <strong>SOTERIA</strong>
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse justify-content-end" id="navmenu">
-      <ul class="navbar-nav ms-auto align-items-center">
-          <li class="nav-item"><a href="/validation" class="nav-link">Link Validation</a></li>
-          <li class="nav-item"><a href="/results?page=1&per_page=5" class="nav-link">Results</a></li>
+          <div class="container">
+            <a href="/dashboard" class="navbar-brand d-flex align-items-center gap-2">
+              <img src="{{ url_for('static', filename='assets/Soteria_logo.png') }}" class="img-fluid" style="max-height: 30px;" alt="Soteria Logo">
+              <strong>SOTERIA</strong>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navmenu">
+              <ul class="navbar-nav ms-auto align-items-center">
+                  <li class="nav-item"><a href="/validation" class="nav-link">Link Validation</a></li>
+                  <li class="nav-item"><a href="/results?page=1&per_page=5" class="nav-link">Results</a></li>
 
           <!-- 🔔 Notification Bell -->
           <li class="nav-item dropdown">

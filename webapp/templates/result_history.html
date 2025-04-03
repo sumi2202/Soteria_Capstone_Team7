@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}Link Validation{% endblock %}</title>
+    <title>{% block title %}PROFILE{% endblock %}</title>
 
     <!-- Styles -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/result_history.css') }}">
@@ -12,39 +12,99 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+
 </head>
+<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+<script>
+  const socket = io("http://localhost:5001");  // or your backend URL
+
+  // ⏱ Fetch stored notifications on page load
+  fetch("/tests/notifications")
+    .then(res => res.json())
+    .then(data => {
+      const notifList = document.getElementById("notif-list");
+      const notifBadge = document.getElementById("notif-badge");
+
+      if (data.success && data.notifications.length > 0) {
+        notifList.innerHTML = "";  // Clear "No notifications yet"
+        data.notifications.forEach(notif => {
+          const li = document.createElement("li");
+          li.classList.add("dropdown-item", "text-wrap", "py-2");
+          li.innerHTML = `<strong>${notif.message}</strong><br><small class="text-muted">${notif.timestamp}</small>`;
+          notifList.appendChild(li);
+        });
+        notifBadge.textContent = data.notifications.length;
+      }
+    });
+
+  // 🔔 Real-time notifications
+  socket.on("new_notification", (data) => {
+    const notifList = document.getElementById("notif-list");
+    const notifBadge = document.getElementById("notif-badge");
+
+    if (notifList.firstElementChild && notifList.firstElementChild.classList.contains("text-muted")) {
+      notifList.innerHTML = "";
+    }
+
+    const li = document.createElement("li");
+    li.classList.add("dropdown-item", "text-wrap", "py-2");
+    li.innerHTML = `<strong>${data.message}</strong><br><small class="text-muted">${data.timestamp}</small>`;
+    notifList.prepend(li);
+
+    let count = parseInt(notifBadge.textContent) || 0;
+    notifBadge.textContent = count + 1;
+  });
+
+  // 🔕 Reset badge count on click
+  document.getElementById("notifDropdown").addEventListener("click", () => {
+    document.getElementById("notif-badge").textContent = "0";
+  });
+</script>
 <body>
 
     <nav class="navbar navbar-expand-sm navbar-dark fixed-top py-1">
-    <div class="container">
+      <div class="container">
         <a href="/dashboard" class="navbar-brand d-flex align-items-center gap-2">
-            <img src="{{ url_for('static', filename='assets/Soteria_logo.png') }}" class="img-fluid" style="max-height: 30px;" alt="Soteria Logo">
-            <strong>SOTERIA</strong>
+          <img src="{{ url_for('static', filename='assets/Soteria_logo.png') }}" class="img-fluid" style="max-height: 30px;" alt="Soteria Logo">
+          <strong>SOTERIA</strong>
         </a>
-
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
-            <span class="navbar-toggler-icon"></span>
+          <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse justify-content-end" id="navmenu">
-            <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item"><a href="/validation" class="nav-link">Link Validation</a></li>
-                    <li class="nav-item"><a href="/results?page=1&per_page=5" class="nav-link">Results</a></li>
+          <ul class="navbar-nav ms-auto align-items-center">
+              <li class="nav-item"><a href="/validation" class="nav-link">Link Validation</a></li>
+              <li class="nav-item"><a href="/results?page=1&per_page=5" class="nav-link">Results</a></li>
 
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class='bx bx-user-circle' style="font-size: 24px;"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
-                            <li><a class="dropdown-item" href="/profile_page">Profile</a></li>
-                            <li><a class="dropdown-item" href="/customer-rating">Feedback</a></li>
-                            <li><a class="dropdown-item" href="/legal">Legal</a></li>
-                        </ul>
-                    </li>
+              <!-- 🔔 Notification Bell -->
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="notifDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class='bx bx-bell' style="font-size: 22px; position: relative;">
+                    <span id="notif-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 10px;">0</span>
+                  </i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end p-2" aria-labelledby="notifDropdown" id="notif-list" style="width: 300px; max-height: 300px; overflow-y: auto;">
+                  <li class="text-muted text-center">No notifications yet</li>
                 </ul>
+              </li>
+
+              <!-- 👤 User Account -->
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class='bx bx-user-circle' style="font-size: 24px;"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
+                  <li><a class="dropdown-item" href="/profile_page">Profile</a></li>
+                  <li><a class="dropdown-item" href="/customer-rating">Feedback</a></li>
+                  <li><a class="dropdown-item" href="/legal">Legal</a></li>
+                </ul>
+              </li>
+            </ul>
+
         </div>
-    </div>
-</nav>
+      </div>
+    </nav>
     <!-- MAIN CONTENT -->
     <div class="container" style="margin-top: 80px;">
         <h1 class="results-title">RESULTS</h1>
