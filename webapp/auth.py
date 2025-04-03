@@ -8,7 +8,7 @@ from webapp.backend_scripts.MFA_generation import (
 
 auth = Blueprint('auth', __name__)
 
-@auth.route('/login', methods=['GpythET', 'POST'])
+@auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         email = request.form.get('email')
