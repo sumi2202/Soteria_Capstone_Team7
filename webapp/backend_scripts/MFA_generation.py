@@ -36,7 +36,7 @@ def generate_code():
 # Used to send the email with the code
 def send_code(email, code):
     try:
-        account = yagmail.SMTP("soteria.solutionsteam@gmail.com", "wlcp eymb hhyu pppw")
+        account = yagmail.SMTP("soteria.solutionsteam@gmail.com", "oelu zgfg sgox srnw")
         email_subject = "Soteria - Your One Time Passcode Has Arrived!"
         email_body = f""" 
         Hello,
