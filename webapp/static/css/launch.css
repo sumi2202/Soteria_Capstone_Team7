@@ -21,102 +21,110 @@ body {
   overflow: hidden;
 }
 
-/* Flickering white dots layer with pulsing glow */
-body::before {
+/* FX Layers */
+body::before, body::after {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+body::before {
   background-image: radial-gradient(white 1px, transparent 2px);
   background-size: 20px 20px;
   mix-blend-mode: lighten;
   opacity: 0.07;
   animation: flicker 3s infinite ease-in-out, pulseGlow 4s infinite ease-in-out;
-  z-index: 0;
-  pointer-events: none;
   filter: blur(0.8px);
 }
+body::after {
+  background: inherit;
+  opacity: 0.3;
+  animation: waveEffect 12s ease-in-out infinite;
+  mix-blend-mode: screen;
+  mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+}
 
-/* Glow pulse animation */
+/* Keyframes */
 @keyframes pulseGlow {
   0%, 100% { opacity: 0.05; }
   50% { opacity: 0.12; }
 }
-
-/* Background gradient animation */
 @keyframes gradient-animation {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
-
-/* Optional slight flicker motion */
 @keyframes flicker {
   0%, 100% { transform: translate(0, 0); }
   50% { transform: translate(-0.5px, 0.5px); }
 }
-body::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: inherit;
-  z-index: 0;
-  opacity: 0.3;
-  animation: waveEffect 12s ease-in-out infinite;
-  mix-blend-mode: screen;
-  pointer-events: none;
-  mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
-}
-
-/* Wavy distortion effect */
 @keyframes waveEffect {
-  0% {
-    transform: scale(1) translateY(0px) skewY(0deg);
-    filter: blur(1px);
-  }
-  25% {
-    transform: scale(1.03) translateY(-2px) skewY(0.6deg);
-    filter: blur(2px);
-  }
-  50% {
-    transform: scale(1) translateY(2px) skewY(-0.6deg);
-    filter: blur(1.5px);
-  }
-  75% {
-    transform: scale(1.02) translateY(-1px) skewY(0.4deg);
-    filter: blur(2.5px);
-  }
-  100% {
-    transform: scale(1) translateY(0px) skewY(0deg);
-    filter: blur(1px);
-  }
+  0% { transform: scale(1) translateY(0) skewY(0deg); filter: blur(1px); }
+  25% { transform: scale(1.03) translateY(-2px) skewY(0.6deg); filter: blur(2px); }
+  50% { transform: scale(1) translateY(2px) skewY(-0.6deg); filter: blur(1.5px); }
+  75% { transform: scale(1.02) translateY(-1px) skewY(0.4deg); filter: blur(2.5px); }
+  100% { transform: scale(1) translateY(0) skewY(0deg); filter: blur(1px); }
+}
+@keyframes pulseBounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
 }
 
-
+/* Logo */
 .logo-container {
-    display: flex;
-    justify-content: center;
-    background: transparent !important;
-    align-items: center;
-    margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent !important;
+  margin-bottom: 20px;
 }
-.logo-container video {
-    background-color: transparent !important;
+.logo-container img {
+  background-color: transparent !important;
+  animation: pulseBounce 3s infinite ease-in-out;
 }
 
-
+/* Login Box */
 .wrapper {
   position: relative;
   z-index: 1;
   width: 420px;
-   background: linear-gradient(145deg, rgba(0, 0, 0, 0.6), rgba(29, 120, 116, 0.6));
-  border: 1px solid #ccc;
+  background: linear-gradient(145deg, rgba(0, 0, 0, 0.6), rgba(29, 120, 116, 0.6));
+  border: 1px solid #cccccc;
   backdrop-filter: blur(20px);
   border-radius: 20px;
   padding: 30px 40px;
   text-align: center;
   color: #fbf5f3;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
 }
 
+/* ✕ Close Button */
+.wrapper .close-btn {
+  position: absolute;
+  top: 20px;
+  right: 28px;
+  font-size: 1.3rem;
+  color: white;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  outline: 1px solid #cccccc;
+  transition: background 0.2s ease, outline-color 0.2s;
+  text-decoration: none;
+}
+.wrapper .close-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  outline-color: white;
+}
+
+/* Header Title */
 .wrapper h1 {
   font-size: 40px;
   font-weight: 800;
@@ -130,6 +138,7 @@ body::after {
   display: inline-block;
 }
 
+/* Subheaders */
 .wrapper h2,
 .wrapper h3 {
   font-size: 14px;
@@ -137,6 +146,7 @@ body::after {
   font-family: 'JetBrains Mono', monospace;
 }
 
+/* Begin Button */
 .wrapper .begin {
   width: 100%;
   height: 45px;
@@ -156,3 +166,29 @@ body::after {
   transform: scale(1.03);
   box-shadow: 0 0 12px #44ffd2;
 }
+
+#typing-text {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  height: 25px; /* fixed height to prevent container shift */
+  font-size: 18px;
+  font-family: 'JetBrains Mono', monospace;
+  white-space: nowrap;
+  overflow: hidden;
+  letter-spacing: 1.2px;
+}
+
+.blinking-cursor {
+  display: inline-block;
+  margin-left: 4px;
+  color: #ffffff;
+  animation: blink 1.2s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+

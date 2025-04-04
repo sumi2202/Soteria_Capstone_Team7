@@ -21,7 +21,6 @@ body {
   overflow: hidden;
 }
 
-/* Flickering white dots layer with pulsing glow */
 body::before {
   content: '';
   position: absolute;
@@ -36,24 +35,6 @@ body::before {
   filter: blur(0.8px);
 }
 
-/* Glow pulse animation */
-@keyframes pulseGlow {
-  0%, 100% { opacity: 0.05; }
-  50% { opacity: 0.12; }
-}
-
-/* Background gradient animation */
-@keyframes gradient-animation {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-/* Optional slight flicker motion */
-@keyframes flicker {
-  0%, 100% { transform: translate(0, 0); }
-  50% { transform: translate(-0.5px, 0.5px); }
-}
 body::after {
   content: '';
   position: absolute;
@@ -67,7 +48,23 @@ body::after {
   mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
 }
 
-/* Wavy distortion effect */
+/* === ANIMATIONS === */
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.05; }
+  50% { opacity: 0.12; }
+}
+
+@keyframes gradient-animation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes flicker {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-0.5px, 0.5px); }
+}
+
 @keyframes waveEffect {
   0% {
     transform: scale(1) translateY(0px) skewY(0deg);
@@ -91,30 +88,63 @@ body::after {
   }
 }
 
-
-.logo-container {
-    display: flex;
-    justify-content: center;
-    background: transparent !important;
-    align-items: center;
-    margin-bottom: 20px;
-}
-.logo-container video {
-    background-color: transparent !important;
+@keyframes fadeSlideUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
+@keyframes pulseBounce {
+  0%, 100% {
+    transform: scale(1) translateY(0);
+  }
+  50% {
+    transform: scale(1.05) translateY(-3px);
+  }
+}
 
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* === WRAPPER === */
 .wrapper {
-  position: relative;
+  background: linear-gradient(145deg, rgba(0, 0, 0, 0.6), rgba(29, 120, 116, 0.6));
+  border: 1px solid #cccccc;
+  border-radius: 16px;
+  padding: 40px 30px;
+  width: 90%;
+  max-width: 400px;
   z-index: 1;
-  width: 420px;
-   background: linear-gradient(145deg, rgba(0, 0, 0, 0.6), rgba(29, 120, 116, 0.6));
-  border: 1px solid #ccc;
-  backdrop-filter: blur(20px);
-  border-radius: 20px;
-  padding: 30px 40px;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   text-align: center;
-  color: #fbf5f3;
+  opacity: 0;
+  transform: translateY(40px);
+  animation: fadeSlideUp 1.2s ease forwards;
+}
+
+/* === LOGO + TITLE === */
+.logo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+  animation: fadeSlideUp 1s ease forwards;
+  animation-delay: 0.2s;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.logo-container img {
+  width: 100px;
+  height: auto;
+  margin-bottom: 10px;
+  animation: pulseBounce 2.5s ease-in-out infinite;
 }
 
 .wrapper h1 {
@@ -127,33 +157,98 @@ body::after {
      1px -1px 0 #44ffd2,
     -1px  1px 0 #29997e,
      1px  1px 0 #29997e;
-  display: inline-block;
+  animation: fadeSlideUp 1s ease forwards;
+  animation-delay: 0.4s;
+  opacity: 0;
+  transform: translateY(30px);
 }
 
-.wrapper .login{
-       width: 100%;
-    height: 45px;
-    background: linear-gradient(#44ffd2, #679289);
-    border: #FFFFFF;
-    outline: none;
-    padding: 3px;
-    border-radius: 40px;
-    cursor: pointer;
-    font-size: 16px;
-    color:#FFFFFF;
-    font-weight: 600;
+/* === BUTTONS === */
+.wrapper a {
+  display: block;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 20px;
+  text-decoration: none;
+  opacity: 0;
+  transform: translateY(30px);
 }
 
-.wrapper .register{
-       width: 100%;
-    height: 45px;
-    background: linear-gradient(#44ffd2, #679289);
-    border: #FFFFFF;
-    outline: none;
-    padding: 3px;
-    border-radius: 40px;
-    cursor: pointer;
-    font-size: 16px;
-    color:#FFFFFF;
-    font-weight: 600;
+.wrapper a:nth-of-type(1) {
+  animation: fadeSlideUp 1s ease forwards;
+  animation-delay: 0.6s;
+}
+
+.wrapper a:nth-of-type(2) {
+  animation: fadeSlideUp 1s ease forwards;
+  animation-delay: 0.8s;
+}
+
+.login,
+.register {
+  width: 100%;
+  height: 45px;
+  background: linear-gradient(90deg, rgba(68, 255, 210, 0.45), rgba(103, 146, 137, 0.71));
+  border: 1px solid #F3EEEE;
+  border-radius: 29px;
+  cursor: pointer;
+  font-size: 20px;
+  color: white;
+  font-weight: 800;
+  letter-spacing: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+/* === HOVER === */
+.login:hover,
+.register:hover {
+  background: linear-gradient(90deg, rgba(68, 255, 210, 0.65), rgba(103, 146, 137, 0.91));
+  transform: translateY(-2px);
+}
+
+/* === LOADING SPINNER === */
+.button-loading {
+  color: transparent !important;
+  pointer-events: none;
+}
+
+.button-loading::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px;
+  border: 3px solid white;
+  border-top: 3px solid transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* === Close Button (X) === */
+.close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 18px;
+  color: #ffffff;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  outline: 1px solid #ffffff44;
+  transition: background 0.2s ease, outline-color 0.2s;
+}
+
+.close-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  outline-color: #ffffff;
 }

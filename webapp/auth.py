@@ -48,7 +48,9 @@ def send_mfa():
     try:
         current_app.logger.info(f"[MFA] Email submitted: {email}")
 
-        if not email_validation(email):
+        check = email_validation(email)
+
+        if not check:
             current_app.logger.warning(f"[MFA] Invalid email: {email}")
             return jsonify(success=False, error="Invalid email address")
 

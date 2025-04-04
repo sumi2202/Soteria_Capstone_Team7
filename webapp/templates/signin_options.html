@@ -14,6 +14,7 @@
 </head>
 <body>
     <div class="wrapper">
+        <button class="close-btn" onclick="window.history.back()">✕</button>
         <div class="logo-container text-center">
                 <div class="logo-container text-center">
                     <img src="{{ url_for('static', filename='assets/animated_logo.gif') }}" alt="Soteria Logo" width="100">
@@ -22,19 +23,28 @@
             </div>
         <h1>SOTERIA</h1>
         <a href="login">
-            <button class="login">
-                <div style="width: 100%; height: 100%; background: linear-gradient(90deg, rgba(68, 255, 210, 0.45) 0%, rgba(103, 146, 137, 0.71) 100%); border-radius: 29px; border: 1px #F3EEEE solid">
-                    <div style="width: 100%; height: 100%; text-align: center; color: white; font-size: 20px; font-family: JetBrains Mono; font-weight: 800; letter-spacing: 15.20px; word-wrap: break-word">LOG IN</div>
-                </div>
-            </button>
+          <button class="login">LOG IN</button>
         </a>
+
         <a href="sign-up">
-            <button class="register">
-                <div style="width: 100%; height: 100%; background: linear-gradient(90deg, rgba(68, 255, 210, 0.45) 0%, rgba(103, 146, 137, 0.71) 100%); border-radius: 29px; border: 1px #F3EEEE solid">
-                    <div style="width: 100%; height: 100%; text-align: center; color: white; font-size: 20px; font-family: JetBrains Mono; font-weight: 800; letter-spacing: 15.20px; word-wrap: break-word">SIGN UP</div>
-                </div>
-            </button>
+          <button class="register">SIGN UP</button>
         </a>
+
     </div>
+
+<script>
+  // Apply loading spinner on button click
+  document.querySelectorAll('.login, .register').forEach(btn => {
+    btn.addEventListener('click', function (e) {
+      btn.classList.add('button-loading');
+
+      // Optional: simulate waiting, remove after 2s
+      setTimeout(() => {
+        btn.classList.remove('button-loading');
+      }, 2000);
+    });
+  });
+</script>
+
 </body>
 </html>

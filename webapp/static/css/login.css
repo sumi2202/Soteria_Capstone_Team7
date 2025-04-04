@@ -9,7 +9,6 @@
 }
 
 body {
-  position: relative;
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -19,104 +18,133 @@ body {
   animation: gradient-animation 18s ease infinite;
   color: #fff;
   overflow: hidden;
+  position: relative;
 }
 
-/* Flickering white dots layer with pulsing glow */
-body::before {
+body::before,
+body::after {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::before {
   background-image: radial-gradient(white 1px, transparent 2px);
   background-size: 20px 20px;
   mix-blend-mode: lighten;
   opacity: 0.07;
   animation: flicker 3s infinite ease-in-out, pulseGlow 4s infinite ease-in-out;
-  z-index: 0;
-  pointer-events: none;
   filter: blur(0.8px);
 }
 
-/* Glow pulse animation */
+body::after {
+  background: inherit;
+  opacity: 0.3;
+  animation: waveEffect 12s ease-in-out infinite;
+  mix-blend-mode: screen;
+  mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+}
+
+/* === Animations === */
 @keyframes pulseGlow {
   0%, 100% { opacity: 0.05; }
   50% { opacity: 0.12; }
 }
-
-/* Background gradient animation */
 @keyframes gradient-animation {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
-
-/* Optional slight flicker motion */
 @keyframes flicker {
   0%, 100% { transform: translate(0, 0); }
   50% { transform: translate(-0.5px, 0.5px); }
 }
-body::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: inherit;
-  z-index: 0;
-  opacity: 0.3;
-  animation: waveEffect 12s ease-in-out infinite;
-  mix-blend-mode: screen;
-  pointer-events: none;
-  mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+@keyframes waveEffect {
+  0% { transform: scale(1) translateY(0px); filter: blur(1px); }
+  25% { transform: scale(1.03) translateY(-2px); filter: blur(2px); }
+  50% { transform: scale(1) translateY(2px); filter: blur(1.5px); }
+  75% { transform: scale(1.02) translateY(-1px); filter: blur(2.5px); }
+  100% { transform: scale(1) translateY(0px); filter: blur(1px); }
 }
 
-/* Wavy distortion effect */
-@keyframes waveEffect {
-  0% {
-    transform: scale(1) translateY(0px) skewY(0deg);
-    filter: blur(1px);
+@keyframes fadeSlideUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  25% {
-    transform: scale(1.03) translateY(-2px) skewY(0.6deg);
-    filter: blur(2px);
+}
+
+@keyframes pulseBounce {
+  0%, 100% {
+    transform: scale(1) translateY(0);
   }
   50% {
-    transform: scale(1) translateY(2px) skewY(-0.6deg);
-    filter: blur(1.5px);
-  }
-  75% {
-    transform: scale(1.02) translateY(-1px) skewY(0.4deg);
-    filter: blur(2.5px);
-  }
-  100% {
-    transform: scale(1) translateY(0px) skewY(0deg);
-    filter: blur(1px);
+    transform: scale(1.05) translateY(-3px);
   }
 }
 
-
-.logo-container {
-    display: flex;
-    justify-content: center;
-    background: transparent !important;
-    align-items: center;
-    margin-bottom: 20px;
-}
-.logo-container video {
-    background-color: transparent !important;
-}
-
-
+/* === Wrapper === */
 .wrapper {
   position: relative;
+  background: linear-gradient(145deg, rgba(0, 0, 0, 0.6), rgba(29, 120, 116, 0.6));
+  border: 1px solid #cccccc;
+  border-radius: 16px;
+  padding: 40px 30px;
+  width: 90%;
+  max-width: 400px;
   z-index: 1;
-  width: 420px;
-   background: linear-gradient(145deg, rgba(0, 0, 0, 0.6), rgba(29, 120, 116, 0.6));
-  border: 1px solid #ccc;
-  backdrop-filter: blur(20px);
-  border-radius: 20px;
-  padding: 30px 40px;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   text-align: center;
-  color: #fbf5f3;
+  animation: fadeSlideUp 1.2s ease forwards;
+  opacity: 0;
+  transform: translateY(40px);
 }
 
+/* === Close Button (X) === */
+.close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 18px;
+  color: #ffffff;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  outline: 1px solid #ffffff44;
+  transition: background 0.2s ease, outline-color 0.2s;
+}
+
+.close-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  outline-color: #ffffff;
+}
+
+/* === Logo === */
+.logo-container {
+  margin-bottom: 15px;
+  animation: fadeSlideUp 1s ease forwards;
+  animation-delay: 0.2s;
+  opacity: 0;
+  transform: translateY(30px);
+}
+.logo-container img {
+  display: block;
+  margin: 0 auto;
+  width: 100px;
+  animation: pulseBounce 2.5s ease-in-out infinite;
+}
+
+/* === Title === */
 .wrapper h1 {
   font-size: 40px;
   font-weight: 800;
@@ -128,18 +156,59 @@ body::after {
     -1px  1px 0 #29997e,
      1px  1px 0 #29997e;
   display: inline-block;
+  animation: fadeSlideUp 1s ease forwards;
+  animation-delay: 0.4s;
+  opacity: 0;
+  transform: translateY(30px);
 }
 
-.wrapper .login{
-       width: 100%;
-    height: 45px;
-    background: linear-gradient(#44ffd2, #679289);
-    border: #FFFFFF;
-    outline: none;
-    padding: 3px;
-    border-radius: 40px;
-    cursor: pointer;
-    font-size: 16px;
-    color:#FFFFFF;
-    font-weight: 600;
+/* === Input Box === */
+.input-box {
+  position: relative;
+  margin: 15px 0;
+  animation: fadeSlideUp 1s ease forwards;
+  animation-delay: 0.6s;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.input-box input {
+  width: 100%;
+  padding: 12px 40px 12px 35px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  color: #000;
+}
+
+.input-box i {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: #999;
+}
+
+/* === Login Button === */
+.login {
+  width: 80%;
+  height: 45px;
+  background: linear-gradient(90deg, rgba(68, 255, 210, 0.45), rgba(103, 146, 137, 0.71));
+  border: 1px solid #F3EEEE;
+  border-radius: 29px;
+  cursor: pointer;
+  font-size: 20px;
+  color: white;
+  font-weight: 800;
+  letter-spacing: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.login:hover {
+  background: linear-gradient(90deg, rgba(68, 255, 210, 0.65), rgba(103, 146, 137, 0.91));
+  transform: translateY(-2px);
 }

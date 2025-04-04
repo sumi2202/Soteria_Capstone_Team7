@@ -125,7 +125,9 @@ document.addEventListener("DOMContentLoaded", () => {
     <div class="profile-card">
         <!-- LEFT SIDE -->
         <div class="avatar-section">
-            <img src="{{ url_for('static', filename='images/avatar.png') }}"  class="avatar-img">
+            <div class="avatar-img icon-avatar">
+              <i class='bx bx-user' style="font-size: 70px; color: #1d7874;"></i>
+            </div>
             <form method="GET" action="{{ url_for('views.launch') }}">
                 <button type="submit" class="logout-btn">LOG OUT</button>
             </form>

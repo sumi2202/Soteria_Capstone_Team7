@@ -35,6 +35,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
+            if (!checkData.verified) {
+                alert("This URL is not verified. Please complete the verification process first.");
+                return;
+            }
+
             // Step 2: Run the tests
             const formData = {
                 url,

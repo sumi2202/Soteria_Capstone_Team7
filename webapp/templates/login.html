@@ -1,49 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
-     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
-    <title>{% block title %}Log In{% endblock %}</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}Log In{% endblock %}</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="wrapper">
-        <form action="{{ url_for('auth.login') }}" method="POST" id="loginForm">
-            <div class="logo-container text-center">
-                <div class="logo-container text-center">
-                    <img src="{{ url_for('static', filename='assets/animated_logo.gif') }}" alt="Soteria Logo" width="100">
-                </div>
+  <div class="wrapper">
+    <button class="close-btn" onclick="window.history.back()">✕</button>
+    <form action="{{ url_for('auth.login') }}" method="POST" id="loginForm">
+      <div class="logo-container">
+        <img src="{{ url_for('static', filename='assets/animated_logo.gif') }}" alt="Soteria Logo" width="100">
+      </div>
+      <h1>SOTERIA</h1>
 
-            </div>
-            <h1>SOTERIA</h1>
-            <div class="input-box">
-                <div class="input-wrapper">
-                    <input type="text" placeholder="Email Address" id="EmailAdd" name="email" required>
-                    <i class='bx bxs-user-badge'></i>
-                </div>
-            </div>
-            <div class="input-box">
-                <div class="input-wrapper">
-                    <input type="text" style="-webkit-text-security: circle" placeholder="Password" id="loginPassword" name="password" required>
-                    <i class='bx bxs-lock' ></i>
-                </div>
-            </div>
-            <div class="remember-forgot">
-                <label><input type="checkbox">Remember Me</label>
-                <a href="#">Forgot Password</a>
-            </div>
-            <button type="submit" class="login">LOG IN</button>
+      <div class="input-box">
+        <i class='bx bxs-user'></i>
+        <input type="text" placeholder="Email Address" name="email" required>
+      </div>
 
-        </form>
+      <div class="input-box">
+        <i class='bx bxs-lock'></i>
+        <input type="password" placeholder="Password" name="password" required>
+      </div>
 
-    </div>
+
+      <button type="submit" class="login">LOG IN</button>
+    </form>
+  </div>
+
 </body>
-<script src="{{ url_for('static', filename='index.js') }}"></script>
-
 </html>

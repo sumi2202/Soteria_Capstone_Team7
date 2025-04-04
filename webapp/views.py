@@ -311,9 +311,24 @@ def check_registered_url():
     registration = db.registered_urls.find_one({"email": email, "url": url})
 
     if registration:
-        return jsonify({"success": True, "message": "URL is registered."})
+        is_verified = registration.get('verified', False)
+        if not is_verified:
+            return jsonify({
+                "success": False,
+                "verified": False,
+                "message": "This URL is not verified yet. Please upload required documents."
+            })
+        return jsonify({
+            "success": True,
+            "verified": True,
+            "message": "URL is registered and verified."
+        })
     else:
-        return jsonify({"success": False, "message": "This URL is not registered under your account."})
+        return jsonify({
+            "success": False,
+            "message": "This URL is not registered under your account."
+        })
+
 
 
 @views.route('/customer-rating', methods=['GET'])

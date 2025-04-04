@@ -105,6 +105,7 @@ h1, h2, h3, h4, h5, h6,
 p, span, div, strong,
 th, td, ul, li {
     color: #ffffff !important;
+    text-transform: uppercase;
 }
 
 /**a {
@@ -145,13 +146,13 @@ a:hover {
     align-items: center;
 }
 
-.avatar-img {
-    width: 140px;
-    height: 140px;
-    border-radius: 50%;
-    background-color: white;
-    object-fit: contain;
+.avatar-img.icon-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
 }
+
 
 .logout-btn {
     margin-top: 40px;
