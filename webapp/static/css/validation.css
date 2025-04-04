@@ -139,9 +139,9 @@ body::before {
     border-radius: 10px 0 0 10px;
 }
 
-.form-control {
+/** .form-control {
     border-radius: 0;
-}
+} **/
 
 
 .result-label {

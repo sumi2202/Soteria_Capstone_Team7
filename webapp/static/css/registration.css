@@ -50,6 +50,7 @@ body::before {
   50% { opacity: 0.12; }
 }
 
+/* === Navbar === */
 .navbar {
   background-color: #071e22;
   border-bottom: 3px solid #ffffff;
@@ -67,18 +68,13 @@ body::before {
 }
 
 .navbar .dropdown-menu {
-  background: linear-gradient(
-    135deg,
-    rgba(7, 30, 34, 0.95),      /* Dark base color - nearly solid #071e22 */
-    rgba(29, 120, 116, 0.65)    /* Slightly lighter teal */
-  ) !important;
+  background: linear-gradient(135deg, rgba(7, 30, 34, 0.95), rgba(29, 120, 116, 0.65)) !important;
   backdrop-filter: blur(15px) !important;
   border: 1px solid rgba(68, 255, 226, 0.2) !important;
   border-radius: 10px !important;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3) !important;
   animation: dropdownFade 0.4s ease !important;
 }
-
 
 @keyframes dropdownFade {
   0% {
@@ -108,250 +104,272 @@ body::before {
 
 /* === WRAPPER === */
 .wrapper {
-    background: linear-gradient(145deg, rgba(0, 0, 0, 0.6), rgba(29, 120, 116, 0.6));
-    border-radius: 20px;
-    border: 1px solid #cccccc;
-    padding: 50px 60px;
-    max-width: 700px;
-    width: 100%;
-    text-align: center;
-    box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+  background: linear-gradient(145deg, rgba(0, 0, 0, 0.6), rgba(29, 120, 116, 0.6));
+  border-radius: 20px;
+  border: 1px solid #cccccc;
+  padding: 50px 60px;
+  max-width: 700px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .wrapper h1 {
-    font-size: 40px;
-    font-weight: 800;
-    letter-spacing: 5.6px;
-    margin-bottom: 20px;
-    color: #fff;
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: 5.6px;
+  margin-bottom: 20px;
+  color: #fff;
 }
 
 .wrapper h5 {
-    font-size: 14px;
-    color: #cccccc;
-    margin-bottom: 30px;
-    text-transform: uppercase;
+  font-size: 14px;
+  color: #cccccc;
+  margin-bottom: 30px;
+  text-transform: uppercase;
 }
 
 /* === FORM INPUTS === */
 .input-box {
-    position: relative;
-    margin-bottom: 20px;
+  position: relative;
+  margin-bottom: 20px;
 }
 
 .input-box input {
-    width: 100%;
-    padding: 15px 20px 15px 45px;
-    border-radius: 10px;
-    border: none;
-    background-color: #fff;
-    color: #333;
-    font-size: 14px;
+  width: 100%;
+  padding: 15px 20px 15px 45px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  border: none;
+  background-color: #fff;
+  color: #333;
+  font-size: 14px;
 }
 
 .input-box i {
-    position: absolute;
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 18px;
-    color: #333;
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: #333;
 }
 
 /* === BUTTONS === */
 .btn-upload,
 .btn-register {
-    background-color: #2CBE9B !important;
-    color: #ffffff !important;
-    border: 3px solid #ffffff;
-    border-radius: 10px;
-    height: 50px;
-    font-weight: 600;
-    font-size: 16px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0 20px;
-    margin: 0 auto;
-    min-width: 200px;
-    max-width: 300px;
-    width: 50%;
+  width: 50%;
+  height: 45px;
+  background: linear-gradient(90deg, rgba(68, 255, 210, 0.45), rgba(103, 146, 137, 0.71)) !important;
+  border: 1px solid #cccccc !important;
+  border-radius: 29px;
+  cursor: pointer;
+  font-size: 20px;
+  color: white !important;
+  font-weight: 800;
+  letter-spacing: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  transition: all 0.3s ease;
 }
 
 .btn-upload:hover,
 .btn-register:hover {
-    background-color: #36d6b8;
+  background: linear-gradient(90deg, rgba(68, 255, 210, 0.65), rgba(103, 146, 137, 0.91));
+  transform: translateY(-2px);
 }
 
 .submit-btn {
-    background-color: #DB5461;
-    color: #ffffff;
-    padding: 12px 40px;
-    border: none;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-top: 20px;
-    cursor: pointer;
-    transition: all 0.3s ease;
+  background-color: #DB5461;
+  color: #ffffff;
+  padding: 12px 40px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .submit-btn:hover {
-    background-color: #c14655;
+  background-color: #c14655;
 }
 
 /* === MODAL BACKGROUND === */
 .modal {
-    display: none;
-    position: fixed;
-    z-index: 999;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    justify-content: center;
-    align-items: center;
-    transition: opacity 0.5s ease;
+  display: flex;
+  position: fixed;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
 }
 
 .modal.show {
-    display: flex;
+  display: flex;
 }
 
 /* === MODAL CONTENT === */
 .modal-content {
-    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-    color: #ffffff;
-    padding: 40px 30px;
-    border-radius: 40px;                   /* More rounded */
-    border: 2px solid #ffffff;             /* Clean white border */
-    width: 350px;                          /* Narrower */
-    max-width: 20%;
-    min-height: 600px;
-    max-height: 90vh;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: #ffffff;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(14px);
+  animation: fadeIn 1.2s ease forwards;
+  padding: 40px 30px;
+  border-radius: 40px;
+  border: 1px solid #cccccc !important;
+  width: 350px;
+  max-width: 20%;
+  min-height: 600px;
+  max-height: 90vh;
 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    position: relative;
-
-    /* Animation Settings */
-    opacity: 0;
-    transform: scale(0.9);
-    transition: all 0.4s ease;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: all 0.4s ease;
 }
 
 .modal.show .modal-content {
-    opacity: 1;
-    transform: scale(1);
+  opacity: 1;
+  transform: scale(1);
 }
 
 /* === MODAL HEADINGS === */
 .modal-content h2 {
-    font-size: 30px;
-    color: #ffffff;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    font-weight: 700;
-    margin: 20px 0 10px;
-    text-align: center;
-    width: 100%;
+  font-size: 30px;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  margin: 20px 0 10px;
+  text-align: center;
+  width: 100%;
 }
 
 /* === SECTIONS INSIDE MODAL === */
 .modal-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 20px;
 }
 
 .modal-section .upload-btn {
-    margin-bottom: 15px;
+  margin-bottom: 15px;
 }
 
 /* === UPLOAD BUTTON === */
 .upload-btn {
-    background-color: #2CBE9B;
-    color: #ffffff;
-    border: 1px solid #ffffff;
-    padding: 12px 30px;
-    margin-bottom: 20px;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    width: 200px;
+  background-color: #2CBE9B;
+  color: #ffffff;
+  border: 1px solid #ffffff;
+  padding: 12px 30px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 200px;
 }
 
 .upload-btn:hover {
-    background-color: #36d6b8;
-    border-color: #ffffff;
+  background-color: #36d6b8;
+  border-color: #ffffff;
 }
 
 /* === FILE PREVIEW === */
 .file-preview {
-    background-color: #071e22;
-    border: 2px solid #ffffff;
-    color: #ffffff;
-    width: 100%;
-    min-height: 60px;
-    margin-bottom: 10px;
-    padding: 15px;
-    border-radius: 12px;
-    overflow-y: auto;
+  background-color: #071e22;
+  border: 2px solid #ffffff;
+  color: #ffffff;
+  width: 100%;
+  min-height: 60px;
+  margin-bottom: 10px;
+  padding: 15px;
+  border-radius: 12px;
+  overflow-y: auto;
 }
 
 .file-preview ul {
-    list-style-type: none;
-    padding-left: 0;
-    margin: 0;
+  list-style-type: none;
+  padding-left: 0;
+  margin: 0;
 }
 
 .file-preview li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
 }
 
 .file-preview li button {
-    background: none;
-    border: none;
-    color: #D06079;
-    cursor: pointer;
-    font-size: 14px;
+  background: none;
+  border: none;
+  color: #D06079;
+  cursor: pointer;
+  font-size: 14px;
 }
 
 .file-preview li button:hover {
-    color: #ff4757;
+  color: #ff4757;
 }
 
 /* === CLOSE BUTTON === */
 .close-button {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    color: #ffffff;
-    font-size: 24px;
-    font-weight: bold;
-    cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 28px;
+  font-size: 1.3rem;
+  color: white;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  outline: 2px solid #ffffff88;
+  transition: background 0.2s ease, outline-color 0.2s;
 }
-
 .close-button:hover {
-    color: #F58220;
+  background: rgba(255, 255, 255, 0.1);
+  outline-color: #ffffff;
+}
+/* === RESPONSIVE FIXES === */
+@media (max-width: 768px) {
+  .modal-content {
+    max-width: 90% !important;
+    padding: 30px 20px;
+    border-radius: 20px;
+  }
+
+  .modal-content h2 {
+    font-size: 22px;
+  }
+
+  .upload-btn {
+    width: 100%;
+  }
 }

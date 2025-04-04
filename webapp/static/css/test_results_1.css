@@ -64,10 +64,10 @@ body {
 
 /* CONTAINER */
 .container.custom-results-container {
-  background: linear-gradient(145deg, rgba(0, 0, 0, 0.6), rgba(29, 120, 116, 0.6));
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
   text-transform: uppercase;
   border-radius: 20px;
-  border: 3px solid #ffffff;
+  border: 1px solid #cccccc;
   padding: 50px 60px;
   max-width: 1000px;
   width: 100%;
@@ -174,26 +174,29 @@ p {
 
 /* BUTTON */
 .expand-btn {
-  background-color: #2CBE9B;
-  color: #ffffff;
-  border: none;
-  padding: 12px 28px;
-  border-radius: 8px;
-  font-weight: bold;
-  font-size: 1rem;
-  text-transform: uppercase;
-  transition: background-color 0.3s ease;
-  letter-spacing: 1px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  width: 50%;
+  height: 45px;
+  background: linear-gradient(90deg, rgba(68, 255, 210, 0.45), rgba(103, 146, 137, 0.71));
+  border: 1px solid #F3EEEE;
+  border-radius: 29px;
+  cursor: pointer;
+  font-size: 20px;
+  color: white;
+  font-weight: 800;
+  letter-spacing: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  transition: all 0.3s ease;
+  position: relative;
 }
 
 .expand-btn:hover {
-  background-color: #4ed2af;
-  cursor: pointer;
+  background: rgba(255, 255, 255, 0.1);
+  outline-color: #ffffff;
 }
 
 .custom-modal {
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  border: 4px solid #ffffff;
   color: #ffffff;
   border-radius: 12px;
   font-family: 'JetBrains Mono', monospace;
@@ -232,28 +235,19 @@ p {
     text-transform: uppercase;
 }
 .submit-btn {
-  background-color: #2CBE9B !important;
-    color: #ffffff !important;
-    border: 3px solid #ffffff;
-    border-radius: 10px;
-    height: 50px;
-    font-weight: 600;
-    font-size: 70px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0 20px;
-
-    /* Centering */
-    margin: 0 auto;
-
-    /* Width Controls */
-    min-width: 200px; /* You can adjust this */
-    max-width: 300px; /* Optional for responsive design */
-    width: 50%; /* or a fixed width like 250px */
+  width: 50%;
+  height: 45px;
+  background: linear-gradient(90deg, rgba(68, 255, 210, 0.45), rgba(103, 146, 137, 0.71));
+  border: 1px solid #F3EEEE !important;
+  border-radius: 29px;
+  cursor: pointer;
+  font-size: 20px;
+  color: white !important;
+  font-weight: 800;
+  letter-spacing: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  transition: all 0.3s ease;
+  position: relative;
 }
 
 .submit-btn:hover {
