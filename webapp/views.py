@@ -217,26 +217,20 @@ def link_validation():
 
 @views.route('/register-link', methods=['GET', 'POST'])
 def link_registration():
-    print("🔍 [DEBUG] Entire session before retrieving URL:", dict(session))
-    validated_url = session.get('validated_url', '')  # Retrieve from Flask session
-    print(f"🚨 [DEBUG] validated_url before rendering template: {validated_url}")
-
     if request.method == 'POST':
         first_name = request.form.get('firstName')
         last_name = request.form.get('lastName')
         email = request.form.get('email')
         url = session.get('validated_url')
-        print("🔍 Retrieved from session:", url)
 
         if not url:
-            flash("No validated URL found. Please validate URL first", "error")
-            return redirect(url_for("views.link_validation"))
+            return jsonify({"success": False, "message": "No validated URL found. Please validate first."}), 400
 
         proof_id_files = request.files.getlist('proofIdFiles')
         ownership_files = request.files.getlist('ownershipFiles')
 
         file_ids = []
-        fs = current_app.fs  # Use app's GridFS instance
+        fs = current_app.fs
 
         for file in proof_id_files + ownership_files:
             if file:
@@ -248,33 +242,31 @@ def link_registration():
 
         user = db.users.find_one({"email": email})
         if not user:
-            flash("User account not found. Use the correct email.", "error")
-            return redirect(url_for('auth.sign_up'))
+            return jsonify({"success": False, "message": "User not found. Please sign up first."}), 404
 
-        # Check if URL is already registered
         existing_registration = db.registered_urls.find_one({"email": email, "url": url})
         if existing_registration:
-            flash("This URL is already registered.", "info")
-            return redirect(url_for('views.dashboard'))
+            return jsonify({"success": False, "message": "This URL is already registered."}), 409
 
-        # Store registration in `registered_urls` collection
         db.registered_urls.insert_one({
-            "first_name": first_name,  # ✅ Added
-            "last_name": last_name,  # ✅ Added
+            "first_name": first_name,
+            "last_name": last_name,
             "email": email,
             "url": url,
             "proof_id_files": file_ids[:len(proof_id_files)],
             "ownership_files": file_ids[len(proof_id_files):],
-            "verified": False
+            "verified": False,
+            "notified": False
         })
 
-        flash("URL successfully registered!", "success")
-        return redirect(url_for('views.dashboard'))
+        return jsonify({"success": True, "message": "URL successfully registered!"})
 
+    # GET fallback
+    validated_url = session.get('validated_url', '')
     if not validated_url:
         flash("Session lost. Please validate the URL again.", "error")
-
     return render_template("link_registration.html", validated_url=validated_url)
+
 
 
 @views.route('/view-file/<file_id>', methods=['GET'])

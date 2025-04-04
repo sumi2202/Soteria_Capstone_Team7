@@ -102,22 +102,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Register button logic (send data to backend)
     registerBtn.addEventListener('click', () => {
-        if (window.tempFormData) {
-            fetch('/register-link', {
-                method: 'POST',
-                body: window.tempFormData
-            })
-            .then(response => response.json())
-            .then(data => {
+    if (window.tempFormData) {
+        fetch('/register-link', {
+            method: 'POST',
+            body: window.tempFormData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
                 alert(data.message);
-                if (data.success) {
-                    window.location.href = '/dashboard';
-                }
-            })
-            .catch(error => console.error('Error:', error));
-        } else {
-            alert('Please attach the required files before registering.');
-        }
-    });
+                window.location.href = '/dashboard';
+            } else {
+                alert("❌ " + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('⚠️ Something went wrong during registration.');
+        });
+    } else {
+        alert('Please attach the required files before registering.');
+    }
+});
 });
 

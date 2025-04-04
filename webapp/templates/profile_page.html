@@ -124,14 +124,16 @@ document.addEventListener("DOMContentLoaded", () => {
 <div class="profile-container">
     <div class="profile-card">
         <!-- LEFT SIDE -->
+        <!-- LEFT SIDE -->
         <div class="avatar-section">
-            <div class="avatar-img icon-avatar">
-              <i class='bx bx-user' style="font-size: 70px; color: #1d7874;"></i>
-            </div>
-            <form method="GET" action="{{ url_for('views.launch') }}">
-                <button type="submit" class="logout-btn">LOG OUT</button>
-            </form>
+          <div class="avatar-icon-container">
+            <i class='bx bx-user'></i>
+          </div>
+          <form method="GET" action="{{ url_for('views.launch') }}">
+            <button type="submit" class="logout-btn">LOG OUT</button>
+          </form>
         </div>
+
 
         <!-- RIGHT SIDE -->
         <div class="profile-content">

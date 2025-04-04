@@ -146,12 +146,23 @@ a:hover {
     align-items: center;
 }
 
-.avatar-img.icon-avatar {
+.avatar-icon-container {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, #0f2b2d 60%, #1d7874 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: white;
+  border: 2px solid white;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
 }
+
+.avatar-icon-container i {
+  font-size: 100px;
+  color: white;
+}
+
 
 
 .logout-btn {
