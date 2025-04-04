@@ -46,6 +46,21 @@ body {
   }
 }
 
+.dropdown-item {
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+  font-size: 14px;
+  padding: 12px 20px;
+  transition: all 0.3s ease;
+  border-radius: 6px;
+}
+
+.dropdown-item:hover {
+  background: rgba(68, 255, 226, 0.15);
+  color: #44ffe2;
+}
+
 /* CONTAINER */
 .container.custom-results-container {
   background: linear-gradient(145deg, rgba(0, 0, 0, 0.6), rgba(29, 120, 116, 0.6));

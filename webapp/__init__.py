@@ -2,9 +2,10 @@ from flask import Flask
 from pymongo import MongoClient
 from gridfs import GridFS
 from .models import SQLResult, XSSResult
-from flask_socketio import SocketIO
+from .test_routes import check_verified_links
+from .extensions import socketio
+import threading
 
-socketio = SocketIO(cors_allowed_origins="*")
 
 def create_app():
     app = Flask(__name__)
@@ -15,6 +16,13 @@ def create_app():
     client = MongoClient(app.config['MONGO_URI'])
     app.db = client.get_database('soteria')
     db = app.db
+
+    def start_verified_link_thread():
+        thread = threading.Thread(target=check_verified_links, args=(app,), daemon=True)
+        thread.start()
+        print("[INIT] 🔁 Background thread to check verified links started.")
+
+    start_verified_link_thread()
 
     # Register indexes
     def create_indexes(db):
@@ -41,6 +49,8 @@ def create_app():
     app.register_blueprint(test_routes, url_prefix='/tests')
 
     socketio.init_app(app)
+    from . import socket_events  # 👈 this auto-registers the handlers on startup
 
     print("App created, all blueprints registered")
     return app
+

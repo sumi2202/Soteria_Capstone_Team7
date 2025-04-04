@@ -1,6 +1,7 @@
-from webapp import create_app, socketio
+from webapp import create_app
 from flask import Flask, session
 from flask_session import Session
+from webapp.extensions import socketio
 
 # Create Flask app
 app = create_app()

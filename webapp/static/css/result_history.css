@@ -38,6 +38,20 @@ body {
 .navbar .bx-user-circle {
     color: #fff;
 }
+.dropdown-item {
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+  font-size: 14px;
+  padding: 12px 20px;
+  transition: all 0.3s ease;
+  border-radius: 6px;
+}
+
+.dropdown-item:hover {
+  background: rgba(68, 255, 226, 0.15);
+  color: #44ffe2;
+}
 
 /* === RESULTS TITLE === */
 .results-title {

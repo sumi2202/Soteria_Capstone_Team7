@@ -10,15 +10,15 @@
 body {
   position: relative;
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   background: linear-gradient(245deg, #071e22, #1d7874, #d85461);
   background-size: 600% 600%;
   animation: gradient-animation 18s ease infinite;
   color: #fff;
-  overflow: visible;
+  overflow-x: hidden;
+  padding-top: 80px; /* Space for navbar */
+  padding-bottom: 60px; /* Optional space at bottom */
 }
+
 
 body::before {
   content: '';
@@ -66,14 +66,19 @@ body::before {
   color: #fff;
 }
 
-.dropdown-menu {
-  background: linear-gradient(135deg, rgba(68, 255, 226, 0.25), rgba(103, 146, 137, 0.2));
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(68, 255, 226, 0.4);
-  border-radius: 10px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-  animation: dropdownFade 0.4s ease;
+.navbar .dropdown-menu {
+  background: linear-gradient(
+    135deg,
+    rgba(7, 30, 34, 0.95),      /* Dark base color - nearly solid #071e22 */
+    rgba(29, 120, 116, 0.65)    /* Slightly lighter teal */
+  ) !important;
+  backdrop-filter: blur(15px) !important;
+  border: 1px solid rgba(68, 255, 226, 0.2) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3) !important;
+  animation: dropdownFade 0.4s ease !important;
 }
+
 
 @keyframes dropdownFade {
   0% {
@@ -99,4 +104,42 @@ body::before {
 .dropdown-item:hover {
   background: rgba(68, 255, 226, 0.15);
   color: #44ffe2;
+}
+
+.legal-content {
+  position: relative;
+  z-index: 1;
+  max-width: 700px;
+  margin: 0 auto;
+  background: linear-gradient(145deg, rgba(0, 0, 0, 0.6), rgba(29, 120, 116, 0.6));
+  border: 1px solid #cccccc;
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 30px 40px;
+  text-align: center;
+  color: #fbf5f3;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+}
+
+
+
+.legal-content h1,
+.legal-content h5 {
+  color: #44ffe2;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.legal-content p {
+  line-height: 1.7;
+  font-size: 14px;
+  text-transform: uppercase;
+  color: #e0f7f5;
+  margin-bottom: 15px;
+}
+
+.legal-content strong {
+  color: #ffffff;
 }

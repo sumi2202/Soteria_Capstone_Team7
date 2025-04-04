@@ -3,6 +3,7 @@ import os
 import threading
 import uuid
 from datetime import datetime, timezone
+from webapp.extensions import socketio  # ✅ no circular import
 from zoneinfo import ZoneInfo
 
 from flask import (
@@ -13,7 +14,6 @@ from flask_login import current_user
 from .backend_scripts.pdf_generator import pdf_converter
 from .backend_scripts.XSS import xss_testing
 from .backend_scripts.SQL_Injection import sql_injection
-from webapp import socketio
 
 test_routes = Blueprint("test_routes", __name__)
 
@@ -79,7 +79,7 @@ def run_security_tests(app, url, task_id, level, risk, user_id, label):
             socketio.emit("new_notification", {
                 "message": notification["message"],
                 "timestamp": formatted_time
-            })
+            }, to=str(user_id))  # 🔁 Now emits only to the user
 
             db.test_status.update_one(
                 {"task_id": task_id},
@@ -202,21 +202,41 @@ def download_pdf(task_id):
 @test_routes.route("/notifications", methods=["GET"])
 def get_user_notifications():
     user_id = session.get("user_id")
-    if not user_id:
+    email = session.get("email")
+    if not user_id or not email:
         return jsonify({"success": False, "error": "Not logged in"}), 401
 
     db = current_app.db
-    results = db.notifications.find({"user_id": str(user_id)}).sort("timestamp", -1).limit(10)
+
+    results = db.notifications.find({
+        "$or": [
+            {"user_id": str(user_id)},
+            {"email": email}
+        ]
+    }).sort("timestamp", -1).limit(10)
 
     notifications = []
     for notif in results:
-        toronto_ts = notif["timestamp"].astimezone(ZoneInfo("America/Toronto"))
+        timestamp = notif["timestamp"]
+
+        # 🧠 Ensure timestamp is a datetime object
+        if isinstance(timestamp, str):
+            if timestamp.endswith("Z"):
+                timestamp = timestamp.replace("Z", "+00:00")
+            timestamp = datetime.fromisoformat(timestamp)
+
+        if timestamp.tzinfo is None:
+            timestamp = timestamp.replace(tzinfo=timezone.utc)
+
+        toronto_ts = timestamp.astimezone(ZoneInfo("America/Toronto"))
+
         notifications.append({
             "message": notif["message"],
             "timestamp": toronto_ts.strftime('%Y-%m-%d %I:%M %p %Z')
         })
 
     return jsonify({"success": True, "notifications": notifications})
+
 
 @test_routes.route("/debug-insert")
 def debug_insert_notification():
@@ -241,17 +261,18 @@ def debug_insert_notification():
         return jsonify({"success": False, "error": str(e)})
 
 
-def check_verified_links(user_email, app):
+def check_verified_links(app):
     """ Continuously checks for verified URLs that need notifications and updates their status. """
     with app.app_context():
-        db = current_app.db  # Ensure we are in app context
-        print(f"🔍 Checking verified links for {user_email}...")  # Debug message
+        db = current_app.db
+        print(f"🔍 Checking verified links for verified users...")
 
         while True:
-            users = db.registered_urls.distinct("email", {"verified": True, "notified": False})
+            # Get all emails with verified = True and notified = False
+            emails_to_check = db.registered_urls.distinct("email", {"verified": True, "notified": False})
 
-            for email in users:
-                # Find URLs that are verified but not notified for the given user
+            for email in emails_to_check:
+                # Find all matching links for that email
                 urls_to_notify = db.registered_urls.find({
                     "email": email,
                     "verified": True,
@@ -259,16 +280,12 @@ def check_verified_links(user_email, app):
                 })
 
                 for url_doc in urls_to_notify:
-                    user_id = url_doc.get("user_id")
                     url = url_doc.get("url")
-
-                    if not user_id:
-                        continue
 
                     # Create the notification
                     timestamp = datetime.now(timezone.utc)
                     notification = {
-                        "user_id": str(user_id),
+                        "email": email,
                         "message": f"✅ Your link {url} has been verified!",
                         "timestamp": timestamp,
                         "type": "link_verified"
@@ -276,30 +293,49 @@ def check_verified_links(user_email, app):
 
                     db.notifications.insert_one(notification)
 
-                    # Mark the URL as notified to avoid duplicate notifications
+                    # Mark this URL as notified
                     db.registered_urls.update_one(
                         {"_id": url_doc["_id"]},
                         {"$set": {"notified": True}}
                     )
 
-                    print(f"[INFO] 🔔 Notification sent for {url}")
+                    # Emit via Socket.IO using the email as the room ID
+                    toronto_time = timestamp.astimezone(ZoneInfo("America/Toronto"))
+                    formatted_time = toronto_time.strftime('%Y-%m-%d %I:%M %p %Z')
 
-            # Wait before checking again
-            time.sleep(30)  # Runs every 30 seconds
+                    socketio.emit("new_notification", {
+                        "message": notification["message"],
+                        "timestamp": formatted_time
+                    }, to=email)
+
+                    print(f"[INFO] 🔔 Notification sent to {email} for verified link: {url} at {formatted_time}")
 
 
-@test_routes.route('/start_checking_verified_links')
-def start_checking_verified_links():
-    """ Starts the background process if not already running. """
-    global notification_thread  # Keep track of the thread globally
+            time.sleep(30)  # Wait before checking again
 
-    if not session.get('email'):
-        return "User not logged in or session expired", 400
 
-    if "notification_thread" not in globals() or not notification_thread.is_alive():
-        app = current_app._get_current_object()
-        notification_thread = threading.Thread(target=check_verified_links, args=(app,), daemon=True)
-        notification_thread.start()
-        print("[INFO] ✅ Background notification thread started.")
 
-    return "Background notification thread is running."
+# @test_routes.route('/start_checking_verified_links')
+# def start_checking_verified_links():
+#     """ Starts the background process if not already running. """
+#     global notification_thread  # Keep track of the thread globally
+#
+#     if not session.get('email'):
+#         return "User not logged in or session expired", 400
+#
+#     if "notification_thread" not in globals() or not notification_thread.is_alive():
+#         app = current_app._get_current_object()
+#         notification_thread = threading.Thread(target=check_verified_links, args=(app,), daemon=True)
+#         notification_thread.start()
+#         print("[INFO] ✅ Background notification thread started.")
+#
+#     return "Background notification thread is running."
+
+# Add this route below your notifications route
+@test_routes.route("/get-user-email")
+def get_user_email():
+    email = session.get("email")
+    if not email:
+        return jsonify({"success": False}), 401
+    return jsonify({"success": True, "email": email})
+
