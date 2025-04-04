@@ -176,7 +176,7 @@ a:hover {
     padding: 10px 30px;
     font-size: 14px;
     background-color: #c94c4c;
-    border: none;
+    border: 1px solid #F3EEEE;
     border-radius: 10px;
     color: white;
     letter-spacing: 2px;
@@ -186,6 +186,7 @@ a:hover {
 
 .logout-btn:hover {
     background-color: #ff4d4d;
+    transform: translateY(-2px);
 }
 
 .profile-content {

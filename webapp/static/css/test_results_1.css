@@ -46,7 +46,7 @@ body {
   }
 }
 
-.dropdown-item {
+.navbar .dropdown-item {
   color: #fff;
   font-family: 'JetBrains Mono', monospace;
   text-transform: uppercase;
@@ -57,9 +57,10 @@ body {
 }
 
 .dropdown-item:hover {
-  background: rgba(68, 255, 226, 0.15);
-  color: #44ffe2;
+  background: rgba(68, 255, 226, 0.08) !important;
+  color: #44ffe2 !important;
 }
+
 
 /* CONTAINER */
 .container.custom-results-container {

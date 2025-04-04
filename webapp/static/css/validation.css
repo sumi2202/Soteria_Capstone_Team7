@@ -66,14 +66,19 @@ body::before {
   color: #fff;
 }
 
-.dropdown-menu {
-  background: linear-gradient(135deg, rgba(68, 255, 226, 0.25), rgba(103, 146, 137, 0.2));
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(68, 255, 226, 0.4);
-  border-radius: 10px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-  animation: dropdownFade 0.4s ease;
+.navbar .dropdown-menu {
+  background: linear-gradient(
+    135deg,
+    rgba(7, 30, 34, 0.95),      /* Dark base color - nearly solid #071e22 */
+    rgba(29, 120, 116, 0.65)    /* Slightly lighter teal */
+  ) !important;
+  backdrop-filter: blur(15px) !important;
+  border: 1px solid rgba(68, 255, 226, 0.2) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3) !important;
+  animation: dropdownFade 0.4s ease !important;
 }
+
 
 @keyframes dropdownFade {
   0% {
@@ -86,7 +91,7 @@ body::before {
   }
 }
 
-.dropdown-item {
+.navbar .dropdown-item {
   color: #fff;
   font-family: 'JetBrains Mono', monospace;
   text-transform: uppercase;
@@ -97,9 +102,10 @@ body::before {
 }
 
 .dropdown-item:hover {
-  background: rgba(68, 255, 226, 0.15);
-  color: #44ffe2;
+  background: rgba(68, 255, 226, 0.08) !important;
+  color: #44ffe2 !important;
 }
+
 
 
 .wrapper {
@@ -137,9 +143,6 @@ body::before {
     border-radius: 0;
 }
 
-.btn-outline-danger {
-    border-radius: 0 10px 10px 0;
-}
 
 .result-label {
     font-size: 12px;
@@ -158,20 +161,18 @@ body::before {
 
 .search-btn,
 .register-btn {
-    background-color: #2CBE9B !important;
-    color: #ffffff !important;
-    border: 3px solid #ffffff;
-    border-radius: 10px;
-    height: 50px;
-    font-weight: 600;
-    font-size: 70px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0 20px;
+      width: 50%;
+      height: 45px;
+      background: linear-gradient(90deg, rgba(68, 255, 210, 0.45), rgba(103, 146, 137, 0.71)) !important;
+      border: 1px solid #cccccc !important;
+      border-radius: 29px;
+      cursor: pointer;
+      font-size: 20px;
+      color: white !important;
+      font-weight: 800;
+      letter-spacing: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      transition: all 0.3s ease;
 
     /* Centering */
     margin: 0 auto;
@@ -184,10 +185,8 @@ body::before {
 
 .search-btn:hover,
 .register-btn:hover {
-    background-color: #36d6b8 !important;
-    color: #ffffff !important;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(90deg, rgba(68, 255, 210, 0.65), rgba(103, 146, 137, 0.91));
+  transform: translateY(-2px);
 }
 
 .register-btn:disabled {

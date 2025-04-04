@@ -167,6 +167,7 @@ body::before {
     font-size: 26px;
     margin: 0;
     text-align:center;
+    text-transform: uppercase;
     padding 50px;
     color: white;
     font-family: JetBrains Mono;
@@ -182,18 +183,23 @@ body::before {
 }
 
 .submit {
-    margin-top: 25px;
-    width: 170px;
-    height: 55px;
-    background: linear-gradient(#44ffd2, #679289);
-    border: #FFFFFF;
-    outline: none;
-    padding: 5px;
-    border-radius: 40px;
-    cursor: pointer;
-    font-size: 28px;
-    color: #F4F3F3;
-    font-family: JetBrains Mono;
-    font-weight: 800;
+    width: 50%;
+  height: 45px;
+  background: linear-gradient(90deg, rgba(68, 255, 210, 0.45), rgba(103, 146, 137, 0.71));
+  border: 1px solid #F3EEEE;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 20px;
+  color: white;
+  text-transform:uppercase;
+  font-weight: 800;
+  letter-spacing: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  transition: all 0.3s ease;
 
+}
+
+.submit:hover{
+  background: linear-gradient(90deg, rgba(68, 255, 210, 0.65), rgba(103, 146, 137, 0.91));
+  transform: translateY(-2px);
 }

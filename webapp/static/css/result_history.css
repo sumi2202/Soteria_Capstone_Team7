@@ -38,7 +38,20 @@ body {
 .navbar .bx-user-circle {
     color: #fff;
 }
-.dropdown-item {
+.navbar .dropdown-menu {
+  background: linear-gradient(
+    135deg,
+    rgba(7, 30, 34, 0.95),      /* Dark base color - nearly solid #071e22 */
+    rgba(29, 120, 116, 0.65)    /* Slightly lighter teal */
+  ) !important;
+  backdrop-filter: blur(15px) !important;
+  border: 1px solid rgba(68, 255, 226, 0.2) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3) !important;
+  animation: dropdownFade 0.4s ease !important;
+}
+
+.navbar .dropdown-item {
   color: #fff;
   font-family: 'JetBrains Mono', monospace;
   text-transform: uppercase;
@@ -47,11 +60,11 @@ body {
   transition: all 0.3s ease;
   border-radius: 6px;
 }
-
 .dropdown-item:hover {
-  background: rgba(68, 255, 226, 0.15);
-  color: #44ffe2;
+  background: rgba(68, 255, 226, 0.08) !important;
+  color: #44ffe2 !important;
 }
+
 
 /* === RESULTS TITLE === */
 .results-title {

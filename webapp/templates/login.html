@@ -12,7 +12,7 @@
 </head>
 <body>
   <div class="wrapper">
-    <button class="close-btn" onclick="window.history.back()">✕</button>
+    <a href="/signup-options" class="close-btn" >✕</a>
     <form action="{{ url_for('auth.login') }}" method="POST" id="loginForm">
       <div class="logo-container">
         <img src="{{ url_for('static', filename='assets/animated_logo.gif') }}" alt="Soteria Logo" width="100">

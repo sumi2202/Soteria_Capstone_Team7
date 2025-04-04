@@ -57,49 +57,50 @@
   </div>
 </nav>
 
-<!-- FORM SECTION -->
-<div class="container2" style="margin-top: 80px;">
-  <form action="/tests/run_tests" method="POST" id="scanForm" class="search-bar">
-    <div class="logo-container text-center">
-      <img src="static/assets/animated_logo.gif" alt="Soteria Logo" width="100">
-    </div>
+<div class="page-fade">
+  <!-- FORM SECTION -->
+  <div class="container2" style="margin-top: 80px;">
+    <form action="/tests/run_tests" method="POST" id="scanForm" class="search-bar">
+      <div class="logo-container text-center">
+            <img src="{{ url_for('static', filename='assets/animated_logo.gif') }}" alt="Soteria Logo" width="100">
+        </div>
 
-    <h2>SOTERIA</h2>
+      <h2>SOTERIA</h2>
 
-    <input type="url" name="url" placeholder="ENTER URL" required>
+      <input type="url" name="url" placeholder="ENTER URL" required>
 
-    <div class="form-group mt-3">
-      <label for="sql_level_risk">Select Testing Intensity</label>
-      <div class="custom-dropdown" id="dropdown">
-        <div class="selected" id="selected">LIGHT TESTING - 1MIN</div>
-        <ul class="options" id="options">
-          <li data-value="1,1">LIGHT TESTING - 1MIN</li>
-          <li data-value="2,2">STANDARD TESTING - 2MIN</li>
-          <li data-value="3,2">MODERATE TESTING - 10MIN</li>
-          <li data-value="4,3">EXTENSIVE TESTING - 25MIN</li>
-          <li data-value="5,3">COMPREHENSIVE TESTING - 1H</li>
-        </ul>
+      <div class="form-group mt-3">
+        <label for="sql_level_risk">Select Testing Intensity - Approximate Times Listed</label>
+        <div class="custom-dropdown" id="dropdown">
+          <div class="selected" id="selected">LIGHT TESTING - 1MIN</div>
+          <ul class="options" id="options">
+            <li data-value="1,1">LIGHT TESTING - 1MIN</li>
+            <li data-value="2,2">STANDARD TESTING - 2MIN</li>
+            <li data-value="3,2">MODERATE TESTING - 10MIN</li>
+            <li data-value="4,3">EXTENSIVE TESTING - 25MIN</li>
+            <li data-value="5,3">COMPREHENSIVE TESTING - 1H</li>
+          </ul>
+        </div>
+        <input type="hidden" name="sql_level_risk" id="sql_level_risk" value="1,1">
       </div>
-      <input type="hidden" name="sql_level_risk" id="sql_level_risk" value="1,1">
-    </div>
 
-    <input type="hidden" name="sql_label" id="sql_label" value="">
-    <button type="submit" class="mt-3">SUBMIT</button>
-  </form>
-</div>
+      <input type="hidden" name="sql_label" id="sql_label" value="">
+      <button type="submit" class="mt-3">SUBMIT</button>
+    </form>
+  </div>
 
-<!-- 🔔 Toast Container -->
-<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1055">
-  <div id="liveToast" class="toast text-white bg-success" role="alert" aria-live="assertive" aria-atomic="true">
-    <div class="d-flex">
-      <div class="toast-body" id="toast-body">
-        New notification!
+  <!-- 🔔 Toast Container -->
+  <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1055">
+    <div id="liveToast" class="toast text-white bg-success" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body" id="toast-body">
+          New notification!
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
-      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
     </div>
   </div>
 </div>
-
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
