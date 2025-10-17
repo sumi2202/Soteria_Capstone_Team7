@@ -11,7 +11,7 @@ def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'dhfbdbfjksd hfjksdkjdh'
     app.secret_key = 'SOFECapstone2425'
-    app.config['MONGO_URI'] = 'mongodb+srv://SoteriaUser:SOFEcapstone2425@soteriacluster.g7txq.mongodb.net/'
+    app.config['MONGO_URI'] = 'secret key'
 
     client = MongoClient(app.config['MONGO_URI'])
     app.db = client.get_database('soteria')
@@ -49,7 +49,7 @@ def create_app():
     app.register_blueprint(test_routes, url_prefix='/tests')
 
     socketio.init_app(app)
-    from . import socket_events  # 👈 this auto-registers the handlers on startup
+    from . import socket_events  # this auto-registers the handlers on startup
 
     print("App created, all blueprints registered")
     return app
